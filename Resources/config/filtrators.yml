@@ -1,0 +1,14 @@
+parameters:
+  ite_filtration.filtrator.text.class: ITE\FiltrationBundle\Filtration\Filtrator\TextFiltrator
+  ite_filtration.filtrator.range.class: ITE\FiltrationBundle\Filtration\Filtrator\RangeFiltrator
+
+services:
+  ite_filtration.filtrator.text:
+    class: %ite_filtration.filtrator.text.class%
+    tags:
+      - { name: ite_filtration.filtrator }
+
+  ite_filtration.filtrator.range:
+    class: %ite_filtration.filtrator.range.class%
+    tags:
+      - { name: ite_filtration.filtrator }

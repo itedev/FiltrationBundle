@@ -1,0 +1,20 @@
+parameters:
+  ite_filtration.manager.class: ITE\FiltrationBundle\Filtration\FiltrationManager
+  ite_filtration.twig_extension.class: ITE\FiltrationBundle\Twig\Extension\FiltrationExtension
+
+services:
+  ite_filtration.manager:
+    class: %ite_filtration.manager.class%
+    arguments:
+      - @form.factory
+      - @request_stack
+
+  ite_filtrator: "@ite_filtration.manager"
+
+  ite_filtration.twig_extension:
+    class: %ite_filtration.twig_extension.class%
+    arguments:
+      - @ite_filtrator
+    tags:
+      - { name: twig.extension }
+

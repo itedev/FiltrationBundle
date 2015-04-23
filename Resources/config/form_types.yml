@@ -1,0 +1,14 @@
+parameters:
+  ite_filtration.form_type.text_filter.class: ITE\FiltrationBundle\Form\Type\TextFilterType
+  ite_filtration.form_type.range_filter.class: ITE\FiltrationBundle\Form\Type\RangeFilterType
+
+services:
+  ite_filtration.form_type.text_filter:
+    class: %ite_filtration.form_type.text_filter.class%
+    tags:
+      - { name: form.type, alias: text_filter }
+
+  ite_filtration.form_type.range_filter:
+    class: %ite_filtration.form_type.range_filter.class%
+    tags:
+      - { name: form.type, alias: range_filter }

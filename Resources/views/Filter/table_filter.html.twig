@@ -1,0 +1,7 @@
+<tr>
+    {{ form_start(form) }}
+    {% for child in form %}
+        <th>{{ form_row(child) }}</th>
+    {% endfor %}
+    {{ form_end(form) }}
+</tr>
