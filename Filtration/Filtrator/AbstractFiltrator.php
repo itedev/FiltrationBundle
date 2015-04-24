@@ -33,6 +33,10 @@ abstract class AbstractFiltrator implements FiltratorInterface
      */
     protected function matchCriteria($target, Criteria $criteria)
     {
+        if (is_array($target)) {
+            $target = new ArrayCollection($target);
+        }
+
         if ($target instanceof ArrayCollection) {
             return $target->matching($criteria);
         } elseif ($target instanceof QueryBuilder) {

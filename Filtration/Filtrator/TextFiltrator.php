@@ -34,12 +34,16 @@ class TextFiltrator extends AbstractFiltrator
      */
     public function filter($target, FormInterface $form)
     {
+        if (!$data = $form->getData()) {
+            return $target;
+        }
+
         $criteria = Criteria::create();
 
         if ($form->getConfig()->getOption('filter_type') == 'contains') {
-           $criteria->andWhere(new Comparison($form->getName(), Comparison::CONTAINS, new Value($form->getData())));
+           $criteria->andWhere(new Comparison($form->getName(), Comparison::CONTAINS, new Value($data)));
         } else {
-            $criteria->andWhere(new Comparison($form->getName(), Comparison::EQ, new Value($form->getData())));
+            $criteria->andWhere(new Comparison($form->getName(), Comparison::EQ, new Value($data)));
         }
 
         return $this->matchCriteria($target, $criteria);
