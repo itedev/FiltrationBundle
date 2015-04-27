@@ -39,16 +39,20 @@ class FiltrationExtension extends \Twig_Extension
 
     /**
      * @param \Twig_Environment $twig
+     * @param                   $filterName
+     * @param array             $context
      * @return string
      */
-    public function render(\Twig_Environment $twig, $filterName)
+    public function render(\Twig_Environment $twig, $filterName, $context = [])
     {
         $filter = $this->filtrator->getFilter($filterName);
 
-        return $twig->render($filter->getTemplateName(), [
-              'form' => $this->filtrator->getFilterForm($filterName)->createView(),
-              'filter' => $filter
-          ]);
+        $context = array_merge($context, [
+            'form' => $this->filtrator->getFilterForm($filterName)->createView(),
+            'filter' => $filter
+        ]);
+
+        return $twig->render($filter->getTemplateName(), $context);
     }
 
     /**

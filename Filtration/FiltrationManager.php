@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class FiltrationManager
 {
-
     /**
      * @var FilterInterface[]
      */
@@ -56,10 +55,7 @@ class FiltrationManager
             $filter = $this->getFilter($filter);
         }
 
-        $form = $filter->getFilterForm($this->formFactory);
-        $request = $this->requestStack->getCurrentRequest();
-
-        $form->handleRequest($request);
+        $form = $this->getFilterForm($filter->getName());
 
         if ($form->isValid()) {
             foreach ($form as $child) {
@@ -105,7 +101,7 @@ class FiltrationManager
         $filter = $this->getFilter($name);
 
         $form = $filter->getFilterForm($this->formFactory);
-        $form->handleRequest($this->requestStack->getCurrentRequest());
+        $form->handleRequest($this->requestStack->getMasterRequest());
 
         return $form;
     }
