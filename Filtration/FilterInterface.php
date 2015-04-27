@@ -18,6 +18,11 @@ interface FilterInterface
     public function getFilterForm(FormFactoryInterface $formFactory);
 
     /**
+     * @param $fieldName
+     */
+    public function markFieldModified($fieldName);
+
+    /**
      * @return string
      */
     public function getTemplateName();

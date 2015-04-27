@@ -59,7 +59,7 @@ class FiltrationManager
 
         if ($form->isValid()) {
             foreach ($form as $child) {
-                $target = $this->filterPart($child, $target);
+                $target = $this->filterPart($child, $target, $filter);
             }
         }
 
@@ -67,14 +67,19 @@ class FiltrationManager
     }
 
     /**
-     * @param FormInterface $form
-     * @param mixed $target
+     * @param FormInterface   $form
+     * @param mixed           $target
+     * @param FilterInterface $filter
      * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\ORM\QueryBuilder
      */
-    private function filterPart($form, $target)
+    private function filterPart(FormInterface $form, $target, FilterInterface $filter)
     {
         $event = new FiltrationEvent($form, $target);
         $this->eventDispatcher->dispatch(FiltrationEvent::EVENT_NAME, $event);
+
+        if ($event->isTargetModified()) {
+            $filter->markFieldModified($event->getFieldName());
+        }
 
         return $event->getTarget();
     }

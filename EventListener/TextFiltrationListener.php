@@ -6,7 +6,9 @@ namespace ITE\FiltrationBundle\EventListener;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\Common\Collections\Expr\Value;
+use ITE\FiltrationBundle\Doctrine\Common\Collections\ArrayCollection;
 use ITE\FiltrationBundle\Event\FiltrationEvent;
+use ITE\FiltrationBundle\Doctrine\Common\Collections\Expr\Comparison as OverridenComparison;
 
 /**
  * Class TextFiltrationListener
@@ -21,7 +23,7 @@ class TextFiltrationListener extends AbstractFiltrationListener
      */
     public function filter(FiltrationEvent $event)
     {
-        $form = $event->getForm();
+        $form   = $event->getForm();
         $target = $event->getTarget();
 
         if (!$this->supportsParentType($form, 'text')) {
@@ -35,7 +37,21 @@ class TextFiltrationListener extends AbstractFiltrationListener
         $criteria = Criteria::create();
 
         if ($form->getConfig()->getOption('filter_type') == 'contains') {
-            $criteria->andWhere(new Comparison($event->getFieldName(), Comparison::CONTAINS, new Value($data)));
+            if ($form->getConfig()->getOption('matching_type') == 'case_insensitive') {
+                if ($target instanceof \Doctrine\Common\Collections\ArrayCollection) {
+                    $target = $target->toArray();
+                }
+                $target = new ArrayCollection($target);
+                $criteria->andWhere(
+                    new Comparison(
+                        $event->getFieldName(),
+                        OverridenComparison::CONTAINS_CASE_INSENSITIVE,
+                        new Value($data)
+                    )
+                );
+            } else {
+                $criteria->andWhere(new Comparison($event->getFieldName(), Comparison::CONTAINS, new Value($data)));
+            }
         } else {
             $criteria->andWhere(new Comparison($event->getFieldName(), Comparison::EQ, new Value($data)));
         }

@@ -32,6 +32,11 @@ class FiltrationEvent extends Event
     private $fieldName;
 
     /**
+     * @var bool
+     */
+    private $targetModified = false;
+
+    /**
      * @param FormInterface                $form
      * @param ArrayCollection|QueryBuilder $target
      * @param string|null                  $fieldName
@@ -66,8 +71,17 @@ class FiltrationEvent extends Event
     public function setTarget($target)
     {
         $this->target = $target;
+        $this->targetModified = true;
 
         return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isTargetModified()
+    {
+        return $this->targetModified;
     }
 
     /**

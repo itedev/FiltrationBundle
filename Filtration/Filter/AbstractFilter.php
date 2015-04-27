@@ -14,6 +14,10 @@ use ITE\FiltrationBundle\Filtration\FilterInterface;
 abstract class AbstractFilter implements FilterInterface
 {
     /**
+     * @var array
+     */
+    protected $modifiedFields = [];
+    /**
      * @return string
      */
     public function getTemplateName()
@@ -21,4 +25,28 @@ abstract class AbstractFilter implements FilterInterface
         return 'ITEFiltration:Filter:raw_form.html.twig';
     }
 
+    /**
+     * @param $fieldName
+     */
+    public function markFieldModified($fieldName)
+    {
+        $this->modifiedFields []= $fieldName;
+    }
+
+    /**
+     * @return array
+     */
+    public function getModifiedFields()
+    {
+        return $this->modifiedFields;
+    }
+
+    /**
+     * @param $fieldName
+     * @return bool
+     */
+    public function isFieldModified($fieldName)
+    {
+        return in_array($fieldName, $this->modifiedFields);
+    }
 } 
