@@ -1,30 +1,57 @@
 <?php
 
 
-namespace ITE\FiltrationBundle\Filtration\Filtrator;
-
+namespace ITE\FiltrationBundle\EventListener;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
-use ITE\FiltrationBundle\Filtration\FiltratorInterface;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * Class AbstractFiltrator
+ * Class AbstractFiltrationListener
  *
  * @author sam0delkin <t.samodelkin@gmail.com>
  */
-abstract class AbstractFiltrator implements FiltratorInterface
+abstract class AbstractFiltrationListener implements FiltrationListenerInterface
 {
     /**
      * @param FormInterface $form
-     * @param $typeName
+     * @param string        $typeName
      * @return bool
      */
     protected function supportsType(FormInterface $form, $typeName)
     {
         return $form->getConfig()->getType()->getName() === $typeName;
+    }
+
+    /**
+     * @param FormInterface $form
+     * @param array         $types
+     * @return bool
+     */
+    protected function supportsTypes(FormInterface $form, $types)
+    {
+        return in_array($form->getConfig()->getType()->getName(), $types);
+    }
+
+    /**
+     * @param FormInterface $form
+     * @param string        $type
+     * @return bool
+     */
+    protected function supportsParentType(FormInterface $form, $type)
+    {
+        $root = $form;
+
+        while (null !== $root->getParent()) {
+            if ($type === $root->getConfig()->getType()->getName()) {
+                return true;
+            }
+            $root = $root->getParent();
+        }
+
+        return false;
     }
 
     /**
@@ -49,7 +76,9 @@ abstract class AbstractFiltrator implements FiltratorInterface
                 $type = gettype($target);
             }
 
-            throw new \InvalidArgumentException(sprintf('Filter supports only "ArrayCollection" and "QueryBuilder", "%s" given', $type));
+            throw new \InvalidArgumentException(
+                sprintf('Filter supports only "ArrayCollection" and "QueryBuilder", "%s" given', $type)
+            );
         }
     }
-} 
+}

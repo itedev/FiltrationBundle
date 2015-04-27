@@ -1,20 +1,27 @@
 parameters:
-  ite_filtration.filtrator.text.class: ITE\FiltrationBundle\Filtration\Filtrator\TextFiltrator
-  ite_filtration.filtrator.range.class: ITE\FiltrationBundle\Filtration\Filtrator\RangeFiltrator
-  ite_filtration.filtrator.filter_collection.class: ITE\FiltrationBundle\Filtration\Filtrator\FilterCollectionFiltrator
+  ite_filtration.filtrator.text.class: ITE\FiltrationBundle\EventListener\TextFiltrationListener
+  ite_filtration.filtrator.range.class: ITE\FiltrationBundle\EventListener\RangeFiltrationListener
+  ite_filtration.filtrator.filter_collection.class: ITE\FiltrationBundle\EventListener\FilterCollectionFiltrationListener
+  ite_filtration.filtrator.choice.class: ITE\FiltrationBundle\EventListener\ChoiceFiltrationListener
 
 services:
   ite_filtration.filtrator.text:
     class: %ite_filtration.filtrator.text.class%
     tags:
-      - { name: ite_filtration.filtrator }
+      - { name: kernel.event_listener, event: ite_filtration.filter, method: filter }
 
   ite_filtration.filtrator.range:
     class: %ite_filtration.filtrator.range.class%
     tags:
-      - { name: ite_filtration.filtrator }
+      - { name: kernel.event_listener, event: ite_filtration.filter, method: filter }
 
   ite_filtration.filter_collection.range:
     class: %ite_filtration.filtrator.filter_collection.class%
+    arguments: [@event_dispatcher]
     tags:
-      - { name: ite_filtration.filtrator }
+      - { name: kernel.event_listener, event: ite_filtration.filter, method: filter }
+
+  ite_filtration.choice.range:
+    class: %ite_filtration.filtrator.choice.class%
+    tags:
+      - { name: kernel.event_listener, event: ite_filtration.filter, method: filter }

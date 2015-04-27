@@ -3,6 +3,8 @@
 
 namespace ITE\FiltrationBundle\Filtration;
 
+use ITE\FiltrationBundle\Event\FiltrationEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -14,10 +16,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class FiltrationManager
 {
-    /**
-     * @var FiltratorInterface[]
-     */
-    private $filtrators = [];
 
     /**
      * @var FilterInterface[]
@@ -34,10 +32,16 @@ class FiltrationManager
      */
     private $formFactory;
 
-    function __construct($formFactory, $requestStack)
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    function __construct(FormFactoryInterface $formFactory, RequestStack $requestStack, EventDispatcherInterface $eventDispatcher)
     {
         $this->formFactory = $formFactory;
         $this->requestStack = $requestStack;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
 
@@ -68,18 +72,15 @@ class FiltrationManager
 
     /**
      * @param FormInterface $form
-     * @param mixed $data
+     * @param mixed $target
      * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\ORM\QueryBuilder
      */
-    private function filterPart($form, $data)
+    private function filterPart($form, $target)
     {
-        foreach ($this->filtrators as $filtrator) {
-            if ($filtrator->supports($form)) {
-               return $filtrator->filter($data, $form);
-            }
-        }
+        $event = new FiltrationEvent($form, $target);
+        $this->eventDispatcher->dispatch(FiltrationEvent::EVENT_NAME, $event);
 
-        return $data;
+        return $event->getTarget();
     }
 
     /**
@@ -110,18 +111,6 @@ class FiltrationManager
     }
 
     /**
-     * @param FiltratorInterface $filtrator
-     */
-    public function addFiltrator(FiltratorInterface $filtrator)
-    {
-        if ($filtrator instanceof FiltrationAwareInterface) {
-            $filtrator->setFiltrationManager($this);
-        }
-
-        $this->filtrators []= $filtrator;
-    }
-
-    /**
      * @param FilterInterface $filter
      */
     public function addFilter(FilterInterface $filter)
@@ -130,19 +119,7 @@ class FiltrationManager
             throw new \InvalidArgumentException(sprintf('Filter "%s" has been already registered.', $filter->getName()));
         }
 
-        if ($filter instanceof FiltrationAwareInterface) {
-            $filter->setFiltrationManager($this);
-        }
-
         $this->filters[$filter->getName()] = $filter;
-    }
-
-    /**
-     * @return FiltratorInterface[]
-     */
-    public function getFiltrators()
-    {
-        return $this->filtrators;
     }
 
     /**
