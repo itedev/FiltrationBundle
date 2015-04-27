@@ -24,26 +24,25 @@ class TextFiltrator extends AbstractFiltrator
      */
     public function supports(FormInterface $form)
     {
-        return $this->supportsType($form, 'text_filter');
+        return $this->supportsType($form, 'text');
     }
 
     /**
-     * @param ArrayCollection|QueryBuilder $target
-     * @param mixed $form
-     * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\ORM\QueryBuilder|void
+     * @inheritdoc
      */
-    public function filter($target, FormInterface $form)
+    public function filter($target, FormInterface $form, $fieldName = null)
     {
         if (!$data = $form->getData()) {
             return $target;
         }
+        $fieldName = $fieldName ?: $form->getName();
 
         $criteria = Criteria::create();
 
         if ($form->getConfig()->getOption('filter_type') == 'contains') {
-           $criteria->andWhere(new Comparison($form->getName(), Comparison::CONTAINS, new Value($data)));
+           $criteria->andWhere(new Comparison($fieldName, Comparison::CONTAINS, new Value($data)));
         } else {
-            $criteria->andWhere(new Comparison($form->getName(), Comparison::EQ, new Value($data)));
+            $criteria->andWhere(new Comparison($fieldName, Comparison::EQ, new Value($data)));
         }
 
         return $this->matchCriteria($target, $criteria);

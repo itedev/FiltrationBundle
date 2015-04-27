@@ -28,8 +28,9 @@ abstract class AbstractFiltrator implements FiltratorInterface
     }
 
     /**
-     * @param $target
+     * @param          $target
      * @param Criteria $criteria
+     * @return \Doctrine\Common\Collections\Collection|QueryBuilder|static
      */
     protected function matchCriteria($target, Criteria $criteria)
     {

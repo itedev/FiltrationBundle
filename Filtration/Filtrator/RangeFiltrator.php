@@ -28,18 +28,17 @@ class RangeFiltrator extends AbstractFiltrator
     }
 
     /**
-     * @param ArrayCollection|QueryBuilder $target
-     * @param FormInterface $form
-     * @return ArrayCollection|QueryBuilder
+     * @inheritdoc
      */
-    public function filter($target, FormInterface $form)
+    public function filter($target, FormInterface $form, $fieldName = null)
     {
         $from = $form->getData()['from'];
         $to = $form->getData()['to'];
+        $fieldName = $fieldName ?: $form->getName();
 
         $criteria = Criteria::create();
-        $criteria->andWhere(new Comparison($form->getName(), Comparison::GTE, new Value($from)));
-        $criteria->andWhere(new Comparison($form->getName(), Comparison::LTE, new Value($to)));
+        $criteria->andWhere(new Comparison($fieldName, Comparison::GTE, new Value($from)));
+        $criteria->andWhere(new Comparison($fieldName, Comparison::LTE, new Value($to)));
 
         return $this->matchCriteria($target, $criteria);
     }

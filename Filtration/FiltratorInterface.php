@@ -18,9 +18,10 @@ interface FiltratorInterface
     public function supports(FormInterface $form);
 
     /**
-     * @param ArrayCollection|QueryBuilder  $target
-     * @param FormInterface $form
+     * @param ArrayCollection|QueryBuilder $target
+     * @param FormInterface                $form
+     * @param string|null                  $fieldName
      * @return ArrayCollection|QueryBuilder
      */
-    public function filter($target, FormInterface $form);
+    public function filter($target, FormInterface $form, $fieldName = null);
 } 

@@ -114,6 +114,10 @@ class FiltrationManager
      */
     public function addFiltrator(FiltratorInterface $filtrator)
     {
+        if ($filtrator instanceof FiltrationAwareInterface) {
+            $filtrator->setFiltrationManager($this);
+        }
+
         $this->filtrators []= $filtrator;
     }
 
@@ -126,6 +130,26 @@ class FiltrationManager
             throw new \InvalidArgumentException(sprintf('Filter "%s" has been already registered.', $filter->getName()));
         }
 
+        if ($filter instanceof FiltrationAwareInterface) {
+            $filter->setFiltrationManager($this);
+        }
+
         $this->filters[$filter->getName()] = $filter;
+    }
+
+    /**
+     * @return FiltratorInterface[]
+     */
+    public function getFiltrators()
+    {
+        return $this->filtrators;
+    }
+
+    /**
+     * @return FilterInterface[]
+     */
+    public function getFilters()
+    {
+        return $this->filters;
     }
 } 

@@ -1,14 +1,20 @@
 parameters:
-  ite_filtration.form_type.text_filter.class: ITE\FiltrationBundle\Form\Type\TextFilterType
-  ite_filtration.form_type.range_filter.class: ITE\FiltrationBundle\Form\Type\RangeFilterType
+  ite_filtration.form.type_extension.text.class: ITE\FiltrationBundle\Form\TypeExtension\TextTypeExtension
+  ite_filtration.form.type.range_filter.class: ITE\FiltrationBundle\Form\Type\RangeFilterType
+  ite_filtration.form.type.filter_collection.class: ITE\FiltrationBundle\Form\Type\FilterCollectionType
 
 services:
-  ite_filtration.form_type.text_filter:
-    class: %ite_filtration.form_type.text_filter.class%
+  ite_filtration.form.type_extension.text:
+    class: %ite_filtration.form.type_extension.text.class%
     tags:
-      - { name: form.type, alias: text_filter }
+      - { name: form.type_extension, alias: text }
 
-  ite_filtration.form_type.range_filter:
-    class: %ite_filtration.form_type.range_filter.class%
+  ite_filtration.form.type.range_filter:
+    class: %ite_filtration.form.type.range_filter.class%
     tags:
       - { name: form.type, alias: range_filter }
+
+  ite_filtration.form.type.filter_collection:
+    class: %ite_filtration.form.type.filter_collection.class%
+    tags:
+      - { name: form.type, alias: filter_collection }

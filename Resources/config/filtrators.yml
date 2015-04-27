@@ -1,6 +1,7 @@
 parameters:
   ite_filtration.filtrator.text.class: ITE\FiltrationBundle\Filtration\Filtrator\TextFiltrator
   ite_filtration.filtrator.range.class: ITE\FiltrationBundle\Filtration\Filtrator\RangeFiltrator
+  ite_filtration.filtrator.filter_collection.class: ITE\FiltrationBundle\Filtration\Filtrator\FilterCollectionFiltrator
 
 services:
   ite_filtration.filtrator.text:
@@ -10,5 +11,10 @@ services:
 
   ite_filtration.filtrator.range:
     class: %ite_filtration.filtrator.range.class%
+    tags:
+      - { name: ite_filtration.filtrator }
+
+  ite_filtration.filter_collection.range:
+    class: %ite_filtration.filtrator.filter_collection.class%
     tags:
       - { name: ite_filtration.filtrator }
