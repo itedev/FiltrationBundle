@@ -4,7 +4,7 @@
 namespace ITE\FiltrationBundle\Doctrine\Common\Collections\Expr;
 
 use Doctrine\Common\Collections\Expr\ClosureExpressionVisitor as BaseClosureExpressionVisitor;
-use Doctrine\Common\Collections\Expr\Comparison;
+use Doctrine\Common\Collections\Expr\Comparison as BaseComparison;
 use ITE\FiltrationBundle\Doctrine\Common\Collections\Expr\Comparison as OverridenComparison;
 
 /**
@@ -15,7 +15,7 @@ use ITE\FiltrationBundle\Doctrine\Common\Collections\Expr\Comparison as Override
 class ClosureExpressionVisitor extends BaseClosureExpressionVisitor
 {
 
-    public function walkComparison(Comparison $comparison)
+    public function walkComparison(BaseComparison $comparison)
     {
         $field = $comparison->getField();
         $value = $comparison->getValue()->getValue();
