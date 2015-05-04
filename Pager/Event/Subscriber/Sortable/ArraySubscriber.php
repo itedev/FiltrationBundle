@@ -31,11 +31,11 @@ class ArraySubscriber implements EventSubscriberInterface
      */
     public function items(ItemsEvent $event)
     {
-        if (!is_array($event->target)) {
+        if (!is_array($event->target) && !($event->target instanceof ArrayCollection)) {
             return;
         }
 
-        $target = new ArrayCollection($event->target);
+        $target = $event->target instanceof ArrayCollection ? $event->target : new ArrayCollection($event->target);
 
         if (!isset($_GET[$event->options['sortFieldParameterName']])) {
             return;
