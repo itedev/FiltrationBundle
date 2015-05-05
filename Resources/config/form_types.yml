@@ -2,6 +2,7 @@ parameters:
   ite_filtration.form.type_extension.text.class: ITE\FiltrationBundle\Form\TypeExtension\TextTypeExtension
   ite_filtration.form.type.range_filter.class: ITE\FiltrationBundle\Form\Type\RangeFilterType
   ite_filtration.form.type.filter_collection.class: ITE\FiltrationBundle\Form\Type\FilterCollectionType
+  ite_filtration.form.type.callback_filter.class: ITE\FiltrationBundle\Form\Type\CallbackFilterType
 
 services:
   ite_filtration.form.type_extension.text:
@@ -18,3 +19,8 @@ services:
     class: %ite_filtration.form.type.filter_collection.class%
     tags:
       - { name: form.type, alias: filter_collection }
+
+  ite_filtration.form.type.callback_filter:
+    class: %ite_filtration.form.type.callback_filter.class%
+    tags:
+      - { name: form.type, alias: callback_filter }

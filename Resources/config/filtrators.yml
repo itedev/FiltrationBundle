@@ -3,6 +3,7 @@ parameters:
   ite_filtration.filtrator.range.class: ITE\FiltrationBundle\EventListener\RangeFiltrationListener
   ite_filtration.filtrator.filter_collection.class: ITE\FiltrationBundle\EventListener\FilterCollectionFiltrationListener
   ite_filtration.filtrator.choice.class: ITE\FiltrationBundle\EventListener\ChoiceFiltrationListener
+  ite_filtration.filtrator.callback_filter.class: ITE\FiltrationBundle\EventListener\CallbackFiltrationListener
 
 services:
   ite_filtration.filtrator.text:
@@ -15,13 +16,18 @@ services:
     tags:
       - { name: kernel.event_listener, event: ite_filtration.filter, method: filter }
 
-  ite_filtration.filter_collection.range:
+  ite_filtration.filtrator.filter_collection:
     class: %ite_filtration.filtrator.filter_collection.class%
     arguments: [@event_dispatcher]
     tags:
       - { name: kernel.event_listener, event: ite_filtration.filter, method: filter }
 
-  ite_filtration.choice.range:
+  ite_filtration.filtrator.choice:
     class: %ite_filtration.filtrator.choice.class%
+    tags:
+      - { name: kernel.event_listener, event: ite_filtration.filter, method: filter }
+
+  ite_filtration.filtrator.callback_filter:
+    class: %ite_filtration.filtrator.callback_filter.class%
     tags:
       - { name: kernel.event_listener, event: ite_filtration.filter, method: filter }

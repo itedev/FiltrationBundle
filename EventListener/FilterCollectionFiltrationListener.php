@@ -17,14 +17,14 @@ class FilterCollectionFiltrationListener extends AbstractFiltrationListener
     /**
      * @var EventDispatcherInterface
      */
-    private $eventDispatcher;
+    private $dispatcher;
 
     /**
      * @param EventDispatcherInterface $eventDispatcher
      */
-    function __construct(EventDispatcherInterface $eventDispatcher)
+    public function __construct(EventDispatcherInterface $eventDispatcher)
     {
-        $this->eventDispatcher = $eventDispatcher;
+        $this->dispatcher = $eventDispatcher;
     }
 
     /**
@@ -47,9 +47,11 @@ class FilterCollectionFiltrationListener extends AbstractFiltrationListener
         /** @var FormInterface $child */
         foreach ($form as $child) {
             $childEvent = new FiltrationEvent($child, $target, $event->getFieldName());
-            $this->eventDispatcher->dispatch(FiltrationEvent::EVENT_NAME, $childEvent);
-            $event->setTarget($childEvent->getTarget());
+            $this->dispatcher->dispatch(FiltrationEvent::EVENT_NAME, $childEvent);
+            $target = $childEvent->getTarget();
         }
+
+        $event->setTarget($target);
     }
 
 }
