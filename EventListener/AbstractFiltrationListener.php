@@ -6,6 +6,8 @@ namespace ITE\FiltrationBundle\EventListener;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\Debug\Exception\UndefinedMethodException;
+use Symfony\Component\Form\Extension\DataCollector\Proxy\ResolvedTypeDataCollectorProxy;
 use Symfony\Component\Form\FormInterface;
 
 /**
@@ -42,10 +44,10 @@ abstract class AbstractFiltrationListener implements FiltrationListenerInterface
      */
     protected function supportsParentType(FormInterface $form, $type)
     {
-        $root = $form;
+        $root = $form->getConfig()->getType();
 
         while (null !== $root->getParent()) {
-            if ($type === $root->getConfig()->getType()->getName()) {
+            if ($type === $root->getName()) {
                 return true;
             }
             $root = $root->getParent();
