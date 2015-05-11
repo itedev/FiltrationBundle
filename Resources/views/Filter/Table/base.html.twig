@@ -1,0 +1,26 @@
+{% block form_start %}
+    {{ form_start(form) }}
+{% endblock %}
+
+{% block table_tag %}
+{% set attr = filter.attributes %}
+{% set table_attr = attr.table_attr|merge({'class': attr.table_attr.class|default('')}) %}
+<table class="{{ attr.table_class }}" {{ table_attr|join(' ') }}>
+    {% endblock %}
+    {% block thead %}
+        <thead>
+        {% for key,header_entry in filter.headers %}
+            {% if form[key] is defined %}
+                {% include filter.filterHeaderTemplate with {filter: filter, form: form[key],  header_entry: header_entry} %}
+            {% else %}
+                {% include filter.rawHeaderTemplate with {header_entry: header_entry, filter: filter} %}
+            {% endif %}
+        {% endfor %}
+        </thead>
+    {% endblock %}
+
+    {% include filter.bodyTemplate with {filter: filter, data: target} %}
+</table>
+{% block form_end %}
+    {{ form_end(form) }}
+{% endblock %}

@@ -1,0 +1,5 @@
+{% set attr = filter.attributes %}
+{% set header_cell_attr = attr.header_cell_attr|merge({'class': attr.header_cell_attr.class|default('')}) %}
+<th class="{{ attr.header_cell_class }}" {{ header_cell_attr|join(' ') }}>
+    {{ header_entry }}
+</th>

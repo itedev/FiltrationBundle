@@ -1,0 +1,22 @@
+{% set attr = filter.attributes %}
+{% set header_cell_attr = attr.header_cell_attr|merge({'class': attr.header_cell_attr.class|default('')}) %}
+<th class="{{ attr.header_cell_class }}" {{ header_cell_attr|join(' ') }}>
+    {% set attr = filter.attributes.filter_header %}
+    <div class="dropdown {{ attr.wrapper_class }}">
+        <button type="button" data-toggle="dropdown"
+                class="dropdown-toggle{{ attr.button_class }}{% if filter.isFieldModified('totalAmount') %}{{ attr.button_active_class }}{% endif %}"
+                aria-expanded="true">
+            {{ header_entry }}
+            {% if attr.icon %}
+                <i class="fa fa-{{ attr.icon }}"></i>
+            {% endif %}
+        </button>
+        <ul class="dropdown-menu {{ attr.list_class }}">
+            <li class="{{ attr.list_item_class }}">
+                <div class="{{ attr.field_wrapper_class }}">
+                    {{ form_row(form) }}
+                </div>
+            </li>
+        </ul>
+    </div>
+</th>
