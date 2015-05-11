@@ -35,31 +35,6 @@ abstract class TableFilter extends AbstractFilter
         return '@ITEFiltrationBundle/Resources/views/Filter/Table/base.html.twig';
     }
 
-    public function getBodyTemplate()
-    {
-        return '@ITEFiltrationBundle/Resources/views/Filter/Table/body.html.twig';
-    }
-
-    public function getRowTemplate()
-    {
-        return '@ITEFiltrationBundle/Resources/views/Filter/Table/row.html.twig';
-    }
-
-    public function getCellTemplate()
-    {
-        return '@ITEFiltrationBundle/Resources/views/Filter/Table/cell.html.twig';
-    }
-
-    public function getFilterHeaderTemplate()
-    {
-        return '@ITEFiltrationBundle/Resources/views/Filter/Table/filter_header.html.twig';
-    }
-
-    public function getRawHeaderTemplate()
-    {
-        return '@ITEFiltrationBundle/Resources/views/Filter/Table/raw_header.html.twig';
-    }
-
     /**
      * @return array
      */

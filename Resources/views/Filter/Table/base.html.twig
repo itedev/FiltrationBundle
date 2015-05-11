@@ -2,25 +2,92 @@
     {{ form_start(form) }}
 {% endblock %}
 
-{% block table_tag %}
 {% set attr = filter.attributes %}
 {% set table_attr = attr.table_attr|merge({'class': attr.table_attr.class|default('')}) %}
+{% block table_tag %}
+
 <table class="{{ attr.table_class }}" {{ table_attr|join(' ') }}>
     {% endblock %}
     {% block thead %}
         <thead>
         {% for key,header_entry in filter.headers %}
             {% if form[key] is defined %}
-                {% include filter.filterHeaderTemplate with {filter: filter, form: form[key],  header_entry: header_entry} %}
+
+                {% set attr = filter.attributes %}
+                {% set filter_form_row = form[key] %}
+                {% set header_key = key %}
+                {% set header_cell_attr = attr.header_cell_attr|merge({'class': attr.header_cell_attr.class|default('')}) %}
+
+                {% block filter_header %}
+                    <th class="{{ attr.header_cell_class }}" {{ header_cell_attr|join(' ') }}>
+                        {% set attr = filter.attributes.filter_header %}
+                        <div class="dropdown {{ attr.wrapper_class }}">
+                            <button type="button" data-toggle="dropdown"
+                                    class="dropdown-toggle{{ attr.button_class }}{% if filter.isFieldModified(header_key) %} {{ attr.button_active_class }}{% endif %}"
+                                    aria-expanded="true">
+                                {{ header_entry }}
+                                {% if attr.icon %}
+                                    <i class="fa fa-{{ attr.icon }}"></i>
+                                {% endif %}
+                            </button>
+                            <ul class="dropdown-menu {{ attr.list_class }}">
+                                <li class="{{ attr.list_item_class }}">
+                                    <div class="{{ attr.field_wrapper_class }}">
+                                        {{ form_row(filter_form_row) }}
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+                {% endblock %}
+
+                {#{% include filter.filterHeaderTemplate with {filter: filter, form: form[key],  header_entry: header_entry} %}#}
             {% else %}
-                {% include filter.rawHeaderTemplate with {header_entry: header_entry, filter: filter} %}
+
+                {% set attr = filter.attributes %}
+                {% set header_cell_attr = attr.header_cell_attr|merge({'class': attr.header_cell_attr.class|default('')}) %}
+
+                {% block raw_header %}
+                    <th class="{{ attr.header_cell_class }}" {{ header_cell_attr|join(' ') }}>
+                        {{ header_entry }}
+                    </th>
+                {% endblock %}
+
+                {#{% include filter.rawHeaderTemplate with {header_entry: header_entry, filter: filter} %}#}
             {% endif %}
         {% endfor %}
         </thead>
     {% endblock %}
+    <tbody>
+    {% block filter_body %}
+        {% for key,item in target %}
 
-    {% include filter.bodyTemplate with {filter: filter, data: target} %}
+            {% set attr = filter.attributes %}
+            {% set row_attr = attr.row_attr|merge({'class': attr.row_attr.class|default('')}) %}
+
+            {% block filter_row %}
+                <tr class="{{ attr.row_class }}" {{ row_attr|join(' ') }}>
+                    {% for field,name in filter.headers %}
+
+                        {% set attr = filter.attributes %}
+                        {% set cell_attr = attr.cell_attr|merge({'class': attr.cell_attr.class|default('')}) %}
+
+                        {% block filter_cell %}
+                            <td class="{{ attr.cell_class }}" {{ cell_attr|join(' ') }}>
+                                {{ attribute(item, field) }}
+                            </td>
+                        {% endblock %}
+                        {#{% include filter.cellTemplate with {field: row[field], filter: filter} %}#}
+                    {% endfor %}
+                </tr>
+            {% endblock %}
+            {#{% include filter.rowTemplate with {filter: filter, row: item} %}#}
+        {% endfor %}
+    {% endblock %}
+    </tbody>
+
 </table>
 {% block form_end %}
     {{ form_end(form) }}
 {% endblock %}
+

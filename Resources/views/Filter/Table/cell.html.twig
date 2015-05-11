@@ -1,5 +1,0 @@
-{% set attr = filter.attributes %}
-{% set cell_attr = attr.cell_attr|merge({'class': attr.cell_attr.class|default('')}) %}
-<td class="{{ attr.cell_class }}" {{ cell_attr|join(' ') }}>
-{{ field }}
-</td>

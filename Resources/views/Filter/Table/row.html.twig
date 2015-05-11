@@ -1,7 +1,0 @@
-{% set attr = filter.attributes %}
-{% set row_attr = attr.row_attr|merge({'class': attr.row_attr.class|default('')}) %}
-<tr class="{{ attr.row_class }}" {{ row_attr|join(' ') }}>
-    {% for field,name in filter.headers %}
-        {% include filter.cellTemplate with {field: row[field], filter: filter} %}
-    {% endfor %}
-</tr>
