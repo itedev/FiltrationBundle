@@ -108,7 +108,9 @@ class FiltrationManager
         $form = $filter->getFilterForm($this->formFactory);
         $request = $this->requestStack->getMasterRequest();
 
-        $form->submit($request->query->get($form->getName()));
+        if ($request->query->has($form->getName())) {
+            $form->submit($request->query->get($form->getName()));
+        }
 
         return $form;
     }
