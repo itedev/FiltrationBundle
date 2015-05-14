@@ -23,7 +23,8 @@
                         {% set attr = filter.attributes.filter_header %}
                         <div class="dropdown {{ attr.wrapper_class }}">
                             <button type="button" data-toggle="dropdown"
-                                    class="dropdown-toggle{{ attr.button_class }}{% if filter.isFieldModified(header_key) %} {{ attr.button_active_class }}{% endif %}"
+                                    id="dropdown_toggle_{{ filter_form_row.vars.name }}"
+                                    class="dropdown-toggle {{ attr.button_class }}{% if filter.isFieldModified(header_key) %} {{ attr.button_active_class }}{% endif %}"
                                     aria-expanded="true">
                                 {{ header_entry }}
                                 {% if attr.icon %}
