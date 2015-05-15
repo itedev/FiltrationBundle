@@ -32,6 +32,7 @@ class CallbackFilterEvent extends FiltrationEvent
      */
     public function getCriteria()
     {
+        $this->targetModified = true;
         return $this->criteria;
     }
 }

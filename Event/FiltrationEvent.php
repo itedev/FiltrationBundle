@@ -34,7 +34,7 @@ class FiltrationEvent extends Event
     /**
      * @var bool
      */
-    private $targetModified = false;
+    protected  $targetModified = false;
 
     /**
      * @param FormInterface                $form

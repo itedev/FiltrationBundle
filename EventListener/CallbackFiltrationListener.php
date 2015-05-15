@@ -33,7 +33,10 @@ class CallbackFiltrationListener extends AbstractFiltrationListener
         $callbackEvent = new CallbackFilterEvent($form->get('callback_filter'), $target);
         call_user_func($form->getConfig()->getOption('callback'), $callbackEvent);
 
-        $event->setTarget($this->matchCriteria($target, $callbackEvent->getCriteria()));
+        if ($callbackEvent->isTargetModified()) {
+            $target = $event->getTarget();
+            $event->setTarget($this->matchCriteria($target, $callbackEvent->getCriteria()));
+        }
 
     }
 
