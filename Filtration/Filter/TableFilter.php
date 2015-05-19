@@ -23,7 +23,8 @@ abstract class TableFilter extends AbstractFilter
         'header_cell_attr' => [],
         'filter_header' => [
             'wrapper_class' => '',
-            'button_class' => 'btn btn-link',
+            'link_class' => 'btn btn-link',
+            'span_class' => 'btn btn-link',
             'button_active_class' => 'active',
             'icon' => '',
             'list_class' => '',
