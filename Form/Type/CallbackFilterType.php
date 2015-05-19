@@ -1,20 +1,29 @@
 <?php
 
-
 namespace ITE\FiltrationBundle\Form\Type;
-
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Class CallbackFilterType
+ *
+ * @author sam0delkin <t.samodelkin@gmail.com>
+ */
 class CallbackFilterType extends AbstractType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('callback_filter', $options['type'], $options['options']);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setRequired(['callback', 'type']);
@@ -24,9 +33,7 @@ class CallbackFilterType extends AbstractType
     }
 
     /**
-     * Returns the name of this type.
-     *
-     * @return string The name of this type
+     * {@inheritdoc}
      */
     public function getName()
     {

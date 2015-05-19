@@ -1,5 +1,5 @@
 parameters:
-  ite_filtration.form.type_extension.text.class: ITE\FiltrationBundle\Form\TypeExtension\TextTypeExtension
+  ite_filtration.form.type_extension.text.class: ITE\FiltrationBundle\Form\Extension\TextTypeFilterExtension
   ite_filtration.form.type.range_filter.class: ITE\FiltrationBundle\Form\Type\RangeFilterType
   ite_filtration.form.type.filter_collection.class: ITE\FiltrationBundle\Form\Type\FilterCollectionType
   ite_filtration.form.type.callback_filter.class: ITE\FiltrationBundle\Form\Type\CallbackFilterType

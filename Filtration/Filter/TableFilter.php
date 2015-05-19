@@ -1,6 +1,5 @@
 <?php
 
-
 namespace ITE\FiltrationBundle\Filtration\Filter;
 
 /**
@@ -10,6 +9,9 @@ namespace ITE\FiltrationBundle\Filtration\Filter;
  */
 abstract class TableFilter extends AbstractFilter
 {
+    /**
+     * @var array
+     */
     protected $attributes = [
         'table_class' => 'table',
         'table_attr' => [],
@@ -30,6 +32,9 @@ abstract class TableFilter extends AbstractFilter
         ]
     ];
 
+    /**
+     * {@inheritdoc}
+     */
     public function getTemplateName()
     {
         return '@ITEFiltrationBundle/Resources/views/Filter/Table/base.html.twig';
@@ -40,6 +45,7 @@ abstract class TableFilter extends AbstractFilter
      */
     public function getAttributes() {
         $this->attributes = array_replace_recursive($this->attributes, $this->setAttributes($this->attributes));
+
         return $this->attributes;
     }
 

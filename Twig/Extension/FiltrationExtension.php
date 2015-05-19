@@ -21,19 +21,22 @@ class FiltrationExtension extends \Twig_Extension
     /**
      * @param FiltrationManager $filtrator
      */
-    function __construct(FiltrationManager $filtrator)
+    public function __construct(FiltrationManager $filtrator)
     {
         $this->filtrator = $filtrator;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getFunctions()
     {
         return [
-          new \Twig_SimpleFunction(
-            'ite_filtration_render',
-            array($this, 'render'),
-            array('pre_escape' => 'html', 'is_safe' => array('html'), 'needs_environment' => true)
-          ),
+            new \Twig_SimpleFunction(
+                'ite_filtration_render',
+                [$this, 'render'],
+                ['pre_escape' => 'html', 'is_safe' => ['html'], 'needs_environment' => true]
+            ),
         ];
     }
 
@@ -43,7 +46,7 @@ class FiltrationExtension extends \Twig_Extension
      * @param array             $context
      * @return string
      */
-    public function render(\Twig_Environment $twig, $filterName, $context = [])
+    public function render(\Twig_Environment $twig, $filterName, array $context = [])
     {
         $filter = $this->filtrator->getFilter($filterName);
 

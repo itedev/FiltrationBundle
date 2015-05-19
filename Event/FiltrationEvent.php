@@ -17,6 +17,7 @@ use Symfony\Component\Form\FormInterface;
 class FiltrationEvent extends Event
 {
     const EVENT_NAME = 'ite_filtration.filter';
+
     /**
      * @var FormInterface
      */
@@ -34,7 +35,7 @@ class FiltrationEvent extends Event
     /**
      * @var bool
      */
-    protected  $targetModified = false;
+    protected $targetModified = false;
 
     /**
      * @param FormInterface                $form
@@ -47,7 +48,6 @@ class FiltrationEvent extends Event
         $this->target    = $target;
         $this->fieldName = $fieldName;
     }
-
 
     /**
      * @return FormInterface
@@ -67,6 +67,7 @@ class FiltrationEvent extends Event
 
     /**
      * @param ArrayCollection|QueryBuilder $target
+     * @return $this
      */
     public function setTarget($target)
     {

@@ -35,7 +35,6 @@ class TextFiltrationListener extends AbstractFiltrationListener
         }
 
         $criteria = Criteria::create();
-
         if ($form->getConfig()->getOption('filter_type') == 'contains') {
             if ($form->getConfig()->getOption('matching_type') == 'case_insensitive') {
                 if ($target instanceof \Doctrine\Common\Collections\ArrayCollection) {

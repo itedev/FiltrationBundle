@@ -1,18 +1,16 @@
 <?php
 
-
-namespace ITE\FiltrationBundle\Form\TypeExtension;
-
+namespace ITE\FiltrationBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Class TextTypeExtension
+ * Class TextTypeFilterExtension
  *
  * @author sam0delkin <t.samodelkin@gmail.com>
  */
-class TextTypeExtension extends AbstractTypeExtension
+class TextTypeFilterExtension extends AbstractTypeExtension
 {
     /**
      * @inheritdoc
@@ -28,7 +26,8 @@ class TextTypeExtension extends AbstractTypeExtension
                 'contains', 'equals'
             ],
             'matching_type' => [
-                'case_sensitive', 'case_insensitive'
+                'case_sensitive',
+                'case_insensitive',
             ]
         ]);
     }

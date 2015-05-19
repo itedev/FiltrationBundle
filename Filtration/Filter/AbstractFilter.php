@@ -1,8 +1,6 @@
 <?php
 
-
 namespace ITE\FiltrationBundle\Filtration\Filter;
-
 
 use ITE\FiltrationBundle\Filtration\FilterInterface;
 
@@ -17,6 +15,7 @@ abstract class AbstractFilter implements FilterInterface
      * @var array
      */
     protected $modifiedFields = [];
+
     /**
      * @return string
      */
@@ -30,7 +29,7 @@ abstract class AbstractFilter implements FilterInterface
      */
     public function markFieldModified($fieldName)
     {
-        $this->modifiedFields []= $fieldName;
+        $this->modifiedFields[] = $fieldName;
     }
 
     /**

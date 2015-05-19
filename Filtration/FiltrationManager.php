@@ -1,6 +1,5 @@
 <?php
 
-
 namespace ITE\FiltrationBundle\Filtration;
 
 use ITE\FiltrationBundle\Event\FiltrationEvent;
@@ -36,13 +35,18 @@ class FiltrationManager
      */
     private $eventDispatcher;
 
-    function __construct(FormFactoryInterface $formFactory, RequestStack $requestStack, EventDispatcherInterface $eventDispatcher)
+    /**
+     * @param FormFactoryInterface $formFactory
+     * @param RequestStack $requestStack
+     * @param EventDispatcherInterface $eventDispatcher
+     */
+    public function __construct(FormFactoryInterface $formFactory, RequestStack $requestStack,
+        EventDispatcherInterface $eventDispatcher)
     {
         $this->formFactory = $formFactory;
         $this->requestStack = $requestStack;
         $this->eventDispatcher = $eventDispatcher;
     }
-
 
     /**
      * @param mixed $target

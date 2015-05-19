@@ -4,15 +4,11 @@
 
 {% set attr = filter.attributes %}
 {% set table_attr = attr.table_attr|merge({'class': attr.table_attr.class|default('')}) %}
-{% block table_tag %}
-
-<table class="{{ attr.table_class }}" {{ table_attr|join(' ') }}>
-    {% endblock %}
+{% block table_tag %}<table class="{{ attr.table_class }}" {{ table_attr|join(' ') }}>{% endblock %}
     {% block thead %}
         <thead>
-        {% for key,header_entry in filter.headers %}
+        {% for key, header_entry in filter.headers %}
             {% if form[key] is defined %}
-
                 {% set attr = filter.attributes %}
                 {% set filter_form_row = form[key] %}
                 {% set header_key = key %}
@@ -44,7 +40,6 @@
 
                 {#{% include filter.filterHeaderTemplate with {filter: filter, form: form[key],  header_entry: header_entry} %}#}
             {% else %}
-
                 {% set attr = filter.attributes %}
                 {% set header_cell_attr = attr.header_cell_attr|merge({'class': attr.header_cell_attr.class|default('')}) %}
 
@@ -61,15 +56,13 @@
     {% endblock %}
     <tbody>
     {% block filter_body %}
-        {% for key,item in target %}
-
+        {% for key, item in target %}
             {% set attr = filter.attributes %}
             {% set row_attr = attr.row_attr|merge({'class': attr.row_attr.class|default('')}) %}
 
             {% block filter_row %}
                 <tr class="{{ attr.row_class }}" {{ row_attr|join(' ') }}>
-                    {% for field,name in filter.headers %}
-
+                    {% for field, name in filter.headers %}
                         {% set attr = filter.attributes %}
                         {% set cell_attr = attr.cell_attr|merge({'class': attr.cell_attr.class|default('')}) %}
 
@@ -86,9 +79,8 @@
         {% endfor %}
     {% endblock %}
     </tbody>
-
 </table>
+
 {% block form_end %}
     {{ form_end(form) }}
 {% endblock %}
-
