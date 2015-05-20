@@ -25,19 +25,20 @@
                                 {% endif %}
                             </a>
                             {#<button type="button" data-toggle="dropdown"#}
-                                    {#id="dropdown_toggle_{{ filter_form_row.vars.name }}"#}
-                                    {#class="dropdown-toggle {{ attr.link_class }}{% if filter.isFieldModified(header_key) %} {{ attr.button_active_class }}{% endif %}"#}
-                                    {#aria-expanded="true">#}
-                                {#{{ header_entry }}#}
-                                {#{% if attr.icon %}#}
-                                    {#<i class="fa fa-{{ attr.icon }}"></i>#}
-                                {#{% endif %}#}
+                            {#id="dropdown_toggle_{{ filter_form_row.vars.name }}"#}
+                            {#class="dropdown-toggle {{ attr.link_class }}{% if filter.isFieldModified(header_key) %} {{ attr.button_active_class }}{% endif %}"#}
+                            {#aria-expanded="true">#}
+                            {#{{ header_entry }}#}
+                            {#{% if attr.icon %}#}
+                            {#<i class="fa fa-{{ attr.icon }}"></i>#}
+                            {#{% endif %}#}
                             {#</button>#}
                             <ul class="dropdown-menu {{ attr.list_class }}">
                                 <li class="{{ attr.list_item_class }}">
                                     <div class="{{ attr.field_wrapper_class }}">
                                         {{ form_row(filter_form_row) }}
                                     </div>
+                                    {% block filter_header_dropdown_footer %}{% endblock filter_header_dropdown_footer %}
                                 </li>
                             </ul>
                         </div>
@@ -65,27 +66,37 @@
     {% endblock %}
     <tbody>
     {% block filter_body %}
-        {% for key, item in target %}
-            {% set attr = filter.attributes %}
-            {% set row_attr = attr.row_attr|merge({'class': attr.row_attr.class|default('')}) %}
+        {% if target|length != 0 %}
+            {% for key, item in target %}
+                {% set attr = filter.attributes %}
+                {% set row_attr = attr.row_attr|merge({'class': attr.row_attr.class|default('')}) %}
 
-            {% block filter_row %}
-                <tr class="{{ attr.row_class }}" {{ row_attr|join(' ') }}>
-                    {% for field, name in filter.headers %}
-                        {% set attr = filter.attributes %}
-                        {% set cell_attr = attr.cell_attr|merge({'class': attr.cell_attr.class|default('')}) %}
+                {% block filter_row %}
+                    <tr class="{{ attr.row_class }}" {{ row_attr|join(' ') }}>
+                        {% for field, name in filter.headers %}
+                            {% set attr = filter.attributes %}
+                            {% set cell_attr = attr.cell_attr|merge({'class': attr.cell_attr.class|default('')}) %}
 
-                        {% block filter_cell %}
-                            <td class="{{ attr.cell_class }}" {{ cell_attr|join(' ') }}>
-                                {{ attribute(item, field) }}
-                            </td>
-                        {% endblock %}
-                        {#{% include filter.cellTemplate with {field: row[field], filter: filter} %}#}
-                    {% endfor %}
+                            {% block filter_cell %}
+                                <td class="{{ attr.cell_class }}" {{ cell_attr|join(' ') }}>
+                                    {{ attribute(item, field) }}
+                                </td>
+                            {% endblock %}
+                            {#{% include filter.cellTemplate with {field: row[field], filter: filter} %}#}
+                        {% endfor %}
+                    </tr>
+                {% endblock %}
+                {#{% include filter.rowTemplate with {filter: filter, row: item} %}#}
+            {% endfor %}
+        {% else %}
+            {% block filter_empty_row %}
+                <tr>
+                    <td colspan="{{ filter.headers|length }}" class="text-center">
+                        <em>No results</em>
+                    </td>
                 </tr>
-            {% endblock %}
-            {#{% include filter.rowTemplate with {filter: filter, row: item} %}#}
-        {% endfor %}
+            {% endblock filter_empty_row %}
+        {% endif %}
     {% endblock %}
     </tbody>
 </table>
