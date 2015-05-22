@@ -14,34 +14,43 @@
                 {% set header_key = key %}
                 {% set header_cell_attr = attr.header_cell_attr|merge({'class': attr.header_cell_attr.class|default('')}) %}
 
-                {% block filter_header %}
-                    <th class="{{ attr.header_cell_class }}" {{ header_cell_attr|join(' ') }}>
-                        {% set attr = filter.attributes.filter_header %}
+                {% set block_filter_header %}
+                {{ block('filter_header_' ~ key) }}
+                {% endset %}
 
-                        {% block filter_th %}
-                        <div class="dropdown {{ attr.wrapper_class }}">
-                            <a href="#" id="dropdown_toggle_{{ filter_form_row.vars.name }}" class="dropdown-toggle {{ attr.link_class }}{% if filter.isFieldModified(header_key) %} {{ attr.button_active_class }}{% endif %}" data-toggle="dropdown">
-                                {{ header_entry }}
-                                {% if attr.icon %}
-                                    <i class="fa fa-{{ attr.icon }}"></i>
-                                {% endif %}
-                            </a>
-                            <ul class="dropdown-menu {{ attr.list_class }}">
-                                {% block dropdown_inner %}
-                                <li class="{{ attr.list_item_class }}">
-                                    <div class="{{ attr.field_wrapper_class }}">
-                                        {{ form_row(filter_form_row) }}
-                                    </div>
-                                    {% block filter_header_dropdown_footer %}{% endblock filter_header_dropdown_footer %}
-                                </li>
-                                {% endblock %}
-                            </ul>
-                        </div>
-                        {% endblock %}
-                    </th>
-                {% endblock %}
+                {% if block_filter_header.__toString()|trim %}
+                    {{ block_filter_header|raw }}
+                {% else %}
+                    {% block filter_header %}
+                        <th class="{{ attr.header_cell_class }}" {{ header_cell_attr|join(' ') }}>
+                            {% set attr = filter.attributes.filter_header %}
 
-                {#{% include filter.filterHeaderTemplate with {filter: filter, form: form[key],  header_entry: header_entry} %}#}
+                            {% block filter_th %}
+                                <div class="dropdown {{ attr.wrapper_class }}">
+                                    <a href="#" id="dropdown_toggle_{{ filter_form_row.vars.name }}"
+                                       class="dropdown-toggle {{ attr.link_class }}{% if filter.isFieldModified(header_key) %} {{ attr.button_active_class }}{% endif %}"
+                                       data-toggle="dropdown">
+                                        {{ header_entry }}
+                                        {% if attr.icon %}
+                                            <i class="fa fa-{{ attr.icon }}"></i>
+                                        {% endif %}
+                                    </a>
+                                    <ul class="dropdown-menu {{ attr.list_class }}">
+                                        {% block dropdown_inner %}
+                                            <li class="{{ attr.list_item_class }}">
+                                                <div class="{{ attr.field_wrapper_class }}">
+                                                    {{ form_row(filter_form_row) }}
+                                                </div>
+                                                {% block filter_header_dropdown_footer %}{% endblock filter_header_dropdown_footer %}
+                                            </li>
+                                        {% endblock %}
+                                    </ul>
+                                </div>
+                            {% endblock %}
+                        </th>
+                    {% endblock %}
+                {% endif %}
+
             {% else %}
                 {% set attr = filter.attributes %}
                 {% set header_cell_attr = attr.header_cell_attr|merge({'class': attr.header_cell_attr.class|default('')}) %}
@@ -67,22 +76,36 @@
                 {% set attr = filter.attributes %}
                 {% set row_attr = attr.row_attr|merge({'class': attr.row_attr.class|default('')}) %}
 
-                {% block filter_row %}
-                    <tr class="{{ attr.row_class }}" {{ row_attr|join(' ') }}>
-                        {% for field, name in filter.headers %}
-                            {% set attr = filter.attributes %}
-                            {% set cell_attr = attr.cell_attr|merge({'class': attr.cell_attr.class|default('')}) %}
+                {% set block_filter_row %}
+                    {{ block('filter_row_' ~ key) }}
+                {% endset %}
 
-                            {% block filter_cell %}
-                                <td class="{{ attr.cell_class }}" {{ cell_attr|join(' ') }}>
-                                    {{ attribute(item, field) }}
-                                </td>
-                            {% endblock %}
-                            {#{% include filter.cellTemplate with {field: row[field], filter: filter} %}#}
-                        {% endfor %}
-                    </tr>
-                {% endblock %}
-                {#{% include filter.rowTemplate with {filter: filter, row: item} %}#}
+                {% if block_filter_row.__toString()|trim %}
+                    {{ block_filter_row|raw }}
+                {% else %}
+                    {% block filter_row %}
+                        <tr class="{{ attr.row_class }}" {{ row_attr|join(' ') }}>
+                            {% for field, name in filter.headers %}
+                                {% set attr = filter.attributes %}
+                                {% set cell_attr = attr.cell_attr|merge({'class': attr.cell_attr.class|default('')}) %}
+
+                                {% set block_filter_cell %}
+                                    {{ block('filter_cell_' ~ field) }}
+                                {% endset %}
+
+                                {% if block_filter_cell.__toString()|trim %}
+                                    {{ block_filter_cell|raw }}
+                                {% else %}
+                                    {% block filter_cell %}
+                                        <td class="{{ attr.cell_class }}" {{ cell_attr|join(' ') }}>
+                                            {{ attribute(item, field) }}
+                                        </td>
+                                    {% endblock %}
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endblock %}
+                {% endif %}
             {% endfor %}
         {% else %}
             {% block filter_empty_row %}
