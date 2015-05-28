@@ -33,6 +33,11 @@ class FiltrationPass implements CompilerPassInterface
         foreach ($filters as $id => $tags) {
             $definition->addMethodCall('addFilter', [new Reference($id)]);
         }
+
+        $handlers = $container->findTaggedServiceIds('ite_filtration.handler');
+        foreach ($handlers as $id => $tags) {
+            $definition->addMethodCall('addHandler', [new Reference($id)]);
+        }
     }
 
 } 

@@ -1,0 +1,14 @@
+parameters:
+    ite_filtration.handler.array_collection.class: ITE\FiltrationBundle\Filtration\Handler\ArrayCollectionHandler
+    ite_filtration.handler.query_builder.class: ITE\FiltrationBundle\Filtration\Handler\QueryBuilderHandler
+
+services:
+    ite_filtration.handler.array_collection:
+        class: %ite_filtration.handler.array_collection.class%
+        tags:
+            - { name: ite_filtration.handler }
+
+    ite_filtration.handler.query_builder:
+        class: %ite_filtration.handler.query_builder.class%
+        tags:
+            - { name: ite_filtration.handler }

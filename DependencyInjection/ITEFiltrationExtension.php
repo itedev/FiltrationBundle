@@ -26,5 +26,6 @@ class ITEFiltrationExtension extends Extension
         $loader->load('services.yml');
         $loader->load('form_types.yml');
         $loader->load('filtrators.yml');
+        $loader->load('handlers.yml');
     }
 }

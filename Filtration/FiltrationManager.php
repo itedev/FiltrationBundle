@@ -3,6 +3,7 @@
 namespace ITE\FiltrationBundle\Filtration;
 
 use ITE\FiltrationBundle\Event\FiltrationEvent;
+use ITE\FiltrationBundle\Filtration\Handler\HandlerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -13,12 +14,17 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @author sam0delkin <t.samodelkin@gmail.com>
  */
-class FiltrationManager
+class FiltrationManager implements FiltrationInterface
 {
     /**
      * @var FilterInterface[]
      */
     private $filters = [];
+
+    /**
+     * @var HandlerInterface[]
+     */
+    private $handlers = [];
 
     /**
      * @var RequestStack
@@ -49,9 +55,7 @@ class FiltrationManager
     }
 
     /**
-     * @param mixed $target
-     * @param string|FilterInterface $filter
-     * @return mixed
+     * @inheritdoc
      */
     public function filter($target, $filter)
     {
@@ -81,16 +85,23 @@ class FiltrationManager
         $event = new FiltrationEvent($form, $target);
         $this->eventDispatcher->dispatch(FiltrationEvent::EVENT_NAME, $event);
 
+        if ($event->getCriteria()) {
+            foreach ($this->handlers as $handler) {
+                if ($handler->supports($target)) {
+                    $event->setTarget($handler->handle($target, $event->getCriteria()));
+                }
+            }
+        }
+
         if ($event->isTargetModified()) {
-            $filter->markFieldModified($event->getFieldName());
+            $filter->markFieldModified($form->getName());
         }
 
         return $event->getTarget();
     }
 
     /**
-     * @param $name
-     * @return \ITE\FiltrationBundle\Filtration\FilterInterface
+     * @inheritdoc
      */
     public function getFilter($name)
     {
@@ -102,14 +113,18 @@ class FiltrationManager
     }
 
     /**
-     * @param $name
-     * @return FormInterface
+     * @inheritdoc
      */
     public function getFilterForm($name)
     {
         $filter = $this->getFilter($name);
 
         $form = $filter->getFilterForm($this->formFactory);
+
+        if (!$form->getConfig()->getOption('filter_form')) {
+            throw new \LogicException('Filter form should have an option "filter_form" set to true.');
+        }
+
         $request = $this->requestStack->getMasterRequest();
 
         if ($request->query->has($form->getName())) {
@@ -120,7 +135,7 @@ class FiltrationManager
     }
 
     /**
-     * @param FilterInterface $filter
+     * @inheritdoc
      */
     public function addFilter(FilterInterface $filter)
     {
@@ -132,7 +147,15 @@ class FiltrationManager
     }
 
     /**
-     * @return FilterInterface[]
+     * @inheritdoc
+     */
+    public function addHandler(HandlerInterface $handler)
+    {
+        $this->handlers[]= $handler;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getFilters()
     {

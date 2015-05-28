@@ -3,7 +3,7 @@
 
 namespace ITE\FiltrationBundle\EventListener;
 
-use Doctrine\Common\Collections\Criteria;
+use ITE\FiltrationBundle\Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\Common\Collections\Expr\Value;
 use ITE\FiltrationBundle\Doctrine\Common\Collections\ArrayCollection;
@@ -41,6 +41,8 @@ class TextFiltrationListener extends AbstractFiltrationListener
                     $target = $target->toArray();
                 }
                 $target = new ArrayCollection($target);
+                $event->setTarget($target);
+
                 $criteria->andWhere(
                     new Comparison(
                         $event->getFieldName(),
@@ -55,7 +57,6 @@ class TextFiltrationListener extends AbstractFiltrationListener
             $criteria->andWhere(new Comparison($event->getFieldName(), Comparison::EQ, new Value($data)));
         }
 
-        $event->setTarget($this->matchCriteria($target, $criteria));
+        $event->setCriteria($criteria);
     }
-
 }

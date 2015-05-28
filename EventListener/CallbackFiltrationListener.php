@@ -35,7 +35,9 @@ class CallbackFiltrationListener extends AbstractFiltrationListener
 
         if ($callbackEvent->isTargetModified()) {
             $target = $event->getTarget();
-            $event->setTarget($this->matchCriteria($target, $callbackEvent->getCriteria()));
+            $event->setTarget($target);
+        } elseif ($callbackEvent->getCriteria()) {
+            $event->setCriteria($callbackEvent->getCriteria());
         }
     }
 

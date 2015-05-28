@@ -3,7 +3,7 @@
 
 namespace ITE\FiltrationBundle\EventListener;
 
-use Doctrine\Common\Collections\Criteria;
+use ITE\FiltrationBundle\Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
 use ITE\FiltrationBundle\Event\FiltrationEvent;
 
@@ -21,7 +21,6 @@ class ChoiceFiltrationListener extends AbstractFiltrationListener
     public function filter(FiltrationEvent $event)
     {
         $form = $event->getForm();
-        $target = $event->getTarget();
 
         if (!$this->supportsParentType($form, 'choice')) {
             return;
@@ -38,7 +37,7 @@ class ChoiceFiltrationListener extends AbstractFiltrationListener
         $criteria = Criteria::create();
         $criteria->andWhere(new Comparison($event->getFieldName(), Comparison::IN, $data));
 
-        $event->setTarget($this->matchCriteria($target, $criteria));
+        $event->setCriteria($criteria);
     }
 
 }

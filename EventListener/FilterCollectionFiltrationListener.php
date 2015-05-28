@@ -3,6 +3,7 @@
 
 namespace ITE\FiltrationBundle\EventListener;
 
+use ITE\FiltrationBundle\Doctrine\Common\Collections\Criteria;
 use ITE\FiltrationBundle\Event\FiltrationEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormInterface;
@@ -43,15 +44,27 @@ class FilterCollectionFiltrationListener extends AbstractFiltrationListener
         if (!$data = $form->getData()) {
             return;
         }
+        /** @var Criteria $criteria */
+        $criteria = null;
 
         /** @var FormInterface $child */
         foreach ($form as $child) {
             $childEvent = new FiltrationEvent($child, $target, $event->getFieldName());
             $this->dispatcher->dispatch(FiltrationEvent::EVENT_NAME, $childEvent);
-            $target = $childEvent->getTarget();
+
+            if ($childEvent->isTargetModified()) {
+                $target = $childEvent->getTarget();
+                $event->setTarget($target);
+            } elseif ($childEvent->getCriteria()) {
+                $criteria = $criteria ? $criteria->andWhere(
+                    $childEvent->getCriteria()->getWhereExpression()
+                ) : Criteria::create($childEvent->getCriteria()->getWhereExpression());
+            }
         }
 
-        $event->setTarget($target);
+        if ($criteria) {
+            $event->setCriteria($criteria);
+        }
     }
 
 }

@@ -3,7 +3,7 @@
 
 namespace ITE\FiltrationBundle\EventListener;
 
-use Doctrine\Common\Collections\Criteria;
+use ITE\FiltrationBundle\Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\Common\Collections\Expr\Value;
 use ITE\FiltrationBundle\Event\FiltrationEvent;
@@ -22,7 +22,6 @@ class RangeFiltrationListener extends AbstractFiltrationListener
     public function filter(FiltrationEvent $event)
     {
         $form = $event->getForm();
-        $target = $event->getTarget();
 
         if (!$this->supportsParentType($form, 'range_filter')) {
             return;
@@ -39,7 +38,6 @@ class RangeFiltrationListener extends AbstractFiltrationListener
         $criteria->andWhere(new Comparison($event->getFieldName(), Comparison::GTE, new Value($from)));
         $criteria->andWhere(new Comparison($event->getFieldName(), Comparison::LTE, new Value($to)));
 
-        $event->setTarget($this->matchCriteria($target, $criteria));
+        $event->setCriteria($criteria);
     }
-
 }

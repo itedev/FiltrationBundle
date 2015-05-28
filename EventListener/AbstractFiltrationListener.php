@@ -3,11 +3,6 @@
 
 namespace ITE\FiltrationBundle\EventListener;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Debug\Exception\UndefinedMethodException;
-use Symfony\Component\Form\Extension\DataCollector\Proxy\ResolvedTypeDataCollectorProxy;
 use Symfony\Component\Form\FormInterface;
 
 /**
@@ -54,33 +49,5 @@ abstract class AbstractFiltrationListener implements FiltrationListenerInterface
         }
 
         return false;
-    }
-
-    /**
-     * @param          $target
-     * @param Criteria $criteria
-     * @return \Doctrine\Common\Collections\Collection|QueryBuilder|static
-     */
-    protected function matchCriteria($target, Criteria $criteria)
-    {
-        if (is_array($target)) {
-            $target = new ArrayCollection($target);
-        }
-
-        if ($target instanceof ArrayCollection) {
-            return $target->matching($criteria);
-        } elseif ($target instanceof QueryBuilder) {
-            return $target->addCriteria($criteria);
-        } else {
-            if (is_object($target)) {
-                $type = get_class($target);
-            } else {
-                $type = gettype($target);
-            }
-
-            throw new \InvalidArgumentException(
-                sprintf('Filter supports only "ArrayCollection" and "QueryBuilder", "%s" given', $type)
-            );
-        }
     }
 }

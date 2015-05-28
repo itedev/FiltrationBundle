@@ -13,27 +13,5 @@ use Symfony\Component\Form\FormInterface;
  */
 class CallbackFilterEvent extends FiltrationEvent
 {
-    /**
-     * @var Criteria
-     */
-    private $criteria;
 
-    /**
-     * @inheritdoc
-     */
-    public function __construct(FormInterface $form, $target, $fieldName = null)
-    {
-        parent::__construct($form, $target, $fieldName);
-        $this->criteria = Criteria::create();
-    }
-
-    /**
-     * @return Criteria
-     */
-    public function getCriteria()
-    {
-        $this->targetModified = true;
-
-        return $this->criteria;
-    }
 }

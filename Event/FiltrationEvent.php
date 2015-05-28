@@ -5,6 +5,7 @@ namespace ITE\FiltrationBundle\Event;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Form\FormInterface;
@@ -31,6 +32,11 @@ class FiltrationEvent extends Event
      * @var null
      */
     private $fieldName;
+
+    /**
+     * @var Criteria
+     */
+    private $criteria;
 
     /**
      * @var bool
@@ -78,6 +84,25 @@ class FiltrationEvent extends Event
     }
 
     /**
+     * @return Criteria
+     */
+    public function getCriteria()
+    {
+        return $this->criteria;
+    }
+
+    /**
+     * @param Criteria $criteria
+     * @return $this
+     */
+    public function setCriteria(Criteria $criteria)
+    {
+        $this->criteria = $criteria;
+
+        return $this;
+    }
+
+    /**
      * @return boolean
      */
     public function isTargetModified()
@@ -91,5 +116,16 @@ class FiltrationEvent extends Event
     public function getFieldName()
     {
         return $this->fieldName ?: $this->form->getName();
+    }
+
+    /**
+     * @param null $fieldName
+     * @return $this
+     */
+    public function setFieldName($fieldName)
+    {
+        $this->fieldName = $fieldName;
+
+        return $this;
     }
 }

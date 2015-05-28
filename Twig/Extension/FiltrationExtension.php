@@ -4,6 +4,7 @@
 namespace ITE\FiltrationBundle\Twig\Extension;
 
 use ITE\FiltrationBundle\Filtration\FiltrationManager;
+use ITE\FiltrationBundle\Twig\TokenParser\FilterEmbedTokenParser;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -29,14 +30,29 @@ class FiltrationExtension extends \Twig_Extension
     /**
      * {@inheritdoc}
      */
+    public function getTokenParsers()
+    {
+        return [
+            new FilterEmbedTokenParser($this->filtrator)
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction(
-                'ite_filtration_render',
-                [$this, 'render'],
-                ['pre_escape' => 'html', 'is_safe' => ['html'], 'needs_environment' => true]
-            ),
+            new \Twig_SimpleFunction('ite_filtration_render', [$this, 'render'], [
+                'pre_escape' => 'html', 
+                'is_safe' => ['html'], 
+                'needs_environment' => true
+            ]),
+            new \Twig_SimpleFunction('ite_is_block_exists', [$this, 'isBlockExists'], [
+                'pre_escape' => 'html', 
+                'is_safe' => ['html'], 
+                'needs_environment' => true
+            ])
         ];
     }
 
@@ -56,6 +72,17 @@ class FiltrationExtension extends \Twig_Extension
         ]);
 
         return $twig->render($filter->getTemplateName(), $context);
+    }
+
+    /**
+     * @param \Twig_Environment $twig
+     * @param                   $templateName
+     * @param                   $blockName
+     * @return bool
+     */
+    public function isBlockExists(\Twig_Environment $twig, $templateName, $blockName)
+    {
+        return $twig->resolveTemplate($templateName)->hasBlock($blockName);
     }
 
     /**

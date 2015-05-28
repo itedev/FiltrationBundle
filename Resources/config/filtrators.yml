@@ -4,6 +4,8 @@ parameters:
   ite_filtration.filtrator.filter_collection.class: ITE\FiltrationBundle\EventListener\FilterCollectionFiltrationListener
   ite_filtration.filtrator.choice.class: ITE\FiltrationBundle\EventListener\ChoiceFiltrationListener
   ite_filtration.filtrator.callback_filter.class: ITE\FiltrationBundle\EventListener\CallbackFiltrationListener
+  ite_filtration.filtrator.where_to_having_converter.class: ITE\FiltrationBundle\EventListener\QueryBuilder\WhereToHavingConverterFiltrationListener
+  ite_filtration.filtrator.field_alias_guesser.class: ITE\FiltrationBundle\EventListener\QueryBuilder\FieldAliasGuesserFiltrationListener
 
 services:
   ite_filtration.filtrator.text:
@@ -31,3 +33,13 @@ services:
     class: %ite_filtration.filtrator.callback_filter.class%
     tags:
       - { name: kernel.event_listener, event: ite_filtration.filter, method: filter }
+
+  ite_filtration.filtrator.where_to_having_converter:
+    class: %ite_filtration.filtrator.where_to_having_converter.class%
+    tags:
+      - { name: kernel.event_listener, event: ite_filtration.filter, method: filter, priority: -100 }
+
+  ite_filtration.filtrator.field_alias_guesser:
+    class: %ite_filtration.filtrator.field_alias_guesser.class%
+    tags:
+      - { name: kernel.event_listener, event: ite_filtration.filter, method: filter, priority: 100 }
