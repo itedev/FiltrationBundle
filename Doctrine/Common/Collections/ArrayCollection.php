@@ -4,7 +4,7 @@
 namespace ITE\FiltrationBundle\Doctrine\Common\Collections;
 
 use Doctrine\Common\Collections\ArrayCollection as BaseCollection;
-use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Criteria as BaseCriteria;
 use ITE\FiltrationBundle\Doctrine\Common\Collections\Expr\ClosureExpressionVisitor;
 
 /**
@@ -17,7 +17,7 @@ class ArrayCollection extends BaseCollection
     /**
      * @inheritdoc
      */
-    public function matching(Criteria $criteria)
+    public function matching(BaseCriteria $criteria)
     {
         $expr     = $criteria->getWhereExpression();
         $filtered = $this->toArray();
@@ -30,7 +30,7 @@ class ArrayCollection extends BaseCollection
 
         if ($orderings = $criteria->getOrderings()) {
             foreach (array_reverse($orderings) as $field => $ordering) {
-                $next = ClosureExpressionVisitor::sortByField($field, $ordering == Criteria::DESC ? -1 : 1);
+                $next = ClosureExpressionVisitor::sortByField($field, $ordering == BaseCriteria::DESC ? -1 : 1);
             }
 
             uasort($filtered, $next);
