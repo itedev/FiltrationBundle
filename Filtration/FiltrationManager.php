@@ -19,27 +19,27 @@ class FiltrationManager implements FiltrationInterface
     /**
      * @var FilterInterface[]
      */
-    private $filters = [];
+    protected $filters = [];
 
     /**
      * @var HandlerInterface[]
      */
-    private $handlers = [];
+    protected $handlers = [];
 
     /**
      * @var RequestStack
      */
-    private $requestStack;
+    protected $requestStack;
 
     /**
      * @var FormFactoryInterface
      */
-    private $formFactory;
+    protected $formFactory;
 
     /**
      * @var EventDispatcherInterface
      */
-    private $eventDispatcher;
+    protected $eventDispatcher;
 
     /**
      * @param FormFactoryInterface $formFactory
@@ -64,7 +64,6 @@ class FiltrationManager implements FiltrationInterface
         }
 
         $form = $this->getFilterForm($filter->getName());
-
         if ($form->isValid()) {
             foreach ($form as $child) {
                 $target = $this->filterPart($child, $target, $filter);
@@ -118,15 +117,12 @@ class FiltrationManager implements FiltrationInterface
     public function getFilterForm($name)
     {
         $filter = $this->getFilter($name);
-
         $form = $filter->getFilterForm($this->formFactory);
-
         if (!$form->getConfig()->getOption('filter_form')) {
             throw new \LogicException('Filter form should have an option "filter_form" set to true.');
         }
 
         $request = $this->requestStack->getMasterRequest();
-
         if ($request->query->has($form->getName())) {
             $form->submit($request->query->get($form->getName()));
         }
@@ -151,7 +147,7 @@ class FiltrationManager implements FiltrationInterface
      */
     public function addHandler(HandlerInterface $handler)
     {
-        $this->handlers[]= $handler;
+        $this->handlers[] = $handler;
     }
 
     /**

@@ -1,0 +1,12 @@
+sort:
+    alpha:
+        asc: Sort A to Z
+        desc: Sort Z to A
+    numeric:
+        asc: Sort Lowest to Highest
+        desc: Sort Highest to Lowest
+    date:
+        asc: Sort Oldest to Newest
+        desc: Sort Newset to Oldest
+
+no_results: No Results

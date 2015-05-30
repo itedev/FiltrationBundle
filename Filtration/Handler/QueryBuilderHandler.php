@@ -15,7 +15,6 @@ use ITE\FiltrationBundle\Doctrine\ORM\QueryBuilder\QueryBuilderExpressionVisitor
  */
 class QueryBuilderHandler implements HandlerInterface
 {
-
     /**
      * Handle target with a given criteria.
      *

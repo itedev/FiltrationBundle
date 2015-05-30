@@ -44,7 +44,8 @@ abstract class TableFilter extends AbstractFilter
     /**
      * @return array
      */
-    public function getAttributes() {
+    public function getAttributes()
+    {
         $this->attributes = array_replace_recursive($this->attributes, $this->setAttributes($this->attributes));
 
         return $this->attributes;

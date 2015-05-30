@@ -1,47 +1,81 @@
 <?php
 
-
 namespace ITE\FiltrationBundle\Form\Extension;
-
 
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Class FormTypeFilterExtension
+ *
+ * @author sam0delkin <t.samodelkin@gmail.com>
+ */
 class FormTypeFilterExtension extends AbstractTypeExtension
 {
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setRequired([
-            'filter_form',
-        ]);
-        $resolver->setOptional([
-            'filter_field',
-            'filter_aggregate'
-        ]);
-        $resolver->setAllowedTypes([
-            'filter_form' => 'bool',
-            'filter_aggregate' => 'bool',
-        ]);
-        $resolver->setDefaults([
-            'filter_form' => false,
-            'filter_field' => null,
-            'filter_aggregate' => false
-        ]);
-    }
-
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($options['filter_form'] === true) {
-            $builder->setRequired(false);
+        if (isset($options['filter_form']) && true === $options['filter_form']) {
+            $builder
+                ->setRequired(false)
+                ->setMethod('GET')
+            ;
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        if (isset($options['filter_sorting'])) {
+            $view->vars['filter_sorting'] = $options['filter_sorting'];
+        }
+    }
 
     /**
-     * Returns the name of the type being extended.
-     *
-     * @return string The name of the type being extended
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setOptional([
+            'filter_form',
+            'filter_field',
+            'filter_aggregate',
+            'filter_sorting',
+        ]);
+        $resolver->setAllowedTypes([
+            'filter_form' => ['bool'],
+            'filter_field' => ['string'],
+            'filter_aggregate' => ['bool'],
+            'filter_sorting' => ['string'],
+        ]);
+        $resolver->setAllowedValues([
+            'filter_sorting' => [
+                'alpha',
+                'numeric',
+                'date',
+            ],
+        ]);
+        $resolver->setDefaults([
+           'csrf_protection' => function(Options $options, $csrfProtection) {
+               if (isset($options['filter_form']) && true === $options['filter_form']) {
+                   return false;
+               }
+
+               return $csrfProtection;
+           },
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getExtendedType()
     {

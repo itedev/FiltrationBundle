@@ -1,6 +1,6 @@
 parameters:
   ite_filtration.manager.class: ITE\FiltrationBundle\Filtration\FiltrationManager
-  ite_filtration.twig_extension.class: ITE\FiltrationBundle\Twig\Extension\FiltrationExtension
+  ite_filtration.twig.extension.filtration.class: ITE\FiltrationBundle\Twig\Extension\FiltrationExtension
   ite_filtration.knp.pager_sortable.event_subscriber.class: ITE\FiltrationBundle\Pager\Event\Subscriber\Sortable\ArraySubscriber
 
 services:
@@ -13,8 +13,8 @@ services:
 
   ite_filtrator: "@ite_filtration.manager"
 
-  ite_filtration.twig_extension:
-    class: %ite_filtration.twig_extension.class%
+  ite_filtration.twig.extension.filtration:
+    class: %ite_filtration.twig.extension.filtration.class%
     arguments:
       - @ite_filtrator
     tags:

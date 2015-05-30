@@ -17,7 +17,7 @@ class FiltrationExtension extends \Twig_Extension
     /**
      * @var FiltrationManager
      */
-    private $filtrator;
+    protected $filtrator;
 
     /**
      * @param FiltrationManager $filtrator
@@ -86,13 +86,11 @@ class FiltrationExtension extends \Twig_Extension
     }
 
     /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
+     * {@inheritdoc}
      */
     public function getName()
     {
-        return 'ite_filtration';
+        return 'ite_filtration.twig.extension.filtration';
     }
 
 } 

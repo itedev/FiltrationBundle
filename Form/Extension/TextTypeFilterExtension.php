@@ -13,27 +13,28 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class TextTypeFilterExtension extends AbstractTypeExtension
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
             'filter_type' => 'contains',
-            'matching_type' => 'case_sensitive'
+            'matching_type' => 'case_sensitive',
         ]);
         $resolver->setAllowedValues([
             'filter_type' => [
-                'contains', 'equals'
+                'contains',
+                'equals',
             ],
             'matching_type' => [
                 'case_sensitive',
                 'case_insensitive',
-            ]
+            ],
         ]);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getExtendedType()
     {
