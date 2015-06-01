@@ -37,16 +37,27 @@ class QueryBuilderExpressionVisitor extends ExpressionVisitor
         $parameterName = uniqid(str_replace('.', '_', $comparison->getField()));
         $placeholder = ':'.$parameterName;
 
-        $this->parameters[] = new Parameter($parameterName, $this->walkValue($comparison->getValue()));
+        $value = $this->walkValue($comparison->getValue());
+        $this->parameters[] = new Parameter($parameterName, $value);
 
         switch ($comparison->getOperator()) {
             case Comparison::EQ;
+            case Comparison::NEQ;
+            case Comparison::IS;
+                if ($value === null) {
+                    array_pop($this->parameters);
+
+                    return sprintf(
+                        '%s %s %s',
+                        $comparison->getField(),
+                        $comparison->getOperator() === Comparison::NEQ ? 'IS NOT' : 'IS',
+                        'NULL'
+                    );
+                }
             case Comparison::GT;
             case Comparison::GTE;
-            case Comparison::IS;
             case Comparison::LT;
             case Comparison::LTE;
-            case Comparison::NEQ;
                 return sprintf('%s %s %s', $comparison->getField(), $comparison->getOperator(), $placeholder);
             case Comparison::IN;
             case Comparison::NIN;

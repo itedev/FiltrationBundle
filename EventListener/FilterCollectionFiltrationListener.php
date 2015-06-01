@@ -49,7 +49,7 @@ class FilterCollectionFiltrationListener extends AbstractFiltrationListener
 
         /** @var FormInterface $child */
         foreach ($form as $child) {
-            $childEvent = new FiltrationEvent($child, $target, $event->getFieldName());
+            $childEvent = new FiltrationEvent($child, $target, $event->getOptions(), $event->getFieldName());
             $this->dispatcher->dispatch(FiltrationEvent::EVENT_NAME, $childEvent);
 
             if ($childEvent->isTargetModified()) {

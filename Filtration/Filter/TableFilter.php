@@ -2,6 +2,8 @@
 
 namespace ITE\FiltrationBundle\Filtration\Filter;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 /**
  * Class TableFilter
  *
@@ -12,7 +14,7 @@ abstract class TableFilter extends AbstractFilter
     /**
      * @var array
      */
-    protected $attributes = [
+    protected $defaultOptions = [
         'paginate' => false,
         'pagination_options' => [
           'limit' => 10,
@@ -48,24 +50,21 @@ abstract class TableFilter extends AbstractFilter
     }
 
     /**
-     * @return array
+     * @inheritdoc
      */
-    public function getAttributes()
+    public function getOptions(array $options = [])
     {
-        $this->attributes = array_replace_recursive($this->attributes, $this->setAttributes($this->attributes));
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults($this->defaultOptions);
+        $this->setOptions($resolver);
 
-        return $this->attributes;
+        return array_replace_recursive($this->defaultOptions, $resolver->resolve($options));
     }
+
 
     /**
      * @return array
      */
     abstract public function getHeaders();
-
-    /**
-     * @param $attributes
-     * @return array
-     */
-    abstract protected function setAttributes($attributes);
 
 } 

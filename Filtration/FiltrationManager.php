@@ -57,7 +57,7 @@ class FiltrationManager implements FiltrationInterface
     /**
      * @inheritdoc
      */
-    public function filter($target, $filter)
+    public function filter($target, $filter, array $options = [])
     {
         if (is_string($filter)) {
             $filter = $this->getFilter($filter);
@@ -66,7 +66,7 @@ class FiltrationManager implements FiltrationInterface
         $form = $this->getFilterForm($filter->getName());
         if ($form->isValid()) {
             foreach ($form as $child) {
-                $target = $this->filterPart($child, $target, $filter);
+                $target = $this->filterPart($child, $target, $filter, $options);
             }
         }
 
@@ -77,11 +77,12 @@ class FiltrationManager implements FiltrationInterface
      * @param FormInterface   $form
      * @param mixed           $target
      * @param FilterInterface $filter
+     * @param array           $options
      * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\ORM\QueryBuilder
      */
-    private function filterPart(FormInterface $form, $target, FilterInterface $filter)
+    private function filterPart(FormInterface $form, $target, FilterInterface $filter, $options)
     {
-        $event = new FiltrationEvent($form, $target);
+        $event = new FiltrationEvent($form, $target, $filter->getOptions($options));
         $this->eventDispatcher->dispatch(FiltrationEvent::EVENT_NAME, $event);
 
         if ($event->getCriteria()) {

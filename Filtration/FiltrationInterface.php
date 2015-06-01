@@ -16,11 +16,12 @@ interface FiltrationInterface
     /**
      * Filter given target by given filter
      *
-     * @param mixed $target
+     * @param mixed                  $target
      * @param string|FilterInterface $filter
+     * @param array                  $options
      * @return mixed
      */
-    public function filter($target, $filter);
+    public function filter($target, $filter, array $options = []);
 
     /**
      * Return filter by given name

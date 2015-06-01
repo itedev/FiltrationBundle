@@ -31,4 +31,10 @@ interface FilterInterface
      * @return string
      */
     public function getName();
+
+    /**
+     * @param array $options
+     * @return array
+     */
+    public function getOptions(array $options = []);
 } 

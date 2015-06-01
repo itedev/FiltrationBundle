@@ -3,6 +3,7 @@
 namespace ITE\FiltrationBundle\Filtration\Filter;
 
 use ITE\FiltrationBundle\Filtration\FilterInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class AbstractFilter
@@ -47,5 +48,24 @@ abstract class AbstractFilter implements FilterInterface
     public function isFieldModified($fieldName)
     {
         return in_array($fieldName, $this->modifiedFields);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getOptions(array $options = [])
+    {
+        $resolver = new OptionsResolver();
+        $this->setOptions($resolver);
+
+        return $resolver->resolve($options);
+    }
+
+    /**
+     * @param OptionsResolver $resolver
+     */
+    protected function setOptions(OptionsResolver $resolver)
+    {
+
     }
 } 
