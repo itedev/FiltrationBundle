@@ -13,6 +13,12 @@ abstract class TableFilter extends AbstractFilter
      * @var array
      */
     protected $attributes = [
+        'paginate' => false,
+        'pagination_options' => [
+          'limit' => 10,
+          'query_param' => 'page',
+          'options' => []
+        ],
         'table_class' => 'table',
         'table_attr' => [],
         'row_class' => '',

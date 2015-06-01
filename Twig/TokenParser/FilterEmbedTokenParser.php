@@ -36,30 +36,10 @@ class FilterEmbedTokenParser extends \Twig_TokenParser_Include
 
         $parent       = $this->parser->getExpressionParser()->parseExpression();
         $filterName   = $parent->getAttribute('value');
-        $filter       = $this->filtrator->getFilter($filterName);
         $templateName = $this->filtrator->getFilter($parent->getAttribute('value'))->getTemplateName();
         $parent       = new \Twig_Node_Expression_Constant($templateName, $parent->getLine());
 
         list($variables, $only, $ignoreMissing) = $this->parseArguments();
-        /** @var \Twig_Node_Expression_Array $variables */
-        if ($variables === null) {
-            $variables = new \Twig_Node_Expression_Array([], $parent->getLine());
-        }
-        $variables->addElement(
-            new \Twig_Node_Expression_Array(
-                $this->filtrator->getFilterForm($filterName)->createView(),
-                $variables->getLine()
-            ),
-            new \Twig_Node_Expression_Constant('form', $variables->getLine())
-        );
-        $variables->addElement(
-            new \Twig_Node_Expression_Array(
-                $filter,
-                $variables->getLine()
-            ),
-            new \Twig_Node_Expression_Constant('filter', $variables->getLine())
-        );
-
 
         // inject a fake parent to make the parent() function work
         $stream->injectTokens(
@@ -83,6 +63,7 @@ class FilterEmbedTokenParser extends \Twig_TokenParser_Include
         return new TwigNodeFilterEmbed(
             $module->getAttribute('filename'),
             $module->getAttribute('index'),
+            $filterName,
             $variables,
             $only,
             $ignoreMissing,

@@ -64,14 +64,32 @@ class FiltrationExtension extends \Twig_Extension
      */
     public function render(\Twig_Environment $twig, $filterName, array $context = [])
     {
-        $filter = $this->filtrator->getFilter($filterName);
+        $filter = $this->getFilter($filterName);
 
         $context = array_merge($context, [
-            'form' => $this->filtrator->getFilterForm($filterName)->createView(),
+            'form' => $this->getFilterForm($filterName),
             'filter' => $filter
         ]);
 
         return $twig->render($filter->getTemplateName(), $context);
+    }
+
+    /**
+     * @param $name
+     * @return \ITE\FiltrationBundle\Filtration\FilterInterface
+     */
+    public function getFilter($name)
+    {
+        return $this->filtrator->getFilter($name);
+    }
+
+    /**
+     * @param $name
+     * @return \Symfony\Component\Form\FormView
+     */
+    public function getFilterForm($name)
+    {
+        return $this->filtrator->getFilterForm($name)->createView();
     }
 
     /**

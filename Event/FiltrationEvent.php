@@ -28,8 +28,14 @@ class FiltrationEvent extends Event
      * @var ArrayCollection|QueryBuilder
      */
     private $target;
+
     /**
-     * @var null
+     * @var array
+     */
+    private $options;
+
+    /**
+     * @var string|null
      */
     private $fieldName;
 
@@ -46,13 +52,15 @@ class FiltrationEvent extends Event
     /**
      * @param FormInterface                $form
      * @param ArrayCollection|QueryBuilder $target
+     * @param array                        $options
      * @param string|null                  $fieldName
      */
-    public function __construct(FormInterface $form, $target, $fieldName = null)
+    public function __construct(FormInterface $form, $target, $options = [], $fieldName = null)
     {
         $this->form      = $form;
         $this->target    = $target;
         $this->fieldName = $fieldName;
+        $this->options = $options;
     }
 
     /**
@@ -100,6 +108,14 @@ class FiltrationEvent extends Event
         $this->criteria = $criteria;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 
     /**
