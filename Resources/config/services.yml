@@ -2,6 +2,7 @@ parameters:
   ite_filtration.manager.class: ITE\FiltrationBundle\Filtration\FiltrationManager
   ite_filtration.twig.extension.filtration.class: ITE\FiltrationBundle\Twig\Extension\FiltrationExtension
   ite_filtration.knp.pager_sortable.event_subscriber.class: ITE\FiltrationBundle\Pager\Event\Subscriber\Sortable\ArraySubscriber
+  ite_filtration.knp.pager_sortable_disable_sorting.event_subscriber.class: ITE\FiltrationBundle\Pager\Event\Subscriber\Sortable\DisableSortingSubscriber
 
 services:
   ite_filtration.manager:
@@ -20,7 +21,13 @@ services:
     tags:
       - { name: twig.extension }
 
-  ite_filtration.knp.pager_sortable.event_subscriber:
+  ite_filtration.knp.pager_sortable_array.event_subscriber:
     class: %ite_filtration.knp.pager_sortable.event_subscriber.class%
     tags:
       - { name: kernel.event_subscriber }
+
+  ite_filtration.knp.pager_sortable_disable_sorting.event_subscriber:
+    class: %ite_filtration.knp.pager_sortable_disable_sorting.event_subscriber.class%
+    tags:
+      - { name: kernel.event_subscriber }
+

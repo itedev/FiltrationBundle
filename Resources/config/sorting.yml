@@ -1,0 +1,9 @@
+parameters:
+ ite_filtration.sorting.event_listener.class: ITE\FiltrationBundle\EventListener\Sorting\SortingEventListener
+
+services:
+  ite_filtration.sorting.event_listener:
+    class: %ite_filtration.sorting.event_listener.class%
+    arguments: [@request_stack]
+    tags:
+      - { name: kernel.event_listener, event: ite_filtration.filter, method: sort }

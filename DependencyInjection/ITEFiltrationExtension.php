@@ -27,5 +27,10 @@ class ITEFiltrationExtension extends Extension
         $loader->load('form_types.yml');
         $loader->load('filtrators.yml');
         $loader->load('handlers.yml');
+        $loader->load('sorting.yml');
+
+        if (!$config['disable_knp_sorting']) {
+            $container->removeDefinition('ite_filtration.knp.pager_sortable_disable_sorting.event_subscriber');
+        }
     }
 }

@@ -51,6 +51,14 @@ class QueryBuilderHandler implements HandlerInterface
             }
         }
 
+        $orderings = $criteria->getOrderings();
+
+        if (!empty($orderings)) {
+            foreach ($orderings as $field => $direction) {
+                $target->addOrderBy($field, $direction);
+            }
+        }
+
         return $target;
     }
 

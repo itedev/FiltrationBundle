@@ -30,7 +30,7 @@ class FiltrationEvent extends Event
     private $target;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $options;
 
@@ -60,7 +60,7 @@ class FiltrationEvent extends Event
         $this->form      = $form;
         $this->target    = $target;
         $this->fieldName = $fieldName;
-        $this->options = $options;
+        $this->options   = new ArrayCollection($options);
     }
 
     /**
@@ -111,7 +111,7 @@ class FiltrationEvent extends Event
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
     public function getOptions()
     {

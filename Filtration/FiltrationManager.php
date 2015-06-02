@@ -3,6 +3,7 @@
 namespace ITE\FiltrationBundle\Filtration;
 
 use ITE\FiltrationBundle\Event\FiltrationEvent;
+use ITE\FiltrationBundle\Event\SortingEvent;
 use ITE\FiltrationBundle\Filtration\Handler\HandlerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -64,6 +65,7 @@ class FiltrationManager implements FiltrationInterface
         }
 
         $form = $this->getFilterForm($filter->getName());
+
         if ($form->isValid()) {
             foreach ($form as $child) {
                 $target = $this->filterPart($child, $target, $filter, $options);
