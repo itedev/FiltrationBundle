@@ -15,6 +15,7 @@ abstract class TableFilter extends AbstractFilter
      * @var array
      */
     protected $defaultOptions = [
+        'translation_domain' => 'ITEFiltrationBundle',
         'paginate' => false,
         'pagination_options' => [
           'limit' => 10,

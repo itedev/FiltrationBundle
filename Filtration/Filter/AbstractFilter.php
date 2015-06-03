@@ -66,6 +66,8 @@ abstract class AbstractFilter implements FilterInterface
      */
     protected function setOptions(OptionsResolver $resolver)
     {
-
+        $resolver->setDefaults([
+            'translation_domain' => 'ITEFiltrationBundle'
+        ]);
     }
 } 

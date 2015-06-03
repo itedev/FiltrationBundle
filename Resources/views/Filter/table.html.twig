@@ -1,10 +1,10 @@
-{% trans_default_domain 'ITEFiltrationBundle' %}
+{% set attr = filter.options %}
+{% trans_default_domain attr.translation_domain %}
 
 {% block form_start %}
     {{ form_start(form) }}
 {% endblock %}
 
-{% set attr = filter.options %}
 {% set table_attr = attr.table_attr|merge({'class': attr.table_class|default('')}) %}
 {% block table_tag %}<table {% for attrname, attrvalue in table_attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>{% endblock %}
     {% block thead %}
@@ -39,7 +39,7 @@
                                         <a href="#" id="dropdown_toggle_{{ filter_form_row.vars.name }}"
                                            class="dropdown-toggle {{ attr.link_class|default('') }}{% if filter.isFieldModified(header_key) %} {{ attr.button_active_class|default('') }}{% endif %}"
                                            data-toggle="dropdown">
-                                            {{ header_entry }}
+                                            {{ header_entry|trans }}
                                             {% if attr.icon %}
                                                 <i class="fa fa-{{ attr.icon }}"></i>
                                             {% endif %}
@@ -106,7 +106,7 @@
                         <th {% for attrname, attrvalue in header_cell_attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
                             {% set attr = filter.options.filter_header %}
                             <span class="{{ attr.span_class }}">
-                        {{ header_entry }}
+                        {{ header_entry|trans }}
                         </span>
                         </th>
                     {% endblock %}
@@ -159,7 +159,7 @@
             {% block filter_empty_row %}
                 <tr>
                     <td colspan="{{ filter.headers|length }}" class="text-center">
-                        <em>No results</em>
+                        <em>{{ 'no_results'|trans }}</em>
                     </td>
                 </tr>
             {% endblock filter_empty_row %}
