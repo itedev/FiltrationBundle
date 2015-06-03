@@ -47,7 +47,7 @@ abstract class TableFilter extends AbstractFilter
      */
     public function getTemplateName()
     {
-        return '@ITEFiltrationBundle/Resources/views/Filter/Table/base.html.twig';
+        return '@ITEFiltrationBundle/Resources/views/Filter/table.html.twig';
     }
 
     /**
