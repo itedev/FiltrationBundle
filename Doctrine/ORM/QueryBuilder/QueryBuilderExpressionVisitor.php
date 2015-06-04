@@ -63,6 +63,8 @@ class QueryBuilderExpressionVisitor extends ExpressionVisitor
             case Comparison::NIN;
                 return sprintf('%s %s (%s)', $comparison->getField(), $comparison->getOperator(), $placeholder);
             case Comparison::CONTAINS;
+                $value = '%'.$this->walkValue($comparison->getValue()).'%';
+                $this->parameters[count($this->parameters) - 1] = new Parameter($parameterName, $value);
                 return sprintf('%s %s %s', $comparison->getField(), 'LIKE', $placeholder);
             default:
                 return sprintf('%s %s %s', $comparison->getField(), $comparison->getOperator(), $placeholder);
