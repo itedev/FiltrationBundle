@@ -16,6 +16,20 @@ use ITE\FiltrationBundle\Doctrine\ORM\QueryBuilder\QueryBuilderExpressionVisitor
 class QueryBuilderHandler implements HandlerInterface
 {
     /**
+     * @var string
+     */
+    protected $expressionVisitorClass;
+
+    /**
+     * @param string $expressionVisitorClass
+     */
+    public function __construct($expressionVisitorClass)
+    {
+        $this->expressionVisitorClass = $expressionVisitorClass;
+    }
+
+
+    /**
      * Handle target with a given criteria.
      *
      * @param  QueryBuilder $target   The target to handle
@@ -32,7 +46,8 @@ class QueryBuilderHandler implements HandlerInterface
         $having = $criteria->getHavingExpression();
 
         if ($where) {
-            $visitor = new QueryBuilderExpressionVisitor();
+            /** @var QueryBuilderExpressionVisitor $visitor */
+            $visitor = new $this->expressionVisitorClass();
             $whereCondition = $where->visit($visitor);
             $target->andWhere($whereCondition);
 
@@ -42,7 +57,7 @@ class QueryBuilderHandler implements HandlerInterface
         }
 
         if ($having) {
-            $visitor = new QueryBuilderExpressionVisitor();
+            $visitor = new $this->expressionVisitorClass();
             $havingCondition = $having->visit($visitor);
             $target->andHaving($havingCondition);
 

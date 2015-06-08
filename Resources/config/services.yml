@@ -18,6 +18,7 @@ services:
     class: %ite_filtration.twig.extension.filtration.class%
     arguments:
       - @ite_filtrator
+      - @?ite_filtration.sorting.url_generator
     tags:
       - { name: twig.extension }
 

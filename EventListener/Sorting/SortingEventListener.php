@@ -5,6 +5,7 @@ namespace ITE\FiltrationBundle\EventListener\Sorting;
 
 use Doctrine\Common\Collections\Criteria;
 use ITE\FiltrationBundle\Event\FiltrationEvent;
+use ITE\FiltrationBundle\Event\SortingEvent;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -12,28 +13,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Class SortingEventListener
  *
  * @author sam0delkin <t.samodelkin@gmail.com>
- * @todo make query params configurable
  */
 class SortingEventListener
 {
     /**
-     * @var RequestStack
+     * @param SortingEvent $event
      */
-    private $requestStack;
-
-    /**
-     * @param RequestStack $requestStack
-     */
-    public function __construct(RequestStack $requestStack)
-    {
-        $this->requestStack = $requestStack;
-    }
-
-
-    /**
-     * @param FiltrationEvent $event
-     */
-    public function sort(FiltrationEvent $event)
+    public function sort(SortingEvent $event)
     {
         $form = $event->getForm();
         $criteria = null;
@@ -42,26 +28,15 @@ class SortingEventListener
             return;
         }
 
-        if (!($this->requestStack->getMasterRequest()->query->get('sort'.$sortField))) {
+        $direction = $form->get('sort')->getData();
+
+        if (!$direction) {
             return;
         }
 
-        if (!($direction = $this->requestStack->getMasterRequest()->query->get('direction'.$sortField))) {
-            return;
-        }
-
-        if ($orderings = $event->getOptions()->get('orderings')) {
-            $orderings[$sortField]= $direction;
-        } else {
-            $orderings = [
-                $sortField => $direction
-            ];
-        }
-        $event->getOptions()->set('orderings', $orderings);
-
-        $criteria = Criteria::create();
-        $criteria->orderBy($orderings);
-        $event->setCriteria($criteria);
+        $event->addOrderBy([
+            $sortField => $direction
+        ], $form->getConfig()->getOption('sort_order', 0));
     }
 
     /**
@@ -72,10 +47,10 @@ class SortingEventListener
      */
     protected function getSortField(FormInterface $form)
     {
-        if (!($sorting = $form->getConfig()->getOption('filter_sorting'))) {
+        if (!$form->getConfig()->getOption('sort')) {
             return false;
         } else {
-            return $form->getConfig()->getOption('filter_field') ?: $form->getName();
+            return $form->getConfig()->getOption('sort_field') ?: $form->getName();
         }
     }
 }

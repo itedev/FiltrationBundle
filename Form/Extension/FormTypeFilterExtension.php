@@ -32,36 +32,17 @@ class FormTypeFilterExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
-    {
-        if (isset($options['filter_sorting'])) {
-            $view->vars['filter_sorting'] = $options['filter_sorting'];
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setOptional([
             'filter_form',
             'filter_field',
             'filter_aggregate',
-            'filter_sorting',
         ]);
         $resolver->setAllowedTypes([
             'filter_form' => ['bool'],
             'filter_field' => ['string'],
             'filter_aggregate' => ['bool'],
-            'filter_sorting' => ['string'],
-        ]);
-        $resolver->setAllowedValues([
-            'filter_sorting' => [
-                'alpha',
-                'numeric',
-                'date',
-            ],
         ]);
         $resolver->setDefaults([
            'csrf_protection' => function(Options $options, $csrfProtection) {

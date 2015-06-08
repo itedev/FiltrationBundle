@@ -8,5 +8,6 @@ sort:
     date:
         asc: Sort Oldest to Newest
         desc: Sort Newset to Oldest
+    reset: Reset
 
 no_results: No Results

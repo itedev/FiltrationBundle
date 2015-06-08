@@ -24,13 +24,8 @@ class QueryBuilderExpressionVisitor extends ExpressionVisitor
      */
     private $parameters;
 
-
     /**
-     * Converts a comparison expression into the target query language output.
-     *
-     * @param Comparison $comparison
-     *
-     * @return mixed
+     * @inheritdoc
      */
     public function walkComparison(Comparison $comparison)
     {
@@ -54,6 +49,7 @@ class QueryBuilderExpressionVisitor extends ExpressionVisitor
                         'NULL'
                     );
                 }
+                return sprintf('%s %s %s', $comparison->getField(), $comparison->getOperator(), $placeholder);
             case Comparison::GT;
             case Comparison::GTE;
             case Comparison::LT;
@@ -73,11 +69,7 @@ class QueryBuilderExpressionVisitor extends ExpressionVisitor
     }
 
     /**
-     * Converts a value expression into the target query language part.
-     *
-     * @param Value $value
-     *
-     * @return mixed
+     * @inheritdoc
      */
     public function walkValue(Value $value)
     {
@@ -85,11 +77,7 @@ class QueryBuilderExpressionVisitor extends ExpressionVisitor
     }
 
     /**
-     * Converts a composite expression into the target query language output.
-     *
-     * @param CompositeExpression $expr
-     *
-     * @return mixed
+     * @inheritdoc
      */
     public function walkCompositeExpression(CompositeExpression $expr)
     {

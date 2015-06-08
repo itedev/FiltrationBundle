@@ -1,18 +1,24 @@
 parameters:
-  ite_filtration.form.type_extension.text.class:    ITE\FiltrationBundle\Form\Extension\TextTypeFilterExtension
-  ite_filtration.form.type_extension.form.class:    ITE\FiltrationBundle\Form\Extension\FormTypeFilterExtension
-  ite_filtration.form.type.range_filter.class:      ITE\FiltrationBundle\Form\Type\RangeFilterType
-  ite_filtration.form.type.filter_collection.class: ITE\FiltrationBundle\Form\Type\FilterCollectionType
-  ite_filtration.form.type.callback_filter.class:   ITE\FiltrationBundle\Form\Type\CallbackFilterType
+  ite_filtration.form.type_extension.text.filtration.class:    ITE\FiltrationBundle\Form\Extension\TextTypeFilterExtension
+  ite_filtration.form.type_extension.form.filtration.class:    ITE\FiltrationBundle\Form\Extension\FormTypeFilterExtension
+  ite_filtration.form.type_extension.form.sorting.class:       ITE\FiltrationBundle\Form\Extension\FormTypeSortingExtension
+  ite_filtration.form.type.range_filter.class:                 ITE\FiltrationBundle\Form\Type\RangeFilterType
+  ite_filtration.form.type.filter_collection.class:            ITE\FiltrationBundle\Form\Type\FilterCollectionType
+  ite_filtration.form.type.callback_filter.class:              ITE\FiltrationBundle\Form\Type\CallbackFilterType
 
 services:
-  ite_filtration.form.type_extension.text:
-    class: %ite_filtration.form.type_extension.text.class%
+  ite_filtration.form.type_extension.text.filtration:
+    class: %ite_filtration.form.type_extension.text.filtration.class%
     tags:
       - { name: form.type_extension, alias: text }
 
-  ite_filtration.form.type_extension.form:
-    class: %ite_filtration.form.type_extension.form.class%
+  ite_filtration.form.type_extension.form.filtration:
+    class: %ite_filtration.form.type_extension.form.filtration.class%
+    tags:
+      - { name: form.type_extension, alias: form }
+
+  ite_filtration.form.type_extension.form.sorting:
+    class: %ite_filtration.form.type_extension.form.sorting.class%
     tags:
       - { name: form.type_extension, alias: form }
 

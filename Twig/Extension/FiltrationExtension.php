@@ -3,7 +3,9 @@
 
 namespace ITE\FiltrationBundle\Twig\Extension;
 
+use Doctrine\ORM\QueryBuilder;
 use ITE\FiltrationBundle\Filtration\FiltrationManager;
+use ITE\FiltrationBundle\Sorting\UrlGenerator;
 use ITE\FiltrationBundle\Twig\TokenParser\FilterEmbedTokenParser;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -20,11 +22,17 @@ class FiltrationExtension extends \Twig_Extension
     protected $filtrator;
 
     /**
+     * @var UrlGenerator
+     */
+    private $urlGenerator;
+
+    /**
      * @param FiltrationManager $filtrator
      */
-    public function __construct(FiltrationManager $filtrator)
+    public function __construct(FiltrationManager $filtrator, UrlGenerator $urlGenerator = null)
     {
         $this->filtrator = $filtrator;
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**
@@ -34,6 +42,13 @@ class FiltrationExtension extends \Twig_Extension
     {
         return [
             new FilterEmbedTokenParser($this->filtrator)
+        ];
+    }
+
+    public function getGlobals()
+    {
+        return [
+            'ite_filtration_url_generator' => $this->urlGenerator
         ];
     }
 
@@ -48,11 +63,6 @@ class FiltrationExtension extends \Twig_Extension
                 'is_safe' => ['html'], 
                 'needs_environment' => true
             ]),
-            new \Twig_SimpleFunction('ite_is_block_exists', [$this, 'isBlockExists'], [
-                'pre_escape' => 'html', 
-                'is_safe' => ['html'], 
-                'needs_environment' => true
-            ])
         ];
     }
 
@@ -65,6 +75,14 @@ class FiltrationExtension extends \Twig_Extension
     public function render(\Twig_Environment $twig, $filterName, array $context = [])
     {
         $filter = $this->getFilter($filterName);
+
+        if (!isset($context['target'])) {
+            throw new \InvalidArgumentException('You need to pass "target" parameter into filter.');
+        }
+
+        if ($context['target'] instanceof QueryBuilder) {
+            $context['target'] = $context['target']->getQuery()->getResult();
+        }
 
         $context = array_merge($context, [
             'form' => $this->getFilterForm($filterName),
@@ -90,17 +108,6 @@ class FiltrationExtension extends \Twig_Extension
     public function getFilterForm($name)
     {
         return $this->filtrator->getFilterForm($name)->createView();
-    }
-
-    /**
-     * @param \Twig_Environment $twig
-     * @param                   $templateName
-     * @param                   $blockName
-     * @return bool
-     */
-    public function isBlockExists(\Twig_Environment $twig, $templateName, $blockName)
-    {
-        return $twig->resolveTemplate($templateName)->hasBlock($blockName);
     }
 
     /**

@@ -2,7 +2,9 @@
 
 namespace ITE\FiltrationBundle\Filtration;
 
+use ITE\FiltrationBundle\Doctrine\Common\Collections\Criteria;
 use ITE\FiltrationBundle\Event\FiltrationEvent;
+use ITE\FiltrationBundle\Event\FiltrationEvents;
 use ITE\FiltrationBundle\Event\SortingEvent;
 use ITE\FiltrationBundle\Filtration\Handler\HandlerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -67,10 +69,84 @@ class FiltrationManager implements FiltrationInterface
         $form = $this->getFilterForm($filter->getName());
 
         if ($form->isValid()) {
-            foreach ($form as $child) {
-                $target = $this->filterPart($child, $target, $filter, $options);
+            $target = $this->doFilter($form, $target, $filter, $options);
+            $target = $this->doSort($form, $target, $filter, $options);
+        }
+
+        return $target;
+    }
+
+    /**
+     * @param FormInterface   $form
+     * @param mixed           $target
+     * @param FilterInterface $filter
+     * @param array           $options
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\ORM\QueryBuilder
+     */
+    private function doFilter(FormInterface $form, $target, FilterInterface $filter, array $options)
+    {
+        $event = new FiltrationEvent($form, $target, $options);
+        $this->eventDispatcher->dispatch(FiltrationEvents::BEFORE_FILTER, $event);
+        $target = $event->getTarget();
+
+        if ($event->isPropagationStopped()) {
+            return $target;
+        }
+
+        foreach ($form as $child) {
+            $target = $this->filterChild($child, $target, $filter, $options);
+        }
+
+        $event = new FiltrationEvent($form, $target, $options);
+        $this->eventDispatcher->dispatch(FiltrationEvents::AFTER_FILTER, $event);
+        $target = $event->getTarget();
+
+        return $target;
+    }
+
+    /**
+     * @param FormInterface   $form
+     * @param mixed           $target
+     * @param FilterInterface $filter
+     * @param array           $options
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\ORM\QueryBuilder|mixed
+     */
+    private function doSort(FormInterface $form, $target, FilterInterface $filter, array $options)
+    {
+        $event = new SortingEvent($form, $target, $options);
+        $this->eventDispatcher->dispatch(FiltrationEvents::BEFORE_SORT, $event);
+        $target = $event->getTarget();
+        $orderings = $event->getOrderings();
+
+        if ($event->isPropagationStopped()) {
+            if (!empty($orderings)) {
+                $criteria = Criteria::create();
+                $criteria->orderBy($orderings);
+                $target = $this->handleCriteria($target, $criteria);
+            }
+
+            return $target;
+        }
+
+        foreach ($form as $child) {
+            $event = new SortingEvent($child, $target, $options);
+            $this->eventDispatcher->dispatch(FiltrationEvents::SORT, $event);
+
+            if ($event->getOrderings()) {
+                $orderings = array_merge($orderings, $event->getOrderings());
             }
         }
+
+        $criteria = Criteria::create();
+        $criteria->orderBy(SortingEvent::getSorted($orderings));
+        $this->handleCriteria($target, $criteria);
+
+        $event = new SortingEvent($form, $target, $options);
+        $event->setOrderings($orderings);
+        $this->eventDispatcher->dispatch(FiltrationEvents::AFTER_SORT, $event);
+        $target = $event->getTarget();
 
         return $target;
     }
@@ -82,17 +158,13 @@ class FiltrationManager implements FiltrationInterface
      * @param array           $options
      * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\ORM\QueryBuilder
      */
-    private function filterPart(FormInterface $form, $target, FilterInterface $filter, $options)
+    private function filterChild(FormInterface $form, $target, FilterInterface $filter, $options)
     {
         $event = new FiltrationEvent($form, $target, $filter->getOptions($options));
-        $this->eventDispatcher->dispatch(FiltrationEvent::EVENT_NAME, $event);
+        $this->eventDispatcher->dispatch(FiltrationEvents::FILTER, $event);
 
         if ($event->getCriteria()) {
-            foreach ($this->handlers as $handler) {
-                if ($handler->supports($target)) {
-                    $event->setTarget($handler->handle($target, $event->getCriteria()));
-                }
-            }
+            $event->setTarget($this->handleCriteria($event->getTarget(), $event->getCriteria()));
         }
 
         if ($event->isTargetModified()) {
@@ -100,6 +172,22 @@ class FiltrationManager implements FiltrationInterface
         }
 
         return $event->getTarget();
+    }
+
+    /**
+     * @param  mixed   $target
+     * @param Criteria $criteria
+     * @return mixed
+     */
+    private function handleCriteria($target, Criteria $criteria)
+    {
+        foreach ($this->handlers as $handler) {
+            if ($handler->supports($target)) {
+                $target = $handler->handle($target, $criteria);
+            }
+        }
+
+        return $target;
     }
 
     /**

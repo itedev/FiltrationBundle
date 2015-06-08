@@ -5,6 +5,7 @@ namespace ITE\FiltrationBundle\EventListener;
 
 use ITE\FiltrationBundle\Doctrine\Common\Collections\Criteria;
 use ITE\FiltrationBundle\Event\FiltrationEvent;
+use ITE\FiltrationBundle\Event\FiltrationEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormInterface;
 
@@ -49,8 +50,8 @@ class FilterCollectionFiltrationListener extends AbstractFiltrationListener
 
         /** @var FormInterface $child */
         foreach ($form as $child) {
-            $childEvent = new FiltrationEvent($child, $target, $event->getOptions(), $event->getFieldName());
-            $this->dispatcher->dispatch(FiltrationEvent::EVENT_NAME, $childEvent);
+            $childEvent = new FiltrationEvent($child, $target, $event->getOptions()->toArray(), $event->getFieldName());
+            $this->dispatcher->dispatch(FiltrationEvents::FILTER, $childEvent);
 
             if ($childEvent->isTargetModified()) {
                 $target = $childEvent->getTarget();

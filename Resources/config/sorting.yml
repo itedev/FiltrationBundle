@@ -1,9 +1,13 @@
 parameters:
  ite_filtration.sorting.event_listener.class: ITE\FiltrationBundle\EventListener\Sorting\SortingEventListener
+ ite_filtration.sorting.url_generator.class:  ITE\FiltrationBundle\Sorting\UrlGenerator
 
 services:
   ite_filtration.sorting.event_listener:
     class: %ite_filtration.sorting.event_listener.class%
-    arguments: [@request_stack]
     tags:
       - { name: kernel.event_listener, event: ite_filtration.filter, method: sort }
+
+  ite_filtration.sorting.url_generator:
+    class: %ite_filtration.sorting.url_generator.class%
+    arguments: [@router, @request_stack]

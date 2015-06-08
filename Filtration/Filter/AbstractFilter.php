@@ -22,7 +22,7 @@ abstract class AbstractFilter implements FilterInterface
      */
     public function getTemplateName()
     {
-        return 'ITEFiltration:Filter:raw_form.html.twig';
+        return '@ITEFiltrationBundle/Resources/views/Filter/raw_form.html.twig';
     }
 
     /**

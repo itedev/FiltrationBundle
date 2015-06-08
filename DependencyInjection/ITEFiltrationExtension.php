@@ -23,14 +23,43 @@ class ITEFiltrationExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
-        $loader->load('form_types.yml');
-        $loader->load('filtrators.yml');
-        $loader->load('handlers.yml');
-        $loader->load('sorting.yml');
+        $this->loadCoreServices($config, $container, $loader);
+        $this->loadFiltration($config, $container, $loader);
+        $this->loadSorting($config, $container, $loader);
 
         if (!$config['disable_knp_sorting']) {
             $container->removeDefinition('ite_filtration.knp.pager_sortable_disable_sorting.event_subscriber');
+        }
+    }
+
+    /**
+     * @param array                 $config
+     * @param ContainerBuilder      $container
+     * @param Loader\YamlFileLoader $loader
+     */
+    protected function loadCoreServices(array $config, ContainerBuilder $container, Loader\YamlFileLoader $loader)
+    {
+        $loader->load('services.yml');
+        $loader->load('filtrators.yml');
+        $loader->load('handlers.yml');
+    }
+
+    /**
+     * @param array                 $config
+     * @param ContainerBuilder      $container
+     * @param Loader\YamlFileLoader $loader
+     */
+    protected function loadFiltration(array $config, ContainerBuilder $container, Loader\YamlFileLoader $loader)
+    {
+        $loader->load('form_types.yml');
+    }
+
+    protected function loadSorting(array $config, ContainerBuilder $container, Loader\YamlFileLoader $loader)
+    {
+        if ($config['sorting']['enabled']) {
+            $loader->load('sorting.yml');
+        } else {
+            $container->removeDefinition('ite_filtration.form.type_extension.form.sorting');
         }
     }
 }
