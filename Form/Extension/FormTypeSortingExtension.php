@@ -21,7 +21,7 @@ class FormTypeSortingExtension extends AbstractTypeExtension
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if (isset($options['sort_enabled'])) {
+        if (isset($options['sort'])) {
             $builder->add('sort', 'hidden');
         }
     }
