@@ -56,10 +56,6 @@ class ITEFiltrationExtension extends Extension
 
     protected function loadSorting(array $config, ContainerBuilder $container, Loader\YamlFileLoader $loader)
     {
-        if ($config['sorting']['enabled']) {
-            $loader->load('sorting.yml');
-        } else {
-            $container->removeDefinition('ite_filtration.form.type_extension.form.sorting');
-        }
+        $loader->load('sorting.yml');
     }
 }

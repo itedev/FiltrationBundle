@@ -31,6 +31,8 @@ class RangeFiltrationListener extends AbstractFiltrationListener
             return;
         }
 
+        $data = $data->getFilter();
+
         $from = $form->getData()['from'];
         $to = $form->getData()['to'];
 

@@ -69,6 +69,7 @@ class QueryBuilderHandler implements HandlerInterface
         $orderings = $criteria->getOrderings();
 
         if (!empty($orderings)) {
+            $target->resetDQLPart('orderBy');
             foreach ($orderings as $field => $direction) {
                 $target->addOrderBy($field, $direction);
             }

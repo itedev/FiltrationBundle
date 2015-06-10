@@ -1,5 +1,6 @@
 {% set attr = filter.options %}
-{% trans_default_domain attr.translation_domain %}
+{% set translation_domain = attr.translation_domain %}
+{% trans_default_domain translation_domain %}
 
 {% block form_start %}
     {{ form_start(form) }}
@@ -47,32 +48,15 @@
                                         <ul class="dropdown-menu {{ attr.list_class|default('') }}">
                                             {% block dropdown_inner %}
 
-                                                {% set route = app.request.attributes.get('_route') %}
-                                                {% set query = app.request.query.all %}
-                                                {% set filter_sorting = form[key].vars['filter_sorting']|default(null) %}
-
-                                                {% if filter_sorting %}
+                                                {% if form[key].vars['sort'] is defined and form[key].vars['sort'] == true %}
                                                     {% block filter_sorting_block %}
                                                         <li>
-                                                            <a href="{{ path(route, query|merge({sort: key, direction: 'asc'})) }}">
-                                                                {{ ('sort.' ~ filter_sorting ~ '.asc')|trans }}
-                                                            </a>
+                                                            {{ ite_filtration_sort_button(form[key], 'asc', {translation_domain: translation_domain}) }}
                                                         </li>
                                                         <li>
-                                                            <a href="{{ path(route, query|merge({sort: key, direction: 'desc'})) }}">
-                                                                {{ ('sort.' ~ filter_sorting ~ '.desc')|trans }}
-                                                            </a>
+                                                            {{ ite_filtration_sort_button(form[key], 'desc', {translation_domain: translation_domain}) }}
                                                         </li>
-                                                        {#<li>#}
-                                                            {#<a href="{{ path(route, query|merge({('sort' ~ key): 1, ('direction' ~ key): 'asc'})) }}">#}
-                                                                {#{{ ('sort.' ~ filter_sorting ~ '.asc')|trans }}#}
-                                                            {#</a>#}
-                                                        {#</li>#}
-                                                        {#<li>#}
-                                                            {#<a href="{{ path(route, query|merge({('sort' ~ key): 1, ('direction' ~ key): 'desc'})) }}">#}
-                                                                {#{{ ('sort.' ~ filter_sorting ~ '.desc')|trans }}#}
-                                                            {#</a>#}
-                                                        {#</li>#}
+                                                        {{ form_widget(form[key].vars.sort_form) }}
                                                     {% endblock %}
                                                 {% endif %}
 

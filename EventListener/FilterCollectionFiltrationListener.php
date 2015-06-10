@@ -45,6 +45,7 @@ class FilterCollectionFiltrationListener extends AbstractFiltrationListener
         if (!$data = $form->getData()) {
             return;
         }
+
         /** @var Criteria $criteria */
         $criteria = null;
 

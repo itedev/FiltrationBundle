@@ -4,6 +4,7 @@
 namespace ITE\FiltrationBundle\Sorting;
 
 use ITE\FormBundle\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Routing\RouterInterface;
@@ -42,7 +43,7 @@ class UrlGenerator
      * @param               $direction
      * @return string
      */
-    public function generateSortingUrl(FormInterface $form, $direction)
+    public function generateFormSortingUrl(FormInterface $form, $direction)
     {
         $route = $this->requestStack->getMasterRequest()->attributes->get('_route');
         $query = $this->requestStack->getMasterRequest()->query->all();
@@ -65,6 +66,37 @@ class UrlGenerator
     }
 
     /**
+     * Generate an URL for sorting
+     *
+     * @param FormView $form
+     * @param               $direction
+     * @return string
+     */
+    public function generateFormViewSortingUrl(FormView $form, $direction)
+    {
+        $request = $this->requestStack->getMasterRequest();
+        $route = $request->attributes->get('_route');
+        $query = $request->query->all();
+        $accessor = PropertyAccess::createPropertyAccessor();
+
+
+        if (!isset($form->vars['sort_multiple']) || (isset($form->vars['sort_multiple']) && !$form->vars['sort_multiple'])) {
+            // we need to remove all other orderings such as sort is not multiple.
+            $parent = $form->parent;
+            /** @var FormView $child */
+            foreach ($parent as $child) {
+                if (isset($child->vars['ite_sort']) && $child->vars['ite_sort']) {
+                    $accessor->setValue($query, $this->getPropertyPath($child), null);
+                }
+            }
+        }
+
+        $accessor->setValue($query, $this->getPropertyPath($form), $direction);
+
+        return $this->router->generate($route, $query);
+    }
+
+    /**
      * Generate an URL for reset sorting on field/whole form.
      *
      * @param FormInterface $form
@@ -73,8 +105,9 @@ class UrlGenerator
      */
     public function generateResetUrl(FormInterface $form, $all = false)
     {
-        $route = $this->requestStack->getMasterRequest()->attributes->get('_route');
-        $query = $this->requestStack->getMasterRequest()->query->all();
+        $request = $this->requestStack->getMasterRequest();
+        $route = $request->attributes->get('_route');
+        $query = $request->query->all();
         $accessor = PropertyAccess::createPropertyAccessor();
 
         if ($all) {
@@ -90,5 +123,23 @@ class UrlGenerator
         }
 
         return $this->router->generate($route, $query);
+    }
+
+    /**
+     * @param FormView $formView
+     * @return mixed
+     */
+    private function getPropertyPath(FormView $formView)
+    {
+        $root = $formView;
+
+        while ($root->parent) {
+            $root = $root->parent;
+        }
+
+        $propertyPath = str_replace($formView->vars['name'].'][filter]', $formView->vars['name'].'][sort]', $formView->vars['full_name']);
+        $propertyPath = str_replace($root->vars['name'], '['.$root->vars['name'].']', $propertyPath);
+
+        return $propertyPath;
     }
 }

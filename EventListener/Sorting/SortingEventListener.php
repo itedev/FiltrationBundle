@@ -28,7 +28,7 @@ class SortingEventListener
             return;
         }
 
-        $direction = $form->get('sort')->getData();
+        $direction = $form->getConfig()->getAttribute('ite_sort_direction');
 
         if (!$direction) {
             return;

@@ -1,11 +1,18 @@
-{% macro sort_link(form, direction, attr) %}
-    {% set attr = form.sorting.vars.attr|merge(attr|default({})) %}
-    {% set route = app.request.attributes.get('_route') %}
-    {% set query = app.request.query.all %}
-    {% set query = query|merge({form.sorting.vars.name: direction}) %}
+{#{% macro sort_link(form, direction, attr) %}#}
+    {#{% set attr = form.sorting.vars.attr|merge(attr|default({})) %}#}
+    {#{% set route = app.request.attributes.get('_route') %}#}
+    {#{% set query = app.request.query.all %}#}
+    {#{% set query = query|merge({form.sorting.vars.name: direction}) %}#}
 
-    <a {% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %} href="{{ path(route, query) }}">
-    {{ form.sorting.vars['sorting_label_' ~ direction] }}
+    {#<a {% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %} href="{{ path(route, query) }}">#}
+    {#{{ form.sorting.vars['sorting_label_' ~ direction] }}#}
+    {#</a>#}
+{#{% endmacro %}#}
+
+{% block sort_link %}
+    {% set attr = options.attr|default({}) %}
+
+    <a {% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %} href="{{ url }}">
+    {{ (form.vars['sort_label_' ~ direction])|trans([], options.translation_domain) }}
     </a>
-{% endmacro %}
-
+{% endblock %}
