@@ -48,18 +48,19 @@
                                             {% block dropdown_inner %}
 
                                                 {% set route = app.request.attributes.get('_route') %}
+                                                {% set routeParams = app.request.attributes.get('_route_params') %}
                                                 {% set query = app.request.query.all %}
                                                 {% set filter_sorting = form[key].vars['filter_sorting']|default(null) %}
 
                                                 {% if filter_sorting %}
                                                     {% block filter_sorting_block %}
                                                         <li>
-                                                            <a href="{{ path(route, query|merge({sort: key, direction: 'asc'})) }}">
+                                                            <a href="{{ path(route, query|merge({sort: key, direction: 'asc'})|merge(routeParams)) }}">
                                                                 {{ ('sort.' ~ filter_sorting ~ '.asc')|trans }}
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a href="{{ path(route, query|merge({sort: key, direction: 'desc'})) }}">
+                                                            <a href="{{ path(route, query|merge({sort: key, direction: 'desc'})|merge(routeParams)) }}">
                                                                 {{ ('sort.' ~ filter_sorting ~ '.desc')|trans }}
                                                             </a>
                                                         </li>
