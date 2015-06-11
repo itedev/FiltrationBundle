@@ -1,18 +1,31 @@
 parameters:
-  ite_filtration.filtrator.text.class: ITE\FiltrationBundle\EventListener\TextFiltrationListener
+  ite_filtration.filtrator.text.class: ITE\FiltrationBundle\EventListener\Form\TextFiltrationListener
   ite_filtration.filtrator.range.class: ITE\FiltrationBundle\EventListener\RangeFiltrationListener
   ite_filtration.filtrator.filter_collection.class: ITE\FiltrationBundle\EventListener\FilterCollectionFiltrationListener
-  ite_filtration.filtrator.choice.class: ITE\FiltrationBundle\EventListener\ChoiceFiltrationListener
+  ite_filtration.filtrator.choice.class: ITE\FiltrationBundle\EventListener\Form\ChoiceFiltrationListener
+  ite_filtration.filtrator.base_types.class: ITE\FiltrationBundle\EventListener\Form\BaseTypesFiltrationListener
   ite_filtration.filtrator.callback_filter.class: ITE\FiltrationBundle\EventListener\CallbackFiltrationListener
   ite_filtration.filtrator.where_to_having_converter.class: ITE\FiltrationBundle\EventListener\QueryBuilder\WhereToHavingConverterFiltrationListener
   ite_filtration.filtrator.field_alias_guesser.class: ITE\FiltrationBundle\EventListener\QueryBuilder\FieldAliasGuesserFiltrationListener
 
 services:
+  # standard form wrappers
   ite_filtration.filtrator.text:
     class: %ite_filtration.filtrator.text.class%
     tags:
       - { name: kernel.event_listener, event: ite_filtration.filter, method: filter }
 
+  ite_filtration.filtrator.choice:
+    class: %ite_filtration.filtrator.choice.class%
+    tags:
+      - { name: kernel.event_listener, event: ite_filtration.filter, method: filter }
+
+  ite_filtration.filtrator.base_types:
+    class: %ite_filtration.filtrator.base_types.class%
+    tags:
+      - { name: kernel.event_listener, event: ite_filtration.filter, method: filter }
+
+  # custom filtration listeners
   ite_filtration.filtrator.range:
     class: %ite_filtration.filtrator.range.class%
     tags:
@@ -24,16 +37,12 @@ services:
     tags:
       - { name: kernel.event_listener, event: ite_filtration.filter, method: filter }
 
-  ite_filtration.filtrator.choice:
-    class: %ite_filtration.filtrator.choice.class%
-    tags:
-      - { name: kernel.event_listener, event: ite_filtration.filter, method: filter }
-
   ite_filtration.filtrator.callback_filter:
     class: %ite_filtration.filtrator.callback_filter.class%
     tags:
       - { name: kernel.event_listener, event: ite_filtration.filter, method: filter }
 
+  # query builder helpers
   ite_filtration.filtrator.where_to_having_converter:
     class: %ite_filtration.filtrator.where_to_having_converter.class%
     tags:

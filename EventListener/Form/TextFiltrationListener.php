@@ -1,7 +1,7 @@
 <?php
 
 
-namespace ITE\FiltrationBundle\EventListener;
+namespace ITE\FiltrationBundle\EventListener\Form;
 
 use ITE\FiltrationBundle\Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Expr\Value;
 use ITE\FiltrationBundle\Doctrine\Common\Collections\ArrayCollection;
 use ITE\FiltrationBundle\Event\FiltrationEvent;
 use ITE\FiltrationBundle\Doctrine\Common\Collections\Expr\Comparison as OverridenComparison;
+use ITE\FiltrationBundle\EventListener\AbstractFiltrationListener;
 
 /**
  * Class TextFiltrationListener

@@ -3,6 +3,8 @@
 namespace ITE\FiltrationBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
@@ -18,7 +20,9 @@ class TextTypeFilterExtension extends AbstractTypeExtension
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'filter_type' => 'contains',
+            'filter_type' => function (Options $options) {
+                return (isset($options['filter_aggregate']) && true === $options['filter_aggregate']) ? 'equals' : 'contains';
+            },
             'matching_type' => 'case_sensitive',
         ]);
         $resolver->setAllowedValues([

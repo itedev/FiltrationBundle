@@ -1,11 +1,12 @@
 <?php
 
 
-namespace ITE\FiltrationBundle\EventListener;
+namespace ITE\FiltrationBundle\EventListener\Form;
 
 use ITE\FiltrationBundle\Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
 use ITE\FiltrationBundle\Event\FiltrationEvent;
+use ITE\FiltrationBundle\EventListener\AbstractFiltrationListener;
 
 /**
  * Class ChoiceFiltrationListener
