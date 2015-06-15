@@ -22,7 +22,6 @@ class ITEFiltrationExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $this->loadCoreServices($config, $container, $loader);
         $this->loadFiltration($config, $container, $loader);
