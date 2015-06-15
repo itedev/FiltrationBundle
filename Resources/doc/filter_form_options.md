@@ -75,3 +75,59 @@ Example:
             ]); 
     }
 ```
+
+# Text type extension
+
+For configuring text filtering, there are additional options was implemented for form field type `text`:
+
+### filter_type
+
+| Option | Value                 |
+|---------------|-----------------------|
+| Is optional | true                 |
+| Default value | `contains`                 |
+| Allowed values | `contains`, `equals`                 |
+| Description | Specifies how filed will be matched in the target. So, for example, for QueryBuilder for `equals`, `=` operator will be used and `LIKE` for `contains`. For ArrayCollection `==` and `strpos` will be used respectively              |
+
+Example:
+
+```php
+// src/Acme/DemoBundle/Form/Filter/FooFilterType
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('name', 'text', [
+              'filter_type' => 'equals'
+            ]); 
+    }
+```
+
+### matching_type
+
+| Option | Value                 |
+|---------------|-----------------------|
+| Is optional | true                 |
+| Default value | `case_sensitive`                 |
+| Allowed values | `case_sensitive`, `case_insensitive`                 |
+| Description | Using only for matching ArrayCollection              |
+
+Example:
+
+```php
+// src/Acme/DemoBundle/Form/Filter/FooFilterType
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('name', 'text', [
+              'matching_type' => 'case_insensitive'
+            ]); 
+    }
+```
