@@ -83,6 +83,14 @@ class UrlGenerator implements UrlGeneratorInterface
 
         $sortField = $this->getSortField($form);
         $propertyPath = $sortField instanceof FormInterface ? $sortField->getPropertyPath() : $this->getPropertyPath($sortField);
+        $multiple = $sortField instanceof FormInterface ? $sortField->getConfig()->getOption('sort_multiple') : $sortField->vars['sort_multiple'];
+
+        if (!$multiple) {
+            $form = $this->getParent($form);
+            $name = $form instanceof FormInterface ? $form->getName() : $form->vars['name'];
+            $accessor->setValue($query, sprintf('[%s]', $name), null);
+        }
+
         $accessor->setValue($query, $propertyPath, $direction);
 
         return $this->router->generate($route, $query);

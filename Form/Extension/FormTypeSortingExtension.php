@@ -54,6 +54,7 @@ class FormTypeSortingExtension extends AbstractTypeExtension
 
             $view->vars['sort_label_asc'] = $sortLabelAsc;
             $view->vars['sort_label_desc'] = $sortLabelDesc;
+            $view->vars['sort_multiple'] = isset ($options['sort_multiple']) && true === $options['sort_multiple'] ? true : false;
 
             if (isset($options['sort_reset_link']) && $options['sort_reset_link'] === true) {
                 $view->vars['sort_reset_link'] = true;
