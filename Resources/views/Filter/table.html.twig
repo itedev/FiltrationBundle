@@ -48,7 +48,7 @@
                                         <ul class="dropdown-menu {{ attr.list_class|default('') }}">
                                             {% block dropdown_inner %}
 
-                                                {% if form[key].vars['sort'] is defined and form[key].vars['sort'] == true %}
+                                                {% if filter_form_row.vars['sort'] is defined and filter_form_row.vars['sort'] == true %}
                                                     {% block filter_sorting_block %}
                                                         <li>
                                                             {{ ite_filtration_sort_button(form[key], 'asc', {translation_domain: translation_domain}) }}
@@ -56,7 +56,7 @@
                                                         <li>
                                                             {{ ite_filtration_sort_button(form[key], 'desc', {translation_domain: translation_domain}) }}
                                                         </li>
-                                                        {{ form_widget(form[key].vars.sort_form) }}
+                                                        {#{{ form_widget(form[key].vars.sort_form) }}#}
                                                     {% endblock %}
                                                 {% endif %}
 

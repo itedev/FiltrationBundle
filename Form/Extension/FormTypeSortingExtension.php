@@ -5,6 +5,7 @@ namespace ITE\FiltrationBundle\Form\Extension;
 
 use ITE\FiltrationBundle\Form\DataMapper\SortDataMapper;
 use ITE\FiltrationBundle\Form\DataTransformer\FilterDataToArrayTransformer;
+use ITE\FiltrationBundle\Util\UrlGeneratorInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\DataMapper\PropertyPathMapper;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -33,35 +34,9 @@ class FormTypeSortingExtension extends AbstractTypeExtension
     {
         if (isset($options['sort']) && $options['sort'] === true) {
             $builder->addEventListener(
-                FormEvents::PRE_SUBMIT,
+                FormEvents::PRE_SET_DATA,
                 function (FormEvent $event) {
-                    $data = $event->getData();
-
-                    if (!is_array($data)) {
-                        return;
-                    }
-
-                    if (!isset($data['sort'])) {
-                        if (isset($data['filter'])) {
-                            $event->setData($data['filter']);
-                        }
-                        return;
-                    }
-
-                    $sort = $data['sort'];
-
-                    /** @var FormBuilder $config */
-                    $config = $event->getForm()->getConfig();
-                    $ref = new \ReflectionObject($config);
-                    $prop = $ref->getProperty('locked');
-                    $prop->setAccessible(true);
-                    $prop->setValue($config, false);
-                    $config->setAttribute('ite_sort_direction', $sort);
-                    $prop->setValue($config, true);
-
-                    $data = isset($data['filter']) ? $data['filter'] : null;
-
-                    $event->setData($data);
+                    $event->getForm()->getParent()->add(UrlGeneratorInterface::SORT_FIELD_PREFIX.$event->getForm()->getName(), 'hidden');
                 }
             );
         }
@@ -85,22 +60,6 @@ class FormTypeSortingExtension extends AbstractTypeExtension
                 $view->vars['sort_reset_link_label'] = isset ($options['sort_reset_link_label']) ? $options['sort_reset_link_label'] : 'sort.reset';
                 $view->vars['sort_reset_link_attr'] = isset ($options['sort_reset_link_attr']) ? $options['sort_reset_link_attr'] : [];
             }
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function finishView(FormView $view, FormInterface $form, array $options)
-    {
-        if (isset($options['sort']) && $options['sort'] === true) {
-            $factory = $form->getConfig()->getFormFactory();
-            $direction = $form->getConfig()->getAttribute('ite_sort_direction');
-            $sortForm = $factory->createNamed('sort', 'hidden', $direction, array(
-                'mapped' => false,
-            ));
-
-            $view->vars['sort_form'] = $sortForm->createView($view);
         }
     }
 

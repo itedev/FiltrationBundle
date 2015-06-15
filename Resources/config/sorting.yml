@@ -1,6 +1,6 @@
 parameters:
  ite_filtration.sorting.event_listener.class: ITE\FiltrationBundle\EventListener\Sorting\SortingEventListener
- ite_filtration.sorting.url_generator.class:  ITE\FiltrationBundle\Sorting\UrlGenerator
+ ite_filtration.util.url_generator.class:  ITE\FiltrationBundle\Util\UrlGenerator
  ite_filtration.twig.extension.sorting.class: ITE\FiltrationBundle\Twig\Extension\SortingExtension
 
 services:
@@ -9,12 +9,12 @@ services:
     tags:
       - { name: kernel.event_listener, event: ite_filtration.sort, method: sort }
 
-  ite_filtration.sorting.url_generator:
-    class: %ite_filtration.sorting.url_generator.class%
+  ite_filtration.util.url_generator:
+    class: %ite_filtration.util.url_generator.class%
     arguments: [@router, @request_stack]
 
   ite_filtration.twig.extension.sorting:
     class: %ite_filtration.twig.extension.sorting.class%
-    arguments: [@ite_filtration.sorting.url_generator]
+    arguments: [@ite_filtration.util.url_generator]
     tags:
       - { name: twig.extension }

@@ -3,7 +3,7 @@
 
 namespace ITE\FiltrationBundle\Twig\Extension;
 
-use ITE\FiltrationBundle\Sorting\UrlGenerator;
+use ITE\FiltrationBundle\Util\UrlGenerator;
 use Symfony\Component\Form\FormView;
 
 /**
@@ -57,7 +57,7 @@ class SortingExtension extends \Twig_Extension
             'form' => $form,
             'direction' => $direction,
             'options' => $options,
-            'url' => $this->urlGenerator->generateFormViewSortingUrl($form, $direction),
+            'url' => $this->urlGenerator->getSortFieldUrl($form, $direction),
         ]);
     }
 
