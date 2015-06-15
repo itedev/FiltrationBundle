@@ -4,10 +4,74 @@ The filter form has some useful options for change/extand the behaviour of filtr
 
 ### filter_form
 
---------------------------------------
+| Option | Value                 |
+|---------------|-----------------------|
 | Is optional | true                 |
---------------------------------------
 | Allowed values | bool                 |
---------------------------------------
-| Description | Mark that form is actually the filter form. Aplies only to the root form.                 |
---------------------------------------
+| Description | Mark that form is actually the filter form. Applies only to the root form.                 |
+
+Example:
+
+```php
+// src/Acme/DemoBundle/Form/Filter/FooFilterType
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults([
+            'filter_form' => true,
+        ]);
+    }
+```
+
+### filter_field
+
+| Option | Value                 |
+|---------------|-----------------------|
+| Is optional | true                 |
+| Allowed values | string                 |
+| Description | Specifies the raw field name, that will be passed to target object (QueryBuidler/ArrayCollection etc.)               |
+
+Example:
+
+```php
+// src/Acme/DemoBundle/Form/Filter/FooFilterType
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('name', 'text', [
+              'filter_field' => 'f.name' // `f` is the alias of the entity that has a `name` field
+            ]); 
+    }
+```
+
+### filter_aggregate
+
+| Option | Value                 |
+|---------------|-----------------------|
+| Is optional | true                 |
+| Allowed values | bool                 |
+| Description | Specifies that the field is the aggregated field, so `HAVING` expression will be used instead of `WHERE`              |
+
+Example:
+
+```php
+// src/Acme/DemoBundle/Form/Filter/FooFilterType
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('name', 'text', [
+              'filter_aggregate' => true
+            ]); 
+    }
+```
