@@ -2,7 +2,7 @@
 
 namespace ITE\FiltrationBundle\Filtration;
 
-use ITE\FiltrationBundle\Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Criteria;
 use ITE\FiltrationBundle\Event\FiltrationEvent;
 use ITE\FiltrationBundle\Event\FiltrationEvents;
 use ITE\FiltrationBundle\Event\SortingEvent;

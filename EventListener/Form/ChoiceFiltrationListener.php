@@ -31,6 +31,10 @@ class ChoiceFiltrationListener extends AbstractFiltrationListener
             return;
         }
 
+        if (empty($data)) {
+            return;
+        }
+
         if (!is_array($data)) {
             $data = [$data];
         }
