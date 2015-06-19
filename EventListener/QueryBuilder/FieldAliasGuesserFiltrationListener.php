@@ -27,8 +27,8 @@ class FieldAliasGuesserFiltrationListener extends AbstractFiltrationListener
         $fieldName = $event->getFieldName();
         $form = $event->getForm();
 
-        if ($formFieldName = $form->getConfig()->getOption('filter_field')) {
-            $fieldName = $formFieldName;
+        if ($form->getConfig()->getOption('filter_field') || $form->getConfig()->getOption('sort_field')) {
+            $fieldName = $form->getConfig()->getOption('filter_field') ?: $form->getConfig()->getOption('sort_field');
         } else {
             if ($form->getConfig()->getOption('filter_aggregate') === true) {
                 return;
