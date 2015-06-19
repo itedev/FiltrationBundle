@@ -40,7 +40,7 @@
                                         <a href="#" id="dropdown_toggle_{{ filter_form_row.vars.name }}"
                                            class="dropdown-toggle {{ attr.link_class|default('') }}{% if filter.isFieldModified(header_key) %} {{ attr.button_active_class|default('') }}{% endif %}"
                                            data-toggle="dropdown">
-                                            {{ header_entry|trans }}
+                                            {{ header_entry|trans|raw }}
                                             {% if attr.icon %}
                                                 <i class="fa fa-{{ attr.icon }}"></i>
                                             {% endif %}
