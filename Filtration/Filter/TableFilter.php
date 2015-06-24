@@ -19,7 +19,8 @@ abstract class TableFilter extends AbstractFilter
         'wrap_result' => false,
         'paginate' => false,
         'limit' => 10,
-        'page' => 1,
+        'page'  => 1,
+        'data'  => [],
         'pagination' => [
             'page_parameter_name' => 'page',
             'wrap_queries' => false,

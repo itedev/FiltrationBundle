@@ -258,12 +258,11 @@ class FiltrationManager implements FiltrationInterface
      */
     private function convertData(FormInterface $form, $data)
     {
-        $resultData = [];
-        $resultData[$form->getName()] = isset($data['filters']) ? $data['filters'] : [];
+        $resultData = isset($data['filters']) ? $data['filters'] : [];
 
         if (isset($data['sort'])) {
             foreach ($data['sort'] as $field => $sort) {
-                $resultData[$form->getName()][UrlGeneratorInterface::SORT_FIELD_PREFIX.$field] = $sort;
+                $resultData[UrlGeneratorInterface::SORT_FIELD_PREFIX.$field] = $sort;
             }
         }
 
