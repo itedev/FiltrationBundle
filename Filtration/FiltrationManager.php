@@ -263,7 +263,7 @@ class FiltrationManager implements FiltrationInterface
 
         if (isset($data['sort'])) {
             foreach ($data['sort'] as $field => $sort) {
-                $resultData[UrlGeneratorInterface::SORT_FIELD_PREFIX.$field] = $sort;
+                $resultData[$form->getName()][UrlGeneratorInterface::SORT_FIELD_PREFIX.$field] = $sort;
             }
         }
 
