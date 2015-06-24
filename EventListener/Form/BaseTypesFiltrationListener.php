@@ -36,7 +36,7 @@ class BaseTypesFiltrationListener extends AbstractFiltrationListener
             return;
         }
 
-        if (null === ($data = $form->getData())) {
+        if (!($data = $form->getData())) {
             return;
         }
 
