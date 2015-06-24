@@ -1,0 +1,21 @@
+parameters:
+  ite_filtration.pagination.doctrine.orm.event_listener.class: ITE\FiltrationBundle\EventListener\Pagination\Doctrine\ORM\QueryBuilderPaginationListener
+  ite_filtration.pagination.query_parameter.event_listener.class: ITE\FiltrationBundle\EventListener\Pagination\QueryParametersSubscriber
+  ite_filtration.pagination.result_wrapping.event_listener.class: ITE\FiltrationBundle\EventListener\Pagination\ResultWrappingListener
+
+services:
+  ite_filtration.pagination.doctrine.orm.event_listener:
+    class: %ite_filtration.pagination.doctrine.orm.event_listener.class%
+    tags:
+      - { name: kernel.event_listener, event: ite_filtration.paginate, method: paginate }
+
+  ite_filtration.pagination.query_parameter.event_listener:
+    class: %ite_filtration.pagination.query_parameter.event_listener.class%
+    arguments: [@request_stack]
+    tags:
+      - { name: kernel.event_listener, event: ite_filtration.paginate, method: paginate, priority: 10 }
+
+  ite_filtration.pagination.result_wrapping.event_listener:
+    class: %ite_filtration.pagination.result_wrapping.event_listener.class%
+    tags:
+      - { name: kernel.event_listener, event: ite_filtration.paginate, method: paginate, priority: -100 }

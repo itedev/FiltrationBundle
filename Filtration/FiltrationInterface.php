@@ -34,10 +34,11 @@ interface FiltrationInterface
     /**
      * Return filter form by given filter name
      *
-     * @param $name
+     * @param       $name
+     * @param array $options
      * @return FormInterface
      */
-    public function getFilterForm($name);
+    public function getFilterForm($name, $options = []);
 
     /**
      * Adds filter using Symfony DI

@@ -67,7 +67,17 @@ abstract class AbstractFilter implements FilterInterface
     protected function setOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'ITEFiltrationBundle'
+            'translation_domain' => 'ITEFiltrationBundle',
+            'wrap_result' => false,
+            'paginate' => false,
+            'limit' => 10,
+            'page' => 1,
+            'pagination' => [
+                'page_parameter_name' => 'page',
+                'wrap_queries' => false,
+                'distinct' => false,
+                'fetch_join_collection' => false,
+            ],
         ]);
     }
 } 

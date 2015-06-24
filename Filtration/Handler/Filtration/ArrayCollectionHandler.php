@@ -1,10 +1,11 @@
 <?php
 
 
-namespace ITE\FiltrationBundle\Filtration\Handler;
+namespace ITE\FiltrationBundle\Filtration\Handler\Filtration;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use ITE\FiltrationBundle\Filtration\Handler\HandlerInterface;
 
 /**
  * Class ArrayCollectionHandler
@@ -14,11 +15,7 @@ use Doctrine\Common\Collections\Criteria;
 class ArrayCollectionHandler implements HandlerInterface
 {
     /**
-     * Handle target with a given criteria.
-     *
-     * @param  array|ArrayCollection    $target   The target to handle
-     * @param  Criteria $criteria Criteria to handle with
-     * @return mixed    Modified $target
+     * {@inheritdoc}
      */
     public function handle($target, Criteria $criteria)
     {
@@ -30,10 +27,7 @@ class ArrayCollectionHandler implements HandlerInterface
     }
 
     /**
-     * Checks that given target is able to be handled.
-     *
-     * @param $target
-     * @return bool
+     * {@inheritdoc}
      */
     public function supports($target)
     {

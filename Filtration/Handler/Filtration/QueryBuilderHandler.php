@@ -1,12 +1,13 @@
 <?php
 
 
-namespace ITE\FiltrationBundle\Filtration\Handler;
+namespace ITE\FiltrationBundle\Filtration\Handler\Filtration;
 
 use Doctrine\Common\Collections\Criteria;
 use ITE\FiltrationBundle\Doctrine\Common\Collections\Criteria as FiltrationCriteria;
 use Doctrine\ORM\QueryBuilder;
 use ITE\FiltrationBundle\Doctrine\ORM\QueryBuilder\QueryBuilderExpressionVisitor;
+use ITE\FiltrationBundle\Filtration\Handler\HandlerInterface;
 
 /**
  * Class QueryBuilderHandler
@@ -30,11 +31,7 @@ class QueryBuilderHandler implements HandlerInterface
 
 
     /**
-     * Handle target with a given criteria.
-     *
-     * @param  QueryBuilder $target   The target to handle
-     * @param  Criteria $criteria Criteria to handle with
-     * @return mixed    Modified $target
+     * {@inheritdoc}
      */
     public function handle($target, Criteria $criteria)
     {
@@ -66,23 +63,11 @@ class QueryBuilderHandler implements HandlerInterface
             }
         }
 
-        $orderings = $criteria->getOrderings();
-
-        if (!empty($orderings)) {
-            $target->resetDQLPart('orderBy');
-            foreach ($orderings as $field => $direction) {
-                $target->addOrderBy($field, $direction);
-            }
-        }
-
         return $target;
     }
 
     /**
-     * Checks that given target is able to be handled.
-     *
-     * @param $target
-     * @return bool
+     * {@inheritdoc}
      */
     public function supports($target)
     {

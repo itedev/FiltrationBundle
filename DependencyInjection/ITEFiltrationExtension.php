@@ -26,6 +26,7 @@ class ITEFiltrationExtension extends Extension
         $this->loadCoreServices($config, $container, $loader);
         $this->loadFiltration($config, $container, $loader);
         $this->loadSorting($config, $container, $loader);
+        $this->loadPagination($config, $container, $loader);
 
         if (!$config['disable_knp_sorting']) {
             $container->removeDefinition('ite_filtration.knp.pager_sortable_disable_sorting.event_subscriber');
@@ -57,5 +58,10 @@ class ITEFiltrationExtension extends Extension
     protected function loadSorting(array $config, ContainerBuilder $container, Loader\YamlFileLoader $loader)
     {
         $loader->load('sorting.yml');
+    }
+
+    protected function loadPagination(array $config, ContainerBuilder $container, Loader\YamlFileLoader $loader)
+    {
+        $loader->load('pagination.yml');
     }
 }

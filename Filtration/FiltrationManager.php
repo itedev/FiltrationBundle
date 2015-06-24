@@ -5,8 +5,11 @@ namespace ITE\FiltrationBundle\Filtration;
 use ITE\FiltrationBundle\Doctrine\Common\Collections\Criteria;
 use ITE\FiltrationBundle\Event\FiltrationEvent;
 use ITE\FiltrationBundle\Event\FiltrationEvents;
+use ITE\FiltrationBundle\Event\PaginationEvent;
 use ITE\FiltrationBundle\Event\SortingEvent;
 use ITE\FiltrationBundle\Filtration\Handler\HandlerInterface;
+use ITE\FiltrationBundle\Filtration\Result\FiltrationResult;
+use ITE\FiltrationBundle\Util\UrlGeneratorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -66,11 +69,14 @@ class FiltrationManager implements FiltrationInterface
             $filter = $this->getFilter($filter);
         }
 
-        $form = $this->getFilterForm($filter->getName());
+        $options = $filter->getOptions($options);
+
+        $form = $this->getFilterForm($filter->getName(), $options);
 
         if ($form->isValid()) {
             $target = $this->doFilter($form, $target, $filter, $options);
             $target = $this->doSort($form, $target, $filter, $options);
+            $target = $this->doPaginate($form, $target, $filter, $options);
         }
 
         return $target;
@@ -151,6 +157,28 @@ class FiltrationManager implements FiltrationInterface
         return $target;
     }
 
+    private function doPaginate($form, $target, $filter, $options)
+    {
+        $event = new PaginationEvent($form, $target, $options, $filter);
+        $this->eventDispatcher->dispatch(FiltrationEvents::BEFORE_PAGINATE, $event);
+        $target = $event->getTarget();
+
+        if ($event->isPropagationStopped()) {
+            return $target;
+        }
+
+        $event = new PaginationEvent($form, $target, $options, $filter);
+        $this->eventDispatcher->dispatch(FiltrationEvents::PAGINATE, $event);
+        $target = $event->getTarget();
+
+
+        $event = new PaginationEvent($form, $target, $options, $filter);
+        $this->eventDispatcher->dispatch(FiltrationEvents::AFTER_FILTER, $event);
+        $target = $event->getTarget();
+
+        return $target;
+    }
+
     /**
      * @param FormInterface   $form
      * @param mixed           $target
@@ -205,7 +233,7 @@ class FiltrationManager implements FiltrationInterface
     /**
      * @inheritdoc
      */
-    public function getFilterForm($name)
+    public function getFilterForm($name, $options = [])
     {
         $filter = $this->getFilter($name);
         $form = $filter->getFilterForm($this->formFactory);
@@ -213,12 +241,33 @@ class FiltrationManager implements FiltrationInterface
             throw new \LogicException('Filter form should have an option "filter_form" set to true.');
         }
 
-        $request = $this->requestStack->getMasterRequest();
-        if ($request->query->has($form->getName())) {
+        if (isset($options['data'])) {
+            $form->submit($this->convertData($form, $options['data']));
+        } else {
+            $request = $this->requestStack->getMasterRequest();
             $form->submit($request->query->get($form->getName()));
         }
 
         return $form;
+    }
+
+    /**
+     * @param FormInterface $form
+     * @param               $data
+     * @return array
+     */
+    private function convertData(FormInterface $form, $data)
+    {
+        $resultData = [];
+        $resultData[$form->getName()] = isset($data['filters']) ? $data['filters'] : [];
+
+        if (isset($data['sort'])) {
+            foreach ($data['sort'] as $field => $sort) {
+                $resultData[UrlGeneratorInterface::SORT_FIELD_PREFIX.$field] = $sort;
+            }
+        }
+
+        return $resultData;
     }
 
     /**

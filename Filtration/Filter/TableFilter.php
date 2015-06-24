@@ -16,11 +16,15 @@ abstract class TableFilter extends AbstractFilter
      */
     protected $defaultOptions = [
         'translation_domain' => 'ITEFiltrationBundle',
+        'wrap_result' => false,
         'paginate' => false,
-        'pagination_options' => [
-          'limit' => 10,
-          'query_param' => 'page',
-          'options' => []
+        'limit' => 10,
+        'page' => 1,
+        'pagination' => [
+            'page_parameter_name' => 'page',
+            'wrap_queries' => false,
+            'distinct' => false,
+            'fetch_join_collection' => false,
         ],
         'table_class' => 'table',
         'table_attr' => [],
