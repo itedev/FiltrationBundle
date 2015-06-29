@@ -241,7 +241,7 @@ class FiltrationManager implements FiltrationInterface
             throw new \LogicException('Filter form should have an option "filter_form" set to true.');
         }
 
-        if (isset($options['data'])) {
+        if (!empty($options['data'])) {
             $form->submit($this->convertData($form, $options['data']));
         } else {
             $request = $this->requestStack->getMasterRequest();
