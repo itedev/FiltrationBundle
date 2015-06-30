@@ -101,4 +101,13 @@ abstract class AbstractFiltrationResult implements FiltrationResultInterface
         return count($this->items);
     }
 
+    /**
+     * Get items
+     *
+     * @return array
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
 }

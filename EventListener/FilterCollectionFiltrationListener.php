@@ -42,7 +42,7 @@ class FilterCollectionFiltrationListener extends AbstractFiltrationListener
             return;
         }
 
-        if (!$data = $form->getData()) {
+        if (null === ($data = $form->getData())) {
             return;
         }
 
