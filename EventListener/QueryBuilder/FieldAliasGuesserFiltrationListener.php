@@ -4,7 +4,8 @@
 namespace ITE\FiltrationBundle\EventListener\QueryBuilder;
 
 
-use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\QueryBuilder as ORMQueryBuilder;
+use Doctrine\DBAL\Query\QueryBuilder as DBALQueryBuilder;
 use ITE\FiltrationBundle\Event\FiltrationEvent;
 use ITE\FiltrationBundle\EventListener\AbstractFiltrationListener;
 
@@ -20,7 +21,7 @@ class FieldAliasGuesserFiltrationListener extends AbstractFiltrationListener
      */
     public function filter(FiltrationEvent $event)
     {
-        if (!($event->getTarget() instanceof QueryBuilder)) {
+        if (!($event->getTarget() instanceof ORMQueryBuilder) && !($event->getTarget() instanceof DBALQueryBuilder)) {
             return;
         }
 

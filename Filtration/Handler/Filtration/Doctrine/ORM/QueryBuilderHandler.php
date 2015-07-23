@@ -1,7 +1,7 @@
 <?php
 
 
-namespace ITE\FiltrationBundle\Filtration\Handler\Filtration;
+namespace ITE\FiltrationBundle\Filtration\Handler\Filtration\Doctrine\ORM;
 
 use Doctrine\Common\Collections\Criteria;
 use ITE\FiltrationBundle\Doctrine\Common\Collections\Criteria as FiltrationCriteria;

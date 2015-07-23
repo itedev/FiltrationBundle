@@ -76,9 +76,9 @@ class FiltrationExtension extends \Twig_Extension
     {
         $filter = $this->getFilter($filterName);
 
-        if (!isset($context['target'])) {
-            throw new \InvalidArgumentException('You need to pass "target" parameter into filter.');
-        }
+//        if (!isset($context['target'])) {
+//            throw new \InvalidArgumentException('You need to pass "target" parameter into filter.');
+//        }
 
         if ($context['target'] instanceof QueryBuilder) {
             $context['target'] = $context['target']->getQuery()->getResult();

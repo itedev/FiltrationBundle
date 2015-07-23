@@ -1,8 +1,10 @@
 parameters:
     ite_filtration.handler.filtration.array_collection.class: ITE\FiltrationBundle\Filtration\Handler\Filtration\ArrayCollectionHandler
-    ite_filtration.handler.filtration.query_builder.class: ITE\FiltrationBundle\Filtration\Handler\Filtration\QueryBuilderHandler
+    ite_filtration.handler.filtration.orm.query_builder.class: ITE\FiltrationBundle\Filtration\Handler\Filtration\Doctrine\ORM\QueryBuilderHandler
+    ite_filtration.handler.filtration.dbal.query_builder.class: ITE\FiltrationBundle\Filtration\Handler\Filtration\Doctrine\DBAL\QueryBuilderHandler
     ite_filtration.handler.sorting.query_builder.class: ITE\FiltrationBundle\Filtration\Handler\Sorting\QueryBuilderHandler
     ite_filtration.doctrine.orm.query_builder_expression_visitor.class: ITE\FiltrationBundle\Doctrine\ORM\QueryBuilder\QueryBuilderExpressionVisitor
+    ite_filtration.doctrine.dbal.query_builder_expression_visitor.class: ITE\FiltrationBundle\Doctrine\DBAL\QueryBuilder\QueryBuilderExpressionVisitor
 
 services:
     ite_filtration.handler.filtration.array_collection:
@@ -10,9 +12,15 @@ services:
         tags:
             - { name: ite_filtration.handler }
 
-    ite_filtration.handler.filtration.query_builder:
-        class: %ite_filtration.handler.filtration.query_builder.class%
+    ite_filtration.handler.filtration.orm.query_builder:
+        class: %ite_filtration.handler.filtration.orm.query_builder.class%
         arguments: [%ite_filtration.doctrine.orm.query_builder_expression_visitor.class%]
+        tags:
+            - { name: ite_filtration.handler }
+
+    ite_filtration.handler.filtration.dbal.query_builder:
+        class: %ite_filtration.handler.filtration.dbal.query_builder.class%
+        arguments: [%ite_filtration.doctrine.dbal.query_builder_expression_visitor.class%]
         tags:
             - { name: ite_filtration.handler }
 
