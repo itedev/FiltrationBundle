@@ -5,8 +5,8 @@ namespace ITE\FiltrationBundle\Twig\Extension;
 
 use Doctrine\ORM\QueryBuilder;
 use ITE\FiltrationBundle\Filtration\FiltrationManager;
-use ITE\FiltrationBundle\Sorting\UrlGenerator;
 use ITE\FiltrationBundle\Twig\TokenParser\FilterEmbedTokenParser;
+use ITE\FiltrationBundle\Util\UrlGenerator;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**

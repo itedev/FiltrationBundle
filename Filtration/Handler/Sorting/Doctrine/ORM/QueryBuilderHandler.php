@@ -1,12 +1,10 @@
 <?php
 
-
-namespace ITE\FiltrationBundle\Filtration\Handler\Sorting;
+namespace ITE\FiltrationBundle\Filtration\Handler\Sorting\Doctrine\ORM;
 
 use Doctrine\Common\Collections\Criteria;
 use ITE\FiltrationBundle\Doctrine\Common\Collections\Criteria as FiltrationCriteria;
 use Doctrine\ORM\QueryBuilder;
-use ITE\FiltrationBundle\Doctrine\ORM\QueryBuilder\QueryBuilderExpressionVisitor;
 use ITE\FiltrationBundle\Filtration\Handler\HandlerInterface;
 
 /**

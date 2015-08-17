@@ -29,7 +29,6 @@ class QueryBuilderHandler implements HandlerInterface
         $this->expressionVisitorClass = $expressionVisitorClass;
     }
 
-
     /**
      * {@inheritdoc}
      */
