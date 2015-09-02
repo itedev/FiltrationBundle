@@ -87,8 +87,7 @@ class UrlGenerator implements UrlGeneratorInterface
 
         if (!$multiple) {
             $form = $this->getParent($form);
-            $name = $form instanceof FormInterface ? $form->getName() : $form->vars['name'];
-            $accessor->setValue($query, sprintf('[%s]', $name), []);
+            $query = $this->clearSorting($query, $form);
         }
 
         $accessor->setValue($query, $propertyPath, $direction);
@@ -126,6 +125,29 @@ class UrlGenerator implements UrlGeneratorInterface
         }
 
         return $this->router->generate($route, $query);
+    }
+
+    /**
+     * Clear all sorting in query array
+     *
+     * @param array $query
+     * @param FormInterface|FormView $form
+     * @return array
+     */
+    private function clearSorting($query, $form)
+    {
+        $accessor = PropertyAccess::createPropertyAccessor();
+
+        foreach ($form as $child) {
+            $sortField = $this->getSortField($child);
+            if (!$sortField) {
+                continue;
+            }
+            $propertyPath = $sortField instanceof FormInterface ? $sortField->getPropertyPath() : $this->getPropertyPath($sortField);
+            $accessor->setValue($query, $propertyPath, "");
+        }
+
+        return $query;
     }
 
     /**
