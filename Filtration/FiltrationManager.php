@@ -140,8 +140,13 @@ class FiltrationManager implements FiltrationInterface
             $event = new SortingEvent($child, $target, $options);
             $this->eventDispatcher->dispatch(FiltrationEvents::SORT, $event);
 
-            if ($event->getOrderings()) {
-                $orderings = array_merge($orderings, $event->getOrderings());
+            if (!empty($orderings = $event->getOrderings())) {
+                $orderings = array_merge($orderings, $orderings);
+                foreach ($orderings as $order) {
+                    foreach ($order as $dir) {
+                        $filter->markFieldSorted($child->getName(), $dir);
+                    }
+                }
             }
         }
 
@@ -196,7 +201,7 @@ class FiltrationManager implements FiltrationInterface
         }
 
         if ($event->isTargetModified()) {
-            $filter->markFieldModified($form->getName());
+            $filter->markFieldFiltered($form->getName());
         }
 
         return $event->getTarget();

@@ -3,6 +3,7 @@
 
 namespace ITE\FiltrationBundle\Twig\Extension;
 
+use ITE\FiltrationBundle\Filtration\FilterInterface;
 use ITE\FiltrationBundle\Util\UrlGenerator;
 use Symfony\Component\Form\FormView;
 
@@ -43,17 +44,18 @@ class SortingExtension extends \Twig_Extension
 
     /**
      * @param \Twig_Environment $twig
+     * @param FilterInterface   $filter
      * @param FormView          $form
      * @param string            $direction
      * @param array             $options
-     *
      * @return string
      */
-    public function sortButton(\Twig_Environment $twig, FormView $form, $direction, $options = [])
+    public function sortButton(\Twig_Environment $twig, FilterInterface $filter, FormView $form, $direction, $options = [])
     {
         $template = $twig->resolveTemplate('@ITEFiltrationBundle/Resources/views/Helpers/sorting_buttons.html.twig');
 
         return $template->renderBlock('sort_link', [
+            'filter' => $filter,
             'form' => $form,
             'direction' => $direction,
             'options' => $options,

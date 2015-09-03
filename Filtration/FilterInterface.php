@@ -20,7 +20,13 @@ interface FilterInterface
     /**
      * @param $fieldName
      */
-    public function markFieldModified($fieldName);
+    public function markFieldFiltered($fieldName);
+
+    /**
+     * @param $fieldName
+     * @param $direction
+     */
+    public function markFieldSorted($fieldName, $direction);
 
     /**
      * @return string
