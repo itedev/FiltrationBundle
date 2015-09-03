@@ -140,7 +140,8 @@ class FiltrationManager implements FiltrationInterface
             $event = new SortingEvent($child, $target, $options);
             $this->eventDispatcher->dispatch(FiltrationEvents::SORT, $event);
 
-            if (!empty($orderings = $event->getOrderings())) {
+            $orderings = $event->getOrderings();
+            if (!empty($orderings)) {
                 $orderings = array_merge($orderings, $orderings);
                 foreach ($orderings as $order) {
                     foreach ($order as $dir) {
