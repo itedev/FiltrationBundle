@@ -10,6 +10,7 @@
 {% block table_tag %}<table {% for attrname, attrvalue in table_attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>{% endblock %}
     {% block thead %}
         <thead>
+        <tr>
         {% for key, header_entry in filter.headers %}
             {% if form[key] is defined %}
                 {% set attr = filter.options %}
@@ -99,7 +100,7 @@
                 {#{% include filter.rawHeaderTemplate with {header_entry: header_entry, filter: filter} %}#}
             {% endif %}
         {% endfor %}
-        </thead>
+        </tr></thead>
     {% endblock %}
     <tbody>
     {% block filter_body %}

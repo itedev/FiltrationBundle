@@ -138,15 +138,17 @@ class UrlGenerator implements UrlGeneratorInterface
         $query    = array_merge($request->query->all(), $request->attributes->get('_route_params', []));
 
         $sortField = $this->getSortField($form);
-        $propertyPath = $sortField instanceof FormInterface ? $sortField->getPropertyPath() : $this->getPropertyPath($sortField);
-        $multiple = $form instanceof FormInterface ? $form->getConfig()->getOption('sort_multiple') : $form->vars['sort_multiple'];
+        if ($sortField) {
+            $propertyPath = $sortField instanceof FormInterface ? $sortField->getPropertyPath() : $this->getPropertyPath($sortField);
+            $multiple = $form instanceof FormInterface ? $form->getConfig()->getOption('sort_multiple') : $form->vars['sort_multiple'];
 
-        if (!$multiple) {
-            $parentForm = $this->getParent($form);
-            $query = $this->clearSorting($query, $parentForm);
+            if (!$multiple) {
+                $parentForm = $this->getParent($form);
+                $query = $this->clearSorting($query, $parentForm);
+            }
+
+            $accessor->setValue($query, $propertyPath, null);
         }
-
-        $accessor->setValue($query, $propertyPath, null);
 
         $propertyPath = $form instanceof FormInterface ? $form->getPropertyPath() : $this->getPropertyPath($form);
         $accessor->setValue($query, $propertyPath, null);
