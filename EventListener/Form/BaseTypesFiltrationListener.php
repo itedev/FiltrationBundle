@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Expr\Comparison;
 use ITE\FiltrationBundle\Doctrine\Common\Collections\Criteria;
 use ITE\FiltrationBundle\Event\FiltrationEvent;
 use ITE\FiltrationBundle\EventListener\AbstractFiltrationListener;
+use ITE\FiltrationBundle\Util\UrlGeneratorInterface;
 
 /**
  * Class BaseTypesFiltrationListener
@@ -39,6 +40,12 @@ class BaseTypesFiltrationListener extends AbstractFiltrationListener
 
         if (null === ($data = $form->getData())) {
             return;
+        }
+
+        if ($this->supportsParentType($form, 'hidden')) {
+            if (strpos($form->getName(), UrlGeneratorInterface::SORT_FIELD_PREFIX) === 0) {
+                return;
+            }
         }
 
         $criteria = Criteria::create();
