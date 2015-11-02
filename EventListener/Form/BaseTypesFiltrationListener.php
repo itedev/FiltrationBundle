@@ -32,6 +32,7 @@ class BaseTypesFiltrationListener extends AbstractFiltrationListener
             && !$this->supportsParentType($form, 'time')
             && !$this->supportsParentType($form, 'integer')
             && !$this->supportsParentType($form, 'checkbox')
+            && !$this->supportsParentType($form, 'hidden')
         ) {
             return;
         }
