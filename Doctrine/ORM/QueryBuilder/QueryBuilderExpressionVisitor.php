@@ -1,8 +1,6 @@
 <?php
 
-
 namespace ITE\FiltrationBundle\Doctrine\ORM\QueryBuilder;
-
 
 use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\Common\Collections\Expr\CompositeExpression;
@@ -29,7 +27,7 @@ class QueryBuilderExpressionVisitor extends ExpressionVisitor
      */
     public function walkComparison(Comparison $comparison)
     {
-        $parameterName = uniqid(str_replace('.', '_', $comparison->getField()));
+        $parameterName = uniqid(strtolower(preg_replace('/([\W]+)/i', '_', $comparison->getField())));
         $placeholder = ':'.$parameterName;
 
         $value = $this->walkValue($comparison->getValue());
