@@ -6,6 +6,7 @@
     {{ form_start(form) }}
 {% endblock %}
 
+{% block table_prefix %}{% endblock table_prefix %}
 {% set table_attr = attr.table_attr|merge({'class': attr.table_class|default('')}) %}
 {% block table_tag %}<table {% for attrname, attrvalue in table_attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>{% endblock %}
     {% block thead %}
@@ -152,6 +153,7 @@
     {% endblock %}
     </tbody>
 </table>
+{% block table_suffix %}{% endblock table_suffix %}
 
 {% block form_end %}
     {{ form_end(form) }}
