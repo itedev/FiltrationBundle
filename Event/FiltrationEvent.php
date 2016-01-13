@@ -7,6 +7,7 @@ namespace ITE\FiltrationBundle\Event;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
+use ITE\DoctrineExtraBundle\ORM\Query\NativeQueryBuilder;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Form\FormInterface;
 
@@ -72,7 +73,7 @@ class FiltrationEvent extends Event
     }
 
     /**
-     * @return ArrayCollection|QueryBuilder
+     * @return ArrayCollection|QueryBuilder|NativeQueryBuilder
      */
     public function getTarget()
     {

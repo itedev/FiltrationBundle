@@ -101,7 +101,9 @@
                 {#{% include filter.rawHeaderTemplate with {header_entry: header_entry, filter: filter} %}#}
             {% endif %}
         {% endfor %}
-        </tr></thead>
+        </tr>
+        {% block thead_rows_after %}{% endblock %}
+        </thead>
     {% endblock %}
     <tbody>
     {% block filter_body %}
