@@ -11,6 +11,7 @@ namespace ITE\FiltrationBundle\Event;
 class FiltrationEvents
 {
     // filtration
+    const INIT_FILTER       = 'ite_filtration.init_filter';
     const BEFORE_FILTER     = 'ite_filtration.before_filter';
     const FILTER            = 'ite_filtration.filter';
     const AFTER_FILTER      = 'ite_filtration.after_filter';

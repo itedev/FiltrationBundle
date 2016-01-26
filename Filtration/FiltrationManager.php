@@ -5,6 +5,7 @@ namespace ITE\FiltrationBundle\Filtration;
 use ITE\FiltrationBundle\Doctrine\Common\Collections\Criteria;
 use ITE\FiltrationBundle\Event\FiltrationEvent;
 use ITE\FiltrationBundle\Event\FiltrationEvents;
+use ITE\FiltrationBundle\Event\InitEvent;
 use ITE\FiltrationBundle\Event\PaginationEvent;
 use ITE\FiltrationBundle\Event\SortingEvent;
 use ITE\FiltrationBundle\Filtration\Handler\HandlerInterface;
@@ -72,6 +73,10 @@ class FiltrationManager implements FiltrationInterface
         $options = $filter->getOptions($options);
 
         $form = $this->getFilterForm($filter->getName(), $options);
+
+        //Filter Init Event
+        $event = new InitEvent($form, $target, $options, $filter);
+        $this->eventDispatcher->dispatch(FiltrationEvents::INIT_FILTER, $event);
 
         if ($form->isValid()) {
             $target = $this->doFilter($form, $target, $filter, $options);
