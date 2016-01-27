@@ -29,6 +29,11 @@ class FiltrationManager implements FiltrationInterface
     protected $filters = [];
 
     /**
+     * @var FormInterface[]
+     */
+    protected $forms = [];
+
+    /**
      * @var HandlerInterface[]
      */
     protected $handlers = [];
@@ -248,7 +253,13 @@ class FiltrationManager implements FiltrationInterface
     public function getFilterForm($name, $options = [])
     {
         $filter = $this->getFilter($name);
-        $form = $filter->getFilterForm($this->formFactory);
+
+        if(!isset($this->forms[$name])) {
+            $this->forms[$name] = $filter->getFilterForm($this->formFactory);
+        }
+
+        $form = $this->forms[$name];
+
         if (!$form->getConfig()->getOption('filter_form')) {
             throw new \LogicException('Filter form should have an option "filter_form" set to true.');
         }

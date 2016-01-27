@@ -9,6 +9,7 @@
 {% block table_prefix %}{% endblock table_prefix %}
 {% set table_attr = attr.table_attr|merge({'class': attr.table_class|default('')}) %}
 {% block table_tag %}<table {% for attrname, attrvalue in table_attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>{% endblock %}
+    {% block table_colgroup %}{% endblock %}
     {% block thead %}
         <thead>
         <tr>
