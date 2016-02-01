@@ -2,6 +2,8 @@
 {% set translation_domain = attr.translation_domain %}
 {% trans_default_domain translation_domain %}
 
+{% block table_addition %}{% endblock %}
+
 {% block form_start %}
     {{ form_start(form) }}
 {% endblock %}
@@ -9,153 +11,154 @@
 {% block table_prefix %}{% endblock table_prefix %}
 {% set table_attr = attr.table_attr|merge({'class': attr.table_class|default('')}) %}
 {% block table_tag %}<table {% for attrname, attrvalue in table_attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>{% endblock %}
+    {% block table_colgroup %}{% endblock %}
     {% block thead %}
         <thead>
         <tr>
-        {% for key, header_entry in filter.headers %}
-            {% if form[key] is defined %}
-                {% set attr = filter.options %}
-                {% set filter_form_row = form[key] %}
-                {% set header_key = key %}
-                {% set header_cell_attr = attr.header_cell_attr|merge({'class': attr.header_cell_class|default('')}) %}
+            {% block thead_row %}
+                {% for key, header_entry in filter.headers %}
+                    {% if form[key] is defined %}
+                        {% set attr = filter.options %}
+                        {% set filter_form_row = form[key] %}
+                        {% set header_key = key %}
+                        {% set header_cell_attr = attr.header_cell_attr|merge({'class': attr.header_cell_class|default('')}) %}
 
-                {% set block_filter_header %}
-                {{ block('filter_header_' ~ key) }}
-                {% endset %}
+                        {% set block_filter_header %}
+                            {{ block('filter_header_' ~ key) }}
+                        {% endset %}
 
-                {% if block_filter_header.__toString()|trim %}
-                    {{ block_filter_header|raw }}
-                {% else %}
-                    {% block filter_header %}
-                        <th {% for attrname, attrvalue in header_cell_attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
-                            {% set attr = filter.options.filter_header %}
+                        {% if block_filter_header.__toString()|trim %}
+                            {{ block_filter_header|raw }}
+                        {% else %}
+                            {% block filter_header %}
+                                <th {% for attrname, attrvalue in header_cell_attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
+                                {% set attr = filter.options.filter_header %}
 
-                            {% set block_filter_th %}
-                            {{ block('filter_th_' ~ key) }}
-                            {% endset %}
+                                {% set block_filter_th %}
+                                    {{ block('filter_th_' ~ key) }}
+                                {% endset %}
 
-                            {% if block_filter_th.__toString()|trim %}
-                                {{ block_filter_th|raw }}
-                            {% else %}
-                                {% block filter_th %}
-                                    <div class="dropdown {{ attr.wrapper_class|default('') }}">
-                                        <a href="#" id="dropdown_toggle_{{ filter_form_row.vars.name }}"
-                                           class="dropdown-toggle {{ attr.link_class|default('') }}{% if filter.isFieldFiltered(header_key) or filter.isFieldSorted(header_key) %} {{ attr.button_active_class|default('') }}{% endif %}"
-                                           data-toggle="dropdown">
-                                            {{ header_entry|trans|raw }}
-                                            {% if attr.icon %}
-                                                <i class="fa fa-{{ attr.icon }}"></i>
-                                            {% endif %}
-                                        </a>
-                                        <ul class="dropdown-menu {{ attr.list_class|default('') }}">
-                                            {% block dropdown_inner %}
-
-                                                {% if filter_form_row.vars['sort'] is defined and filter_form_row.vars['sort'] == true %}
-                                                    {% block filter_sorting_block %}
-                                                        <li>
-                                                            {{ ite_filtration_sort_button(filter, form[key], 'asc', {translation_domain: translation_domain}) }}
-                                                        </li>
-                                                        <li>
-                                                            {{ ite_filtration_sort_button(filter, form[key], 'desc', {translation_domain: translation_domain}) }}
-                                                        </li>
-                                                        {#{{ form_widget(form[key].vars.sort_form) }}#}
-                                                    {% endblock %}
+                                {% if block_filter_th.__toString()|trim %}
+                                    {{ block_filter_th|raw }}
+                                {% else %}
+                                    {% block filter_th %}
+                                        <div class="dropdown {{ attr.wrapper_class|default('') }}">
+                                            <a href="#" id="dropdown_toggle_{{ filter_form_row.vars.name }}"
+                                               class="dropdown-toggle {{ attr.link_class|default('') }}{% if filter.isFieldFiltered(header_key) or filter.isFieldSorted(header_key) %} {{ attr.button_active_class|default('') }}{% endif %}"
+                                               data-toggle="dropdown">
+                                                {{ header_entry|trans|raw }}
+                                                {% if attr.icon %}
+                                                    <i class="fa fa-{{ attr.icon }}"></i>
                                                 {% endif %}
+                                            </a>
+                                            <ul class="dropdown-menu {{ attr.list_class|default('') }}">
+                                                {% block dropdown_inner %}
 
-                                                <li class="{{ attr.list_item_class|default('') }}">
-                                                    <div class="{{ attr.field_wrapper_class|default('') }}">
-                                                        {{ form_row(filter_form_row) }}
-                                                    </div>
-                                                    {% block filter_header_dropdown_footer %}{% endblock filter_header_dropdown_footer %}
-                                                </li>
-                                            {% endblock %}
-                                        </ul>
-                                    </div>
-                                {% endblock %}
-                            {% endif %}
-                        </th>
-                    {% endblock %}
-                {% endif %}
+                                                    {% if filter_form_row.vars['sort'] is defined and filter_form_row.vars['sort'] == true %}
+                                                        {% block filter_sorting_block %}
+                                                            <li>
+                                                                {{ ite_filtration_sort_button(filter, form[key], 'asc', {translation_domain: translation_domain}) }}
+                                                            </li>
+                                                            <li>
+                                                                {{ ite_filtration_sort_button(filter, form[key], 'desc', {translation_domain: translation_domain}) }}
+                                                            </li>
+                                                            {#{{ form_widget(form[key].vars.sort_form) }}#}
+                                                        {% endblock %}
+                                                    {% endif %}
 
-            {% else %}
-                {% set attr = filter.options %}
-                {% set header_cell_attr = attr.header_cell_attr|merge({'class': attr.header_cell_class|default('')}) %}
+                                                    <li class="{{ attr.list_item_class|default('') }}">
+                                                        <div class="{{ attr.field_wrapper_class|default('') }}">
+                                                            {{ form_row(filter_form_row) }}
+                                                        </div>
+                                                        {% block filter_header_dropdown_footer %}{% endblock filter_header_dropdown_footer %}
+                                                    </li>
+                                                {% endblock %}
+                                            </ul>
+                                        </div>
+                                    {% endblock %}
+                                {% endif %}
+                                </th>
+                            {% endblock %}
+                        {% endif %}
 
-                {% set block_raw_header %}
-                {{ block('raw_header_' ~ key) }}
-                {% endset %}
+                    {% else %}
+                        {% set attr = filter.options %}
+                        {% set header_cell_attr = attr.header_cell_attr|merge({'class': attr.header_cell_class|default('')}) %}
 
-                {% if block_raw_header.__toString()|trim %}
-                    {{ block_raw_header|raw }}
-                {% else %}
-                    {% block raw_header %}
-                        <th {% for attrname, attrvalue in header_cell_attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
-                            {% set attr = filter.options.filter_header %}
-                            <span class="{{ attr.span_class }}">
-                        {{ header_entry|trans }}
-                        </span>
-                        </th>
-                    {% endblock %}
-                {% endif %}
+                        {% set block_raw_header %}
+                            {{ block('raw_header_' ~ key) }}
+                        {% endset %}
 
-                {#{% include filter.rawHeaderTemplate with {header_entry: header_entry, filter: filter} %}#}
-            {% endif %}
-        {% endfor %}
+                        {% if block_raw_header.__toString()|trim %}
+                            {{ block_raw_header|raw }}
+                        {% else %}
+                            {% block raw_header %}
+                                <th {% for attrname, attrvalue in header_cell_attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
+                                    {% set attr = filter.options.filter_header %}
+                                    {% block filter_th_raw %}<span class="{{ attr.span_class }}">{{ header_entry|trans }}</span>{% endblock %}
+                                </th>
+                            {% endblock %}
+                        {% endif %}
+
+                        {#{% include filter.rawHeaderTemplate with {header_entry: header_entry, filter: filter} %}#}
+                    {% endif %}
+                {% endfor %}
+            {% endblock thead_row %}
         </tr>
         {% block thead_rows_after %}{% endblock %}
         </thead>
     {% endblock %}
-    <tbody>
-    {% block filter_body %}
-        {% if target|length != 0 %}
-            {% for key, item in target %}
-                {% set attr = filter.options %}
-                {% set row_attr = attr.row_attr|merge({'class': attr.row_class|default('')}) %}
+<tbody>
+{% block filter_body %}
+    {% if target|length != 0 %}
+        {% for key, item in target %}
+            {% set attr = filter.options %}
+            {% set row_attr = attr.row_attr|merge({'class': attr.row_class|default('')}) %}
 
-                {% set block_filter_row %}
-                    {{ block('filter_row_' ~ key) }}
-                {% endset %}
+            {% set block_filter_row %}
+                {{ block('filter_row_' ~ key) }}
+            {% endset %}
 
-                {% if block_filter_row.__toString()|trim %}
-                    {{ block_filter_row|raw }}
-                {% else %}
-                    {% block filter_row %}
-                        <tr {% for attrname, attrvalue in row_attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
-                            {% for field, name in filter.headers %}
-                                {% set attr = filter.options %}
-                                {% set cell_attr = attr.cell_attr|merge({'class': attr.cell_class|default('')}) %}
+            {% if block_filter_row.__toString()|trim %}
+                {{ block_filter_row|raw }}
+            {% else %}
+                {% block filter_row %}
+                    <tr {% for attrname, attrvalue in row_attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
+                    {% for field, name in filter.headers %}
+                        {% set attr = filter.options %}
+                        {% set cell_attr = attr.cell_attr|merge({'class': attr.cell_class|default('')}) %}
 
-                                {% set block_filter_cell %}
-                                    {{ block('filter_cell_' ~ field) }}
-                                {% endset %}
+                        {% set block_filter_cell %}
+                            {{ block('filter_cell_' ~ field) }}
+                        {% endset %}
 
-                                {% if block_filter_cell.__toString()|trim %}
-                                    {{ block_filter_cell|raw }}
-                                {% else %}
-                                    {% block filter_cell %}
-                                        <td {% for attrname, attrvalue in cell_attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
-                                            {{ attribute(item, field) }}
-                                        </td>
-                                    {% endblock %}
-                                {% endif %}
-                            {% endfor %}
-                        </tr>
-                    {% endblock %}
-                {% endif %}
-            {% endfor %}
-        {% else %}
-            {% block filter_empty_row %}
-                <tr>
-                    <td colspan="{{ filter.headers|length }}" class="text-center">
-                        <em>{{ 'no_results'|trans }}</em>
-                    </td>
-                </tr>
-            {% endblock filter_empty_row %}
-        {% endif %}
-    {% endblock %}
-    </tbody>
+                        {% if block_filter_cell.__toString()|trim %}
+                            {{ block_filter_cell|raw }}
+                        {% else %}
+                            {% block filter_cell %}
+                                <td {% for attrname, attrvalue in cell_attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
+                                {{ attribute(item, field) }}
+                                </td>
+                            {% endblock %}
+                        {% endif %}
+                    {% endfor %}
+                    </tr>
+                {% endblock %}
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        {% block filter_empty_row %}
+            <tr>
+                <td colspan="{{ filter.headers|length }}" class="text-center">
+                    <em>{{ 'no_results'|trans }}</em>
+                </td>
+            </tr>
+        {% endblock filter_empty_row %}
+    {% endif %}
+{% endblock %}
+</tbody>
 
-    {% block tfoot %}{% endblock %}
+{% block tfoot %}{% endblock %}
 </table>
 {% block table_suffix %}{% endblock table_suffix %}
 

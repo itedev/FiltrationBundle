@@ -5,6 +5,7 @@ namespace ITE\FiltrationBundle\Filtration;
 use ITE\FiltrationBundle\Doctrine\Common\Collections\Criteria;
 use ITE\FiltrationBundle\Event\FiltrationEvent;
 use ITE\FiltrationBundle\Event\FiltrationEvents;
+use ITE\FiltrationBundle\Event\InitEvent;
 use ITE\FiltrationBundle\Event\PaginationEvent;
 use ITE\FiltrationBundle\Event\SortingEvent;
 use ITE\FiltrationBundle\Filtration\Handler\HandlerInterface;
@@ -26,6 +27,11 @@ class FiltrationManager implements FiltrationInterface
      * @var FilterInterface[]
      */
     protected $filters = [];
+
+    /**
+     * @var FormInterface[]
+     */
+    protected $forms = [];
 
     /**
      * @var HandlerInterface[]
@@ -72,6 +78,10 @@ class FiltrationManager implements FiltrationInterface
         $options = $filter->getOptions($options);
 
         $form = $this->getFilterForm($filter->getName(), $options);
+
+        //Filter Init Event
+        $event = new InitEvent($form, $target, $options, $filter);
+        $this->eventDispatcher->dispatch(FiltrationEvents::INIT_FILTER, $event);
 
         if ($form->isValid()) {
             $target = $this->doFilter($form, $target, $filter, $options);
@@ -243,19 +253,26 @@ class FiltrationManager implements FiltrationInterface
     public function getFilterForm($name, $options = [])
     {
         $filter = $this->getFilter($name);
+
         $form = $filter->getFilterForm($this->formFactory);
+
         if (!$form->getConfig()->getOption('filter_form')) {
             throw new \LogicException('Filter form should have an option "filter_form" set to true.');
         }
 
         $request = $this->requestStack->getMasterRequest();
         $data = $form->getData();
-        if (isset($options['data']) && !empty($options['data'])) {
-            $form->submit($this->convertData($form, $options['data']));
-        } elseif ($request->query->has($form->getName())) {
-            $form->submit($request->query->get($form->getName()));
-        } elseif (!empty($data)) {
-            $form->submit($data);
+
+        if(!$form->isSubmitted()) {
+            if (isset($options['data']) && !empty($options['data'])) {
+                $form->submit($this->convertData($form, $options['data']));
+            }
+            elseif ($request->query->has($form->getName())) {
+                $form->submit($request->query->get($form->getName()));
+            }
+            elseif (!empty($data)) {
+                $form->submit($data);
+            }
         }
 
         return $form;
