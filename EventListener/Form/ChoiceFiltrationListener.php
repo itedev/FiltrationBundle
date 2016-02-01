@@ -3,6 +3,7 @@
 
 namespace ITE\FiltrationBundle\EventListener\Form;
 
+use Doctrine\Common\Collections\Collection;
 use ITE\FiltrationBundle\Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
 use ITE\FiltrationBundle\Event\FiltrationEvent;
@@ -31,12 +32,16 @@ class ChoiceFiltrationListener extends AbstractFiltrationListener
             return;
         }
 
-        if (empty($data)) {
-            return;
+        if ($data instanceof Collection) {
+            $data = $data->toArray();
         }
 
         if (!is_array($data)) {
             $data = [$data];
+        }
+
+        if (empty($data)) {
+            return;
         }
 
         $criteria = Criteria::create();
