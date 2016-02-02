@@ -22,10 +22,11 @@ abstract class TableFilter extends AbstractFilter
         'page'  => 1,
         'data'  => [],
         'pagination' => [
-            'page_parameter_name' => 'page',
+            'pageParameterName' => 'page',
             'wrap_queries' => false,
             'distinct' => false,
             'fetch_join_collection' => false,
+            'page_range' => 5,
         ],
         'table_class' => 'table',
         'table_attr' => [],

@@ -19,6 +19,11 @@ class PaginationEvent extends FiltrationEvent
      */
     private $filter;
 
+    /**
+     * @var int
+     */
+    private $count = 0;
+
     public function __construct(FormInterface $form, $target, $options = [], FilterInterface $filter)
     {
         parent::__construct($form, $target, $options);
@@ -35,4 +40,27 @@ class PaginationEvent extends FiltrationEvent
         return $this->filter;
     }
 
+    /**
+     * Get count
+     *
+     * @return int
+     */
+    public function getCount()
+    {
+        return $this->count;
+    }
+
+    /**
+     * Set count
+     *
+     * @param int $count
+     *
+     * @return PaginationEvent
+     */
+    public function setCount($count)
+    {
+        $this->count = $count;
+
+        return $this;
+    }
 }
