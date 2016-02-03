@@ -62,6 +62,10 @@ class QueryBuilderPaginationListener
             return;
         }
 
+        if ($event->getResult()->getFilterForm()->getConfig()->getOption('paginate')) {
+            return;
+        }
+
         $event->setResult($event->getResult()->getSortedTarget());
     }
 }
