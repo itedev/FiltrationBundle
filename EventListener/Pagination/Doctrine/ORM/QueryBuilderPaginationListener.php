@@ -7,6 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\CountWalker;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use ITE\FiltrationBundle\Event\PaginationEvent;
+use ITE\FiltrationBundle\Event\ResultEvent;
 
 /**
  * Class QueryBuilderPaginationListener
@@ -53,5 +54,14 @@ class QueryBuilderPaginationListener
 
         $event->setTarget($paginator->getIterator()->getArrayCopy());
         $event->setCount($paginator->count());
+    }
+
+    public function result(ResultEvent $event)
+    {
+        if (!($event->getResult()->getOriginalTarget() instanceof QueryBuilder)) {
+            return;
+        }
+
+        $event->setResult($event->getResult()->getSortedTarget());
     }
 }

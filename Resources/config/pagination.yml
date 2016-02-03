@@ -9,6 +9,7 @@ services:
     class: %ite_filtration.pagination.doctrine.orm.event_listener.class%
     tags:
       - { name: kernel.event_listener, event: ite_filtration.paginate, method: paginate }
+      - { name: kernel.event_listener, event: ite_filtration.result, method: result }
 
   ite_filtration.pagination.doctrine.dbal.event_listener:
     class: %ite_filtration.pagination.doctrine.dbal.event_listener.class%
@@ -16,6 +17,7 @@ services:
       - @doctrine.orm.entity_manager
     tags:
       - { name: kernel.event_listener, event: ite_filtration.paginate, method: paginate }
+      - { name: kernel.event_listener, event: ite_filtration.result, method: result }
 
   ite_filtration.pagination.query_parameter.event_listener:
     class: %ite_filtration.pagination.query_parameter.event_listener.class%

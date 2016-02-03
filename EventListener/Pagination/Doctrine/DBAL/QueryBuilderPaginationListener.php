@@ -7,6 +7,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityManager;
 use ITE\DoctrineExtraBundle\ORM\Query\ResultSetMappingBuilder;
 use ITE\FiltrationBundle\Event\PaginationEvent;
+use ITE\FiltrationBundle\Event\ResultEvent;
 
 /**
  * Class QueryBuilderPaginationListener
@@ -78,5 +79,14 @@ class QueryBuilderPaginationListener
         }
 
         $event->stopPropagation();
+    }
+
+    public function result(ResultEvent $event)
+    {
+        if (!($event->getResult()->getOriginalTarget() instanceof QueryBuilder)) {
+            return;
+        }
+
+        $event->setResult($event->getResult()->getSortedTarget());
     }
 }

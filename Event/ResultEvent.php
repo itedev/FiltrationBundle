@@ -44,7 +44,7 @@ class ResultEvent extends Event
      *
      * @return ResultEvent
      */
-    public function setResult(FiltrationResultInterface $result)
+    public function setResult($result)
     {
         $this->result = $result;
 

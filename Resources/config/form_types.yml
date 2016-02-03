@@ -2,6 +2,7 @@ parameters:
   ite_filtration.form.type_extension.text.filtration.class:    ITE\FiltrationBundle\Form\Extension\TextTypeFilterExtension
   ite_filtration.form.type_extension.form.filtration.class:    ITE\FiltrationBundle\Form\Extension\FormTypeFilterExtension
   ite_filtration.form.type_extension.form.sorting.class:       ITE\FiltrationBundle\Form\Extension\FormTypeSortingExtension
+  ite_filtration.form.type_extension.form.pagination.class:    ITE\FiltrationBundle\Form\Extension\FormTypePaginationExtension
   ite_filtration.form.type.range_filter.class:                 ITE\FiltrationBundle\Form\Type\RangeFilterType
   ite_filtration.form.type.filter_collection.class:            ITE\FiltrationBundle\Form\Type\FilterCollectionType
   ite_filtration.form.type.callback_filter.class:              ITE\FiltrationBundle\Form\Type\CallbackFilterType
@@ -19,6 +20,11 @@ services:
 
   ite_filtration.form.type_extension.form.sorting:
     class: %ite_filtration.form.type_extension.form.sorting.class%
+    tags:
+      - { name: form.type_extension, alias: form }
+
+  ite_filtration.form.type_extension.form.pagination:
+    class: %ite_filtration.form.type_extension.form.pagination.class%
     tags:
       - { name: form.type_extension, alias: form }
 
