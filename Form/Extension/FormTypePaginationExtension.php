@@ -20,7 +20,7 @@ class FormTypePaginationExtension extends AbstractTypeExtension
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'paginate' => false,
+            'paginate' => true,
             'paginate_page' => 1,
             'paginate_limit' => 10,
         ]);
