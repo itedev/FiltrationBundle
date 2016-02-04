@@ -30,6 +30,15 @@ class FormTypeFilterExtension extends AbstractTypeExtension
     }
 
     /**
+     * @inheritDoc
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['filter_formatter'] = $options['filter_formatter'];
+        $view->vars['filter_formatter_params'] = $options['filter_formatter_params'];
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -39,19 +48,23 @@ class FormTypeFilterExtension extends AbstractTypeExtension
             'filter_field',
             'filter_aggregate',
         ]);
+        $resolver->setDefaults([
+            'csrf_protection' => function(Options $options, $csrfProtection) {
+                if (isset($options['filter_form']) && true === $options['filter_form']) {
+                    return false;
+                }
+
+                return $csrfProtection;
+            },
+            'filter_formatter' => 'string',
+            'filter_formatter_params' => [],
+        ]);
         $resolver->setAllowedTypes([
             'filter_form' => ['bool'],
             'filter_field' => ['string'],
             'filter_aggregate' => ['bool'],
-        ]);
-        $resolver->setDefaults([
-           'csrf_protection' => function(Options $options, $csrfProtection) {
-               if (isset($options['filter_form']) && true === $options['filter_form']) {
-                   return false;
-               }
-
-               return $csrfProtection;
-           },
+            'filter_formatter' => ['string', 'callable'],
+            'filter_formatter_params' => ['array']
         ]);
     }
 
@@ -62,5 +75,4 @@ class FormTypeFilterExtension extends AbstractTypeExtension
     {
         return 'form';
     }
-
 }

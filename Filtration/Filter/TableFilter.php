@@ -73,5 +73,4 @@ abstract class TableFilter extends AbstractFilter
      * @return array
      */
     abstract public function getHeaders();
-
-} 
+}
