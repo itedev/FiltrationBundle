@@ -132,6 +132,9 @@ class FiltrationExtension extends \Twig_Extension
     public function format($context, $item, $fieldName)
     {
         /** @var FormView $field */
+        if (!isset($context['form'][$fieldName])) {
+            throw new \Exception(sprintf('Field with name "%s" is not found in form for auto formatting.', $fieldName));
+        }
         $field = $context['form'][$fieldName];
         $formatter = $field->vars['filter_formatter'];
         if (!isset($this->formatters[$formatter])) {

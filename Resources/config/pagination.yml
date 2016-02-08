@@ -1,6 +1,7 @@
 parameters:
   ite_filtration.pagination.doctrine.orm.event_listener.class: ITE\FiltrationBundle\EventListener\Pagination\Doctrine\ORM\QueryBuilderPaginationListener
   ite_filtration.pagination.doctrine.dbal.event_listener.class: ITE\FiltrationBundle\EventListener\Pagination\Doctrine\DBAL\QueryBuilderPaginationListener
+  ite_filtration.pagination.doctrine.array_collection.event_listener.class: ITE\FiltrationBundle\EventListener\Pagination\Doctrine\ArrayCollectionPaginationListener
   ite_filtration.pagination.query_parameter.event_listener.class: ITE\FiltrationBundle\EventListener\Pagination\QueryParametersSubscriber
   ite_filtration.twig.extension.pagination.class: ITE\FiltrationBundle\Twig\Extension\PaginationExtension
 
@@ -18,6 +19,11 @@ services:
     tags:
       - { name: kernel.event_listener, event: ite_filtration.paginate, method: paginate }
       - { name: kernel.event_listener, event: ite_filtration.result, method: result }
+
+  ite_filtration.pagination.doctrine.array_collection.event_listener:
+    class: %ite_filtration.pagination.doctrine.array_collection.event_listener.class%
+    tags:
+      - { name: kernel.event_listener, event: ite_filtration.paginate, method: paginate }
 
   ite_filtration.pagination.query_parameter.event_listener:
     class: %ite_filtration.pagination.query_parameter.event_listener.class%
