@@ -31,6 +31,7 @@ class ITEFiltrationExtension extends Extension
         if (!$config['disable_knp_sorting']) {
             $container->removeDefinition('ite_filtration.knp.pager_sortable_disable_sorting.event_subscriber');
         }
+        $container->setParameter('ite_filtration.pagination', $config['pagination']);
     }
 
     /**
@@ -43,6 +44,7 @@ class ITEFiltrationExtension extends Extension
         $loader->load('services.yml');
         $loader->load('filtrators.yml');
         $loader->load('handlers.yml');
+        $loader->load('templating.yml');
     }
 
     /**

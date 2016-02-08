@@ -4,6 +4,7 @@
 namespace ITE\FiltrationBundle\Filtration;
 
 use ITE\FiltrationBundle\Filtration\Handler\HandlerInterface;
+use ITE\FiltrationBundle\Filtration\Result\FiltrationResultInterface;
 use Symfony\Component\Form\FormInterface;
 
 /**
@@ -19,7 +20,7 @@ interface FiltrationInterface
      * @param mixed                  $target
      * @param string|FilterInterface $filter
      * @param array                  $options
-     * @return mixed
+     * @return FiltrationResultInterface
      */
     public function filter($target, $filter, array $options = []);
 

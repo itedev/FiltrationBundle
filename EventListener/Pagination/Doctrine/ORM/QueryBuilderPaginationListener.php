@@ -6,8 +6,8 @@ namespace ITE\FiltrationBundle\EventListener\Pagination\Doctrine\ORM;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\CountWalker;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use ITE\FiltrationBundle\Doctrine\Common\Collections\Criteria;
 use ITE\FiltrationBundle\Event\PaginationEvent;
+use ITE\FiltrationBundle\Event\ResultEvent;
 
 /**
  * Class QueryBuilderPaginationListener
@@ -22,19 +22,9 @@ class QueryBuilderPaginationListener
             return;
         }
 
-        if (!($event->getOptions()->get('paginate'))) {
-            return;
-        }
-
         $limit = $event->getOptions()->get('limit') ?: 10;
         $page = $event->getOptions()->get('page') ?: 1;
         $offset = abs($page - 1) * $limit;
-
-        if (!$event->getOptions()->get('wrap_result')) {
-            $event->getTarget()->setFirstResult($offset)->setMaxResults($limit);
-
-            return;
-        }
 
         if (!class_exists('Doctrine\ORM\Tools\Pagination\Paginator')) {
             return;
@@ -62,6 +52,20 @@ class QueryBuilderPaginationListener
         $paginator = new Paginator($target, $fetchJoinCollection);
         $paginator->setUseOutputWalkers($useOutputWalkers);
 
-        $event->setTarget($paginator);
+        $event->setTarget($paginator->getIterator()->getArrayCopy());
+        $event->setCount($paginator->count());
+    }
+
+    public function result(ResultEvent $event)
+    {
+        if (!($event->getResult()->getOriginalTarget() instanceof QueryBuilder)) {
+            return;
+        }
+
+        if ($event->getResult()->getFilterForm()->getConfig()->getOption('paginate')) {
+            return;
+        }
+
+        $event->setResult($event->getResult()->getSortedTarget());
     }
 }

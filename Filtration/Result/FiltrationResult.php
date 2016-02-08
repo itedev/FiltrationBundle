@@ -1,9 +1,8 @@
 <?php
 
-
 namespace ITE\FiltrationBundle\Filtration\Result;
 
-use ITE\FiltrationBundle\Filtration\Filter\AbstractFilter;
+use ITE\FiltrationBundle\Filtration\FilterInterface;
 use Symfony\Component\Form\FormInterface;
 
 /**
@@ -11,81 +10,24 @@ use Symfony\Component\Form\FormInterface;
  *
  * @author sam0delkin <t.samodelkin@gmail.com>
  */
-class FiltrationResult extends AbstractFiltrationResult
+class FiltrationResult implements FiltrationResultInterface
 {
-    /**
-     * @var FormInterface
-     */
-    private $form;
+    use FiltrationResultTrait;
 
     /**
-     * @var AbstractFilter
-     */
-    private $filter;
-
-    /**
-     * @var int
-     */
-    private $count;
-
-    /**
-     * @param FormInterface   $form
-     * @param AbstractFilter $filter
+     * FiltrationResult constructor.
+     *
+     * @param FilterInterface $filter
+     * @param FormInterface   $filterForm
+     * @param                 $originalTarget
      * @param array           $options
      */
-    public function __construct(FormInterface $form, AbstractFilter $filter, $options = [])
+    public function __construct(FilterInterface $filter, FormInterface $filterForm, $originalTarget, $options = [])
     {
-        $this->form = $form;
         $this->filter = $filter;
+        $this->filterForm = $filterForm;
+        $this->originalTarget = is_object($originalTarget) ? clone $originalTarget : $originalTarget;
+        $this->filteredTarget = $this->sortedTarget = $this->originalTarget;
         $this->options = $options;
     }
-
-    /**
-     * @param $fieldName
-     * @return bool
-     */
-    public function isFieldModified($fieldName)
-    {
-        return $this->filter->isFieldModified($fieldName);
-    }
-
-    /**
-     * @return int
-     */
-    public function getLimit()
-    {
-        return isset($this->options['limit']) ? $this->options['limit'] : 10;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPage()
-    {
-        return isset($this->options['page']) ? $this->options['page'] : 10;
-    }
-
-    /**
-     * Get count
-     *
-     * @return int
-     */
-    public function getCount()
-    {
-        return $this->count;
-    }
-
-    /**
-     * Set count
-     *
-     * @param int $count
-     * @return FiltrationResult
-     */
-    public function setCount($count)
-    {
-        $this->count = $count;
-
-        return $this;
-    }
-
 }

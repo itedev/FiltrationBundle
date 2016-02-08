@@ -39,5 +39,4 @@ class FiltrationPass implements CompilerPassInterface
             $definition->addMethodCall('addHandler', [new Reference($id)]);
         }
     }
-
 } 

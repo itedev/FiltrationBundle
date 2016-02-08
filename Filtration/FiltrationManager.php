@@ -7,6 +7,7 @@ use ITE\FiltrationBundle\Event\FiltrationEvent;
 use ITE\FiltrationBundle\Event\FiltrationEvents;
 use ITE\FiltrationBundle\Event\InitEvent;
 use ITE\FiltrationBundle\Event\PaginationEvent;
+use ITE\FiltrationBundle\Event\ResultEvent;
 use ITE\FiltrationBundle\Event\SortingEvent;
 use ITE\FiltrationBundle\Filtration\Handler\HandlerInterface;
 use ITE\FiltrationBundle\Filtration\Result\FiltrationResult;
@@ -79,17 +80,27 @@ class FiltrationManager implements FiltrationInterface
 
         $form = $this->getFilterForm($filter->getName(), $options);
 
+        $result = new FiltrationResult($filter, $form, $target, $options);
+        $result->setFilteredTarget($target);
+
         //Filter Init Event
         $event = new InitEvent($form, $target, $options, $filter);
         $this->eventDispatcher->dispatch(FiltrationEvents::INIT_FILTER, $event);
 
         if ($form->isValid()) {
             $target = $this->doFilter($form, $target, $filter, $options);
+            $result->setFilteredTarget($target);
+
             $target = $this->doSort($form, $target, $filter, $options);
-            $target = $this->doPaginate($form, $target, $filter, $options);
+            $result->setSortedTarget($target);
         }
 
-        return $target;
+        $this->doPaginate($form, $result, $filter, $options);
+
+        $event = new ResultEvent($result);
+        $this->eventDispatcher->dispatch(FiltrationEvents::RESULT, $event);
+
+        return $event->getResult();
     }
 
     /**
@@ -174,24 +185,29 @@ class FiltrationManager implements FiltrationInterface
         return $target;
     }
 
-    private function doPaginate($form, $target, $filter, $options)
+    private function doPaginate($form, FiltrationResult $target, $filter, $options)
     {
-        $event = new PaginationEvent($form, $target, $options, $filter);
+        $event = new PaginationEvent($form, $target->getSortedTarget(), $options, $filter);
         $this->eventDispatcher->dispatch(FiltrationEvents::BEFORE_PAGINATE, $event);
-        $target = $event->getTarget();
+        $target->setPaginatedTarget($event->getTarget());
+        $target->setCount($event->getCount());
 
         if ($event->isPropagationStopped()) {
             return $target;
         }
 
-        $event = new PaginationEvent($form, $target, $options, $filter);
+        $event = new PaginationEvent($form, $target->getSortedTarget(), $options, $filter);
         $this->eventDispatcher->dispatch(FiltrationEvents::PAGINATE, $event);
-        $target = $event->getTarget();
+        $target->setPaginatedTarget($event->getTarget());
+        $target->setCount($event->getCount());
 
 
-        $event = new PaginationEvent($form, $target, $options, $filter);
-        $this->eventDispatcher->dispatch(FiltrationEvents::AFTER_FILTER, $event);
-        $target = $event->getTarget();
+        $event = new PaginationEvent($form, $target->getPaginatedTarget(), $options, $filter);
+        $this->eventDispatcher->dispatch(FiltrationEvents::AFTER_PAGINATE, $event);
+        if ($event->isTargetModified()) {
+            $target->setPaginatedTarget($event->getTarget());
+            $target->setCount($event->getCount());
+        }
 
         return $target;
     }
@@ -323,4 +339,4 @@ class FiltrationManager implements FiltrationInterface
     {
         return $this->filters;
     }
-} 
+}
