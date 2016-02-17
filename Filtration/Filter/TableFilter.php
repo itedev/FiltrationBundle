@@ -18,6 +18,7 @@ abstract class TableFilter extends AbstractFilter
         'translation_domain' => 'ITEFiltrationBundle',
         'wrap_result' => false,
         'paginate' => false,
+        'force_result_return' => false,
         'limit' => 10,
         'page'  => 1,
         'data'  => [],

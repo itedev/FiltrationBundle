@@ -36,6 +36,11 @@ class QueryBuilderPaginationListener
         if (!($event->getTarget() instanceof QueryBuilder)) {
             return;
         }
+
+        if (!$event->getForm()->getConfig()->getOption('paginate')) {
+            return;
+        }
+
         $target = $event->getTarget();
 
         $limit = $event->getOptions()->get('limit') ?: 10;
@@ -88,6 +93,10 @@ class QueryBuilderPaginationListener
         }
 
         if ($event->getResult()->getFilterForm()->getConfig()->getOption('paginate')) {
+            return;
+        }
+
+        if ($event->getResult()->getFilterForm()->getConfig()->getOption('force_result')) {
             return;
         }
 

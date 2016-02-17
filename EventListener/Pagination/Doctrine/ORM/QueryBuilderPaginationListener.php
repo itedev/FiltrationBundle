@@ -22,6 +22,10 @@ class QueryBuilderPaginationListener
             return;
         }
 
+        if (!$event->getForm()->getConfig()->getOption('paginate')) {
+            return;
+        }
+
         $limit = $event->getOptions()->get('limit') ?: 10;
         $page = $event->getOptions()->get('page') ?: 1;
         $offset = abs($page - 1) * $limit;
@@ -63,6 +67,10 @@ class QueryBuilderPaginationListener
         }
 
         if ($event->getResult()->getFilterForm()->getConfig()->getOption('paginate')) {
+            return;
+        }
+
+        if ($event->getResult()->getFilterForm()->getConfig()->getOption('force_result')) {
             return;
         }
 
