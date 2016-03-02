@@ -2,6 +2,7 @@
 
 namespace ITE\FiltrationBundle\Filtration\Filter;
 
+use Doctrine\ORM\Query;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -21,6 +22,7 @@ abstract class TableFilter extends AbstractFilter
         'force_result_return' => false,
         'limit' => 10,
         'page'  => 1,
+        'hydrator' => Query::HYDRATE_OBJECT,
         'data'  => [],
         'pagination' => [
             'pageParameterName' => 'page',

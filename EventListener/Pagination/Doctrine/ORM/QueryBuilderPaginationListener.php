@@ -46,6 +46,7 @@ class QueryBuilderPaginationListener
         $target
             ->setMaxResults($limit)
             ->setFirstResult($offset)
+            ->setHydrationMode($event->getOptions()->get('hydrator'))
             ->setHint(CountWalker::HINT_DISTINCT, $distinct);
 
         $fetchJoinCollection = true;

@@ -79,7 +79,7 @@ class QueryBuilderPaginationListener
 
             $event->setTarget($qb
                 ->getQuery()
-                ->getResult()
+                ->getResult($event->getOptions()->get('hydrator'))
             );
         }
 
