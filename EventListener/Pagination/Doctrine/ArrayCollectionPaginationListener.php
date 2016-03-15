@@ -36,5 +36,6 @@ class ArrayCollectionPaginationListener
         $criteria->setFirstResult($offset);
 
         $event->setTarget($target->matching($criteria));
+        $event->stopPropagation();
     }
 }

@@ -59,6 +59,7 @@ class QueryBuilderPaginationListener
 
         $event->setTarget($paginator->getIterator()->getArrayCopy());
         $event->setCount($paginator->count());
+        $event->stopPropagation();
     }
 
     public function result(ResultEvent $event)
