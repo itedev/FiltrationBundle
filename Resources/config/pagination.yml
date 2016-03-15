@@ -23,7 +23,7 @@ services:
   ite_filtration.pagination.doctrine.array_collection.event_listener:
     class: %ite_filtration.pagination.doctrine.array_collection.event_listener.class%
     tags:
-      - { name: kernel.event_listener, event: ite_filtration.paginate, method: paginate }
+      - { name: kernel.event_listener, event: ite_filtration.paginate, method: paginate, priority: 1 }
 
   ite_filtration.pagination.query_parameter.event_listener:
     class: %ite_filtration.pagination.query_parameter.event_listener.class%
