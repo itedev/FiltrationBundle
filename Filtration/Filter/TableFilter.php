@@ -15,6 +15,19 @@ abstract class TableFilter extends AbstractFilter
     /**
      * @var array
      */
+    protected $availableHeaders = [];
+
+    /**
+     * TableFilter constructor.
+     */
+    public function __construct()
+    {
+        $this->availableHeaders = $this->getHeaders();
+    }
+
+    /**
+     * @var array
+     */
     protected $defaultOptions = [
         'translation_domain' => 'ITEFiltrationBundle',
         'wrap_result' => false,
@@ -71,6 +84,29 @@ abstract class TableFilter extends AbstractFilter
         return array_replace_recursive($this->defaultOptions, $resolver->resolve($options));
     }
 
+    /**
+     * Get availableHeaders
+     *
+     * @return array
+     */
+    public function getAvailableHeaders()
+    {
+        return $this->availableHeaders;
+    }
+
+    /**
+     * Set availableHeaders
+     *
+     * @param array $availableHeaders
+     *
+     * @return TableFilter
+     */
+    public function setAvailableHeaders(array $availableHeaders)
+    {
+        $this->availableHeaders = $availableHeaders;
+
+        return $this;
+    }
 
     /**
      * @return array

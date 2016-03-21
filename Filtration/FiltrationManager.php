@@ -116,13 +116,16 @@ class FiltrationManager implements FiltrationInterface
         $event = new FiltrationEvent($form, $target, $options);
         $this->eventDispatcher->dispatch(FiltrationEvents::BEFORE_FILTER, $event);
         $target = $event->getTarget();
+        $availableHeaders = $filter->getAvailableHeaders();
 
         if ($event->isPropagationStopped()) {
             return $target;
         }
 
         foreach ($form as $child) {
-            $target = $this->filterChild($child, $target, $filter, $options);
+            if (isset($availableHeaders[$child->getName()])) {
+                $target = $this->filterChild($child, $target, $filter, $options);
+            }
         }
 
         $event = new FiltrationEvent($form, $target, $options);
@@ -145,6 +148,7 @@ class FiltrationManager implements FiltrationInterface
         $event = new SortingEvent($form, $target, $options);
         $this->eventDispatcher->dispatch(FiltrationEvents::BEFORE_SORT, $event);
         $target = $event->getTarget();
+        $availableHeaders = $filter->getAvailableHeaders();
         $orderings = $event->getOrderings();
 
         if ($event->isPropagationStopped()) {
@@ -158,16 +162,18 @@ class FiltrationManager implements FiltrationInterface
         }
 
         foreach ($form as $child) {
-            $event = new SortingEvent($child, $target, $options);
-            $this->eventDispatcher->dispatch(FiltrationEvents::SORT, $event);
+            if (isset($availableHeaders[$child->getName()])) {
+                $event = new SortingEvent($child, $target, $options);
+                $this->eventDispatcher->dispatch(FiltrationEvents::SORT, $event);
 
-            $or = $event->getOrderings();
-            if (!empty($or)) {
-                $orderings = array_merge($orderings, $or);
+                $or = $event->getOrderings();
+                if (!empty($or)) {
+                    $orderings = array_merge($orderings, $or);
 
-                foreach ($orderings as $order) {
-                    foreach ($order as $dir) {
-                        $filter->markFieldSorted($child->getName(), $dir);
+                    foreach ($orderings as $order) {
+                        foreach ($order as $dir) {
+                            $filter->markFieldSorted($child->getName(), $dir);
+                        }
                     }
                 }
             }
