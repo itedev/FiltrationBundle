@@ -9,6 +9,7 @@ use ITE\FiltrationBundle\Event\InitEvent;
 use ITE\FiltrationBundle\Event\PaginationEvent;
 use ITE\FiltrationBundle\Event\ResultEvent;
 use ITE\FiltrationBundle\Event\SortingEvent;
+use ITE\FiltrationBundle\Filtration\Filter\TableFilter;
 use ITE\FiltrationBundle\Filtration\Handler\HandlerInterface;
 use ITE\FiltrationBundle\Filtration\Result\FiltrationResult;
 use ITE\FiltrationBundle\Util\UrlGeneratorInterface;
@@ -116,14 +117,21 @@ class FiltrationManager implements FiltrationInterface
         $event = new FiltrationEvent($form, $target, $options);
         $this->eventDispatcher->dispatch(FiltrationEvents::BEFORE_FILTER, $event);
         $target = $event->getTarget();
-        $availableHeaders = $filter->getAvailableHeaders();
+        $availableHeaders = null;
+
+        if ($filter instanceof TableFilter) {
+            $availableHeaders = $filter->getAvailableHeaders();
+        }
 
         if ($event->isPropagationStopped()) {
             return $target;
         }
 
         foreach ($form as $child) {
-            if (isset($availableHeaders[$child->getName()])) {
+            if (
+                $availableHeaders === null ||
+                isset($availableHeaders[$child->getName()])
+            ) {
                 $target = $this->filterChild($child, $target, $filter, $options);
             }
         }
@@ -148,7 +156,12 @@ class FiltrationManager implements FiltrationInterface
         $event = new SortingEvent($form, $target, $options);
         $this->eventDispatcher->dispatch(FiltrationEvents::BEFORE_SORT, $event);
         $target = $event->getTarget();
-        $availableHeaders = $filter->getAvailableHeaders();
+        $availableHeaders = null;
+
+        if ($filter instanceof TableFilter) {
+            $availableHeaders = $filter->getAvailableHeaders();
+        }
+
         $orderings = $event->getOrderings();
 
         if ($event->isPropagationStopped()) {
@@ -162,7 +175,10 @@ class FiltrationManager implements FiltrationInterface
         }
 
         foreach ($form as $child) {
-            if (isset($availableHeaders[$child->getName()])) {
+            if (
+                $availableHeaders === null ||
+                isset($availableHeaders[$child->getName()])
+            ) {
                 $event = new SortingEvent($child, $target, $options);
                 $this->eventDispatcher->dispatch(FiltrationEvents::SORT, $event);
 
