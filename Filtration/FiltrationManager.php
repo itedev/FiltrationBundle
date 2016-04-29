@@ -88,7 +88,7 @@ class FiltrationManager implements FiltrationInterface
         $event = new InitEvent($form, $target, $options, $filter);
         $this->eventDispatcher->dispatch(FiltrationEvents::INIT_FILTER, $event);
 
-        if ($form->isValid()) {
+        if ($form->isValid() || !empty($form->getConfig()->getData()) || (isset($options['data']) && !empty($options['data']))) {
             $target = $this->doFilter($form, $target, $filter, $options);
             $result->setFilteredTarget($target);
 
@@ -288,18 +288,22 @@ class FiltrationManager implements FiltrationInterface
     /**
      * @inheritdoc
      */
-    public function getFilterForm($name, $options = [])
+    public function getFilterForm($name, $options = [], $recreate = false)
     {
+        if (isset($this->forms[$name]) && !$recreate) {
+            return $this->forms[$name];
+        }
+
         $filter = $this->getFilter($name);
 
-        $form = $filter->getFilterForm($this->formFactory);
+        $form = $this->forms[$name] = $filter->getFilterForm($this->formFactory);
 
         if (!$form->getConfig()->getOption('filter_form')) {
             throw new \LogicException('Filter form should have an option "filter_form" set to true.');
         }
 
         $request = $this->requestStack->getMasterRequest();
-        $data = $form->getData();
+//        $data = $form->getData();
 
         if(!$form->isSubmitted()) {
             if (isset($options['data']) && !empty($options['data'])) {
@@ -308,9 +312,9 @@ class FiltrationManager implements FiltrationInterface
             elseif ($request->query->has($form->getName())) {
                 $form->submit($request->query->get($form->getName()));
             }
-            elseif (!empty($data)) {
-                $form->submit($data);
-            }
+//            elseif (!empty($data)) {
+//                $form->submit($data);
+//            }
         }
 
         return $form;

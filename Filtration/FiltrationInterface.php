@@ -39,7 +39,7 @@ interface FiltrationInterface
      * @param array $options
      * @return FormInterface
      */
-    public function getFilterForm($name, $options = []);
+    public function getFilterForm($name, $options = [], $recreate = false);
 
     /**
      * Adds filter using Symfony DI
