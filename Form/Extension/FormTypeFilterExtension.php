@@ -35,6 +35,7 @@ class FormTypeFilterExtension extends AbstractTypeExtension
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['filter_form'] = isset($options['filter_form']) ? $options['filter_form'] : false;
+        $view->vars['attr'] = isset($view->vars['attr']) ? array_merge($view->vars['attr'], ['data-filter-form' => true]) : ['data-filter-form' => true];
         $view->vars['filter_formatter'] = $options['filter_formatter'];
         $view->vars['filter_formatter_params'] = $options['filter_formatter_params'];
     }
