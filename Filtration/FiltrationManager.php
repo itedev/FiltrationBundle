@@ -88,6 +88,9 @@ class FiltrationManager implements FiltrationInterface
         $event = new InitEvent($form, $target, $options, $filter);
         $this->eventDispatcher->dispatch(FiltrationEvents::INIT_FILTER, $event);
 
+        $options = $event->getOptions()->toArray();
+        $form = $this->submitFilterForm($form, $options);
+
         if ($form->isValid() || !empty($form->getConfig()->getData()) || (isset($options['data']) && !empty($options['data']))) {
             $target = $this->doFilter($form, $target, $filter, $options);
             $result->setFilteredTarget($target);
@@ -302,8 +305,18 @@ class FiltrationManager implements FiltrationInterface
             throw new \LogicException('Filter form should have an option "filter_form" set to true.');
         }
 
+        return $form;
+    }
+
+    /**
+     * @param FormInterface $form
+     * @param array         $options
+     *
+     * @return FormInterface
+     */
+    protected function submitFilterForm(FormInterface $form, $options = [])
+    {
         $request = $this->requestStack->getMasterRequest();
-//        $data = $form->getData();
 
         if(!$form->isSubmitted()) {
             if (isset($options['data']) && !empty($options['data'])) {
@@ -312,9 +325,6 @@ class FiltrationManager implements FiltrationInterface
             elseif ($request->query->has($form->getName())) {
                 $form->submit($request->query->get($form->getName()));
             }
-//            elseif (!empty($data)) {
-//                $form->submit($data);
-//            }
         }
 
         return $form;
