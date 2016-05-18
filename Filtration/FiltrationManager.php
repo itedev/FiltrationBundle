@@ -82,11 +82,11 @@ class FiltrationManager implements FiltrationInterface
         $form = $this->getFilterForm($filter->getName(), $options);
 
         $result = new FiltrationResult($filter, $form, $target, $options);
-        $result->setFilteredTarget($target);
 
         //Filter Init Event
-        $event = new InitEvent($form, $target, $options, $filter);
+        $event = new InitEvent($result);
         $this->eventDispatcher->dispatch(FiltrationEvents::INIT_FILTER, $event);
+        $target = $result->getOriginalTarget();
 
         $options = $event->getOptions()->toArray();
         $form = $this->submitFilterForm($form, $options);

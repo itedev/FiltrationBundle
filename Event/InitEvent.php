@@ -5,6 +5,7 @@ namespace ITE\FiltrationBundle\Event;
 
 use ITE\FiltrationBundle\Filtration\Filter\AbstractFilter;
 use ITE\FiltrationBundle\Filtration\FilterInterface;
+use ITE\FiltrationBundle\Filtration\Result\FiltrationResultInterface;
 use Symfony\Component\Form\FormInterface;
 
 /**
@@ -15,24 +16,28 @@ use Symfony\Component\Form\FormInterface;
 class InitEvent extends FiltrationEvent
 {
     /**
-     * @var AbstractFilter
+     * @var FiltrationResultInterface $filtrationResult
      */
-    private $filter;
+    private $filtrationResult;
 
-    public function __construct(FormInterface $form, $target, $options = [], FilterInterface $filter)
+    /**
+     * InitEvent constructor.
+     *
+     * @param FiltrationResultInterface $filtrationResult
+     */
+    public function __construct(FiltrationResultInterface $filtrationResult)
     {
-        parent::__construct($form, $target, $options);
-        $this->filter = $filter;
+        parent::__construct($filtrationResult->getFilterForm(), $filtrationResult->getOriginalTarget(), $filtrationResult->getOptions());
+        $this->filtrationResult = $filtrationResult;
     }
 
     /**
-     * Get filter
+     * Get filtrationResult
      *
-     * @return AbstractFilter
+     * @return FiltrationResultInterface
      */
-    public function getFilter()
+    public function getFiltrationResult()
     {
-        return $this->filter;
+        return $this->filtrationResult;
     }
-
 }
