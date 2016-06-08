@@ -142,7 +142,13 @@ class FiltrationExtension extends \Twig_Extension
         }
         $formatter = $this->formatters[$formatter];
         $formatterParams = $field->vars['filter_formatter_params'];
-        $value = $this->getValue($item, $fieldName);
+        if ($fieldName == 'toPercent') {
+//            $test = $field->parent();
+            $test = '';
+        }
+        $filterFieldName = $field->vars['filter_field'];
+        $value = $this->getValue($item, strpos($filterFieldName, '.') === false && $filterFieldName ? $filterFieldName : $fieldName);
+//        $value = $this->getValue($item, $fieldName);
         $params = [];
         if ($formatter->getOptions()['needs_context']) {
             $params[] = $context;
@@ -163,7 +169,7 @@ class FiltrationExtension extends \Twig_Extension
      */
     private function getValue($item, $fieldName)
     {
-        if (is_array($item) && isset($item[$fieldName])) {
+        if (is_array($item) && array_key_exists($fieldName, $item)) {
             return $item[$fieldName];
         } else {
             $item = $item[0];
