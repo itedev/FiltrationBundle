@@ -169,6 +169,8 @@ class FiltrationExtension extends \Twig_Extension
      */
     private function getValue($item, $fieldName)
     {
+        $value = null;
+
         if (is_array($item) && array_key_exists($fieldName, $item)) {
             return $item[$fieldName];
         } else {
@@ -176,7 +178,14 @@ class FiltrationExtension extends \Twig_Extension
         }
         $accessor = PropertyAccess::createPropertyAccessor();
 
-        return $accessor->getValue($item, $fieldName);
+        try {
+            $value = $accessor->getValue($item, $fieldName);
+        }
+        catch (\Exception $e) {
+
+        }
+
+        return $value;
     }
 
     /**
