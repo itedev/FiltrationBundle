@@ -142,13 +142,10 @@ class FiltrationExtension extends \Twig_Extension
         }
         $formatter = $this->formatters[$formatter];
         $formatterParams = $field->vars['filter_formatter_params'];
-        if ($fieldName == 'toPercent') {
-//            $test = $field->parent();
-            $test = '';
-        }
+
         $filterFieldName = $field->vars['filter_field'];
         $value = $this->getValue($item, strpos($filterFieldName, '.') === false && $filterFieldName ? $filterFieldName : $fieldName);
-//        $value = $this->getValue($item, $fieldName);
+
         $params = [];
         if ($formatter->getOptions()['needs_context']) {
             $params[] = $context;
