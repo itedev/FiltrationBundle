@@ -187,7 +187,7 @@ class FiltrationManager implements FiltrationInterface
 
                 $or = $event->getOrderings();
                 if (!empty($or)) {
-                    $orderings = array_merge($orderings, $or);
+                    $orderings += $or;
 
                     foreach ($orderings as $order) {
                         foreach ($order as $dir) {
