@@ -120,23 +120,13 @@ class FiltrationManager implements FiltrationInterface
         $event = new FiltrationEvent($form, $target, $options);
         $this->eventDispatcher->dispatch(FiltrationEvents::BEFORE_FILTER, $event);
         $target = $event->getTarget();
-        $availableHeaders = null;
-
-        if ($filter instanceof TableFilter) {
-            $availableHeaders = $filter->getAvailableHeaders();
-        }
 
         if ($event->isPropagationStopped()) {
             return $target;
         }
 
         foreach ($form as $child) {
-            if (
-                $availableHeaders === null ||
-                isset($availableHeaders[$child->getName()])
-            ) {
                 $target = $this->filterChild($child, $target, $filter, $options);
-            }
         }
 
         $event = new FiltrationEvent($form, $target, $options);
