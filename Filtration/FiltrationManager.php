@@ -234,7 +234,7 @@ class FiltrationManager implements FiltrationInterface
      * @param array           $options
      * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\ORM\QueryBuilder
      */
-    private function filterChild(FormInterface $form, $target, FilterInterface $filter, $options)
+    public function filterChild(FormInterface $form, $target, FilterInterface $filter, $options)
     {
         $event = new FiltrationEvent($form, $target, $filter->getOptions($options));
         $this->eventDispatcher->dispatch(FiltrationEvents::FILTER, $event);
