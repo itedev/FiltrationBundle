@@ -38,10 +38,16 @@ class SortingEventListener
         }
 
         $config = $form->getConfig();
-        $sortField = $config->getOption('sort_field') ?: $config->getOption('filter_field') ?: $form->getName();
+        $sortFields = $config->getOption('sort_field') ?: $config->getOption('filter_field') ?: $form->getName();
 
-        $event->addOrderBy([
-            $sortField => $direction
-        ], $form->getConfig()->getOption('sort_order', 0));
+        if (!is_array($sortFields)) {
+            $sortFields = [$sortFields];
+        }
+
+        foreach ($sortFields as $sortField) {
+            $event->addOrderBy([
+                $sortField => $direction
+            ], $form->getConfig()->getOption('sort_order', 0));
+        }
     }
 }

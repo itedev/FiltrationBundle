@@ -86,7 +86,7 @@ class FormTypeSortingExtension extends AbstractTypeExtension
             'sort'                  => ['bool'],
             'sort_multiple'         => ['bool'],
             'sort_order'            => ['int'],
-            'sort_field'            => ['string'],
+            'sort_field'            => ['string', 'array'],
             'sort_label'            => ['string'],
             'sort_label_asc'        => ['string'],
             'sort_label_desc'       => ['string'],
