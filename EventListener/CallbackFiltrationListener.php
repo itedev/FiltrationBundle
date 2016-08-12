@@ -1,8 +1,6 @@
 <?php
 
-
 namespace ITE\FiltrationBundle\EventListener;
-
 
 use ITE\FiltrationBundle\Event\CallbackFilterEvent;
 use ITE\FiltrationBundle\Event\FiltrationEvent;
@@ -40,5 +38,4 @@ class CallbackFiltrationListener extends AbstractFiltrationListener
             $event->setCriteria($callbackEvent->getCriteria());
         }
     }
-
 }
