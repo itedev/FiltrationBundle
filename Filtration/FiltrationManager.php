@@ -95,7 +95,7 @@ class FiltrationManager implements FiltrationInterface
         $hasData = false;
         FormUtils::formWalkRecursive($form, function (FormInterface $instance) use (&$hasData) {
             if (!$hasData) {
-                $hasData = null !== $instance->getConfig()->getData();
+                $hasData = null !== $instance->getConfig()->getData() || null !== $instance->getData();
             }
         });
 
