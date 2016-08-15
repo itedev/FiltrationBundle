@@ -168,9 +168,10 @@ class FiltrationExtension extends \Twig_Extension
     {
         $value = null;
 
-        if (is_array($item) && array_key_exists($fieldName, $item)) {
-            return $item[$fieldName];
-        } else {
+        if (is_array($item)) {
+            if (array_key_exists($fieldName, $item)) {
+                return $item[$fieldName];
+            }
             $item = $item[0];
         }
         $accessor = PropertyAccess::createPropertyAccessor();
