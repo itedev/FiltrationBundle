@@ -13,6 +13,7 @@ use ITE\FiltrationBundle\Filtration\Filter\TableFilter;
 use ITE\FiltrationBundle\Filtration\Handler\HandlerInterface;
 use ITE\FiltrationBundle\Filtration\Result\FiltrationResult;
 use ITE\FiltrationBundle\Util\UrlGeneratorInterface;
+use ITE\FormBundle\Util\FormUtils;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -91,7 +92,14 @@ class FiltrationManager implements FiltrationInterface
         $options = $event->getOptions()->toArray();
         $form = $this->submitFilterForm($form, $options);
 
-        if ($form->isValid() || !empty($form->getConfig()->getData()) || (isset($options['data']) && !empty($options['data']))) {
+        $hasData = false;
+        FormUtils::formWalkRecursive($form, function (FormInterface $instance) use (&$hasData) {
+            if (!$hasData) {
+                $hasData = null !== $instance->getConfig()->getData();
+            }
+        });
+
+        if ($form->isValid() || $hasData || (isset($options['data']) && !empty($options['data']))) {
             $target = $this->doFilter($form, $target, $filter, $options);
             $result->setFilteredTarget($target);
 
@@ -308,11 +316,10 @@ class FiltrationManager implements FiltrationInterface
     {
         $request = $this->requestStack->getMasterRequest();
 
-        if(!$form->isSubmitted()) {
+        if (!$form->isSubmitted()) {
             if (isset($options['data']) && !empty($options['data'])) {
                 $form->submit($this->convertData($form, $options['data']));
-            }
-            elseif ($request->query->has($form->getName())) {
+            } elseif ($request->query->has($form->getName())) {
                 $form->submit($request->query->get($form->getName()));
             }
         }
