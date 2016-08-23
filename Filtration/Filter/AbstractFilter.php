@@ -2,6 +2,7 @@
 
 namespace ITE\FiltrationBundle\Filtration\Filter;
 
+use Doctrine\ORM\Query;
 use ITE\FiltrationBundle\Filtration\FilterInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -108,6 +109,7 @@ abstract class AbstractFilter implements FilterInterface
     {
         $resolver->setDefaults([
             'translation_domain' => 'ITEFiltrationBundle',
+            'hydrator' => Query::HYDRATE_OBJECT,
             'wrap_result' => false,
             'paginate' => false,
             'limit' => 10,
@@ -120,4 +122,4 @@ abstract class AbstractFilter implements FilterInterface
             ],
         ]);
     }
-} 
+}

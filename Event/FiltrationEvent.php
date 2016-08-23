@@ -120,6 +120,16 @@ class FiltrationEvent extends Event
     }
 
     /**
+     * @param string $name
+     * @param mixed $defaultValue
+     * @return mixed
+     */
+    public function getOption($name, $defaultValue = null)
+    {
+        return $this->options->containsKey($name) ? $this->options->get($name) : $defaultValue;
+    }
+
+    /**
      * @return boolean
      */
     public function isTargetModified()

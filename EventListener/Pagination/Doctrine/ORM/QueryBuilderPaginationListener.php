@@ -22,7 +22,7 @@ class QueryBuilderPaginationListener
             return;
         }
 
-        if (!$event->getForm()->getConfig()->getOption('paginate')) {
+        if (!$event->getOption('paginate', false)) {
             return;
         }
 
