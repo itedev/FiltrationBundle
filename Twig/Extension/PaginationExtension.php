@@ -49,18 +49,25 @@ class PaginationExtension extends \Twig_Extension
     }
 
     /**
-     * @param FiltrationResult $result
+     * @param \Twig_Environment $twig
+     * @param FiltrationResult  $result
+     * @param array             $queryParams
+     * @param array             $viewParams
+     * @param null              $template
+     *
+     * @return string
      */
-    public function renderPagination(\Twig_Environment $twig, FiltrationResult $result, $queryParams = [], $viewParams = [])
+    public function renderPagination(\Twig_Environment $twig, FiltrationResult $result, $queryParams = [], $viewParams = [], $template = null)
     {
         $data = [];
 
+        $template = $template ?: $this->paginationOptions['template'];
         $request = $this->requestStack->getMasterRequest();
 
         $data['route'] = $request->attributes->get('_route');
         $data['query'] = array_merge($request->attributes->get('_route_params'), $request->query->all(), $queryParams);
 
-        return $twig->render($this->paginationOptions['template'], array_merge(
+        return $twig->render($template, array_merge(
             $this->getPaginationData($result),
             $result->getOption('pagination'),
             $viewParams,
