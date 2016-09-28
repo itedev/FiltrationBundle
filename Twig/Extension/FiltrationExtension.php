@@ -172,6 +172,11 @@ class FiltrationExtension extends \Twig_Extension
             if (array_key_exists($fieldName, $item)) {
                 return $item[$fieldName];
             }
+
+            if (!isset($item[0])) {
+                return null;
+            }
+
             $item = $item[0];
         }
         $accessor = PropertyAccess::createPropertyAccessor();
