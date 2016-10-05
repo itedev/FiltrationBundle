@@ -47,7 +47,7 @@ class QueryParametersSubscriber
             $pageParameterName = isset($this->defaultParameterNames['page']) ? $this->defaultParameterNames['page']: 'page';
         }
 
-        $page = $this->requestStack->getMasterRequest()->query->get($pageParameterName, 1);
+        $page = $this->requestStack->getMasterRequest()->request->get($pageParameterName, 1);
 
         $event->getOptions()->set('page', $page);
     }

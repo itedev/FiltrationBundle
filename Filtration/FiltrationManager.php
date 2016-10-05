@@ -322,6 +322,9 @@ class FiltrationManager implements FiltrationInterface
             } elseif ($request->query->has($form->getName())) {
                 $form->submit($request->query->get($form->getName()));
             }
+            elseif ($request->request->has($form->getName())) {
+                $form->submit($request->request->get($form->getName()));
+            }
         }
 
         return $form;

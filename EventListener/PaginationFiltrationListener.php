@@ -54,7 +54,7 @@ class PaginationFiltrationListener extends AbstractFiltrationListener
 
         $target = $this->paginator->paginate(
             $event->getTarget(),
-            $this->requestStack->getMasterRequest()->query->get($options['pagination_options']['query_param']),
+            $this->requestStack->getMasterRequest()->request->get($options['pagination_options']['query_param']),
             $options['pagination_options']['limit'],
             $options['pagination_options']['options']
         );

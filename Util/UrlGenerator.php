@@ -46,7 +46,7 @@ class UrlGenerator implements UrlGeneratorInterface
         $accessor = PropertyAccess::createPropertyAccessor();
         $request  = $this->requestStack->getMasterRequest();
         $route    = $request->attributes->get('_route');
-        $query    = array_merge($request->query->all(), $request->attributes->get('_route_params', []));
+        $query    = array_merge($request->request->all(), $request->attributes->get('_route_params', []));
 
         $propertyPath = $form instanceof FormInterface ? $form->getPropertyPath() : $this->getPropertyPath($form);
         $accessor->setValue($query, $propertyPath, null);
@@ -62,7 +62,7 @@ class UrlGenerator implements UrlGeneratorInterface
         $accessor = PropertyAccess::createPropertyAccessor();
         $request  = $this->requestStack->getMasterRequest();
         $route    = $request->attributes->get('_route');
-        $query    = array_merge($request->query->all(), $request->attributes->get('_route_params', []));
+        $query    = array_merge($request->request->all(), $request->attributes->get('_route_params', []));
 
         $form = $this->getParent($form);
         $name = $form instanceof FormInterface ? $form->getName() : $form->vars['name'];
@@ -79,7 +79,7 @@ class UrlGenerator implements UrlGeneratorInterface
         $accessor = PropertyAccess::createPropertyAccessor();
         $request  = $this->requestStack->getMasterRequest();
         $route    = $request->attributes->get('_route');
-        $query    = array_merge($request->query->all(), $request->attributes->get('_route_params', []));
+        $query    = array_merge($request->request->all(), $request->attributes->get('_route_params', []));
 
         $sortField = $this->getSortField($form);
         $propertyPath = $sortField instanceof FormInterface ? $sortField->getPropertyPath() : $this->getPropertyPath($sortField);
@@ -110,7 +110,7 @@ class UrlGenerator implements UrlGeneratorInterface
     {
         $request  = $this->requestStack->getMasterRequest();
         $route    = $request->attributes->get('_route');
-        $query    = array_merge($request->query->all(), $request->attributes->get('_route_params', []));
+        $query    = array_merge($request->request->all(), $request->attributes->get('_route_params', []));
 
         $form = $this->getParent($form);
         $name = $form instanceof FormInterface ? $form->getName() : $form->vars['name'];
@@ -135,7 +135,7 @@ class UrlGenerator implements UrlGeneratorInterface
         $accessor = PropertyAccess::createPropertyAccessor();
         $request  = $this->requestStack->getMasterRequest();
         $route    = $request->attributes->get('_route');
-        $query    = array_merge($request->query->all(), $request->attributes->get('_route_params', []));
+        $query    = array_merge($request->request->all(), $request->attributes->get('_route_params', []));
 
         $sortField = $this->getSortField($form);
         if ($sortField) {
