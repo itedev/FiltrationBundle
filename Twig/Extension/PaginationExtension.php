@@ -65,7 +65,7 @@ class PaginationExtension extends \Twig_Extension
         $request = $this->requestStack->getMasterRequest();
 
         $data['route'] = $request->attributes->get('_route');
-        $data['query'] = array_merge($request->attributes->get('_route_params'), $request->request->all(), $queryParams);
+        $data['query'] = array_merge($request->attributes->get('_route_params'), $request->query->all(), $queryParams);
 
         return $twig->render($template, array_merge(
             $this->getPaginationData($result),
