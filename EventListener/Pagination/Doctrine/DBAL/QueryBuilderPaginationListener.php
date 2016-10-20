@@ -47,13 +47,8 @@ class QueryBuilderPaginationListener
         $page = $event->getOptions()->get('page') ?: 1;
         $offset = abs($page - 1) * $limit;
 
-        $countTarget = clone $target;
-        // Add empty select to increase performance
-        $countTarget->select("'count_target'");
-        $countTarget->resetQueryPart('orderBy');
-
         // get the query
-        $sql = $countTarget->getSQL();
+        $sql = $target->getSQL();
 
         // count results
         $qb = clone $target;
