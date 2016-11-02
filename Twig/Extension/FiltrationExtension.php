@@ -144,7 +144,7 @@ class FiltrationExtension extends \Twig_Extension
         $formatterParams = $field->vars['filter_formatter_params'];
 
         $filterFieldName = $field->vars['filter_field'];
-        $value = $this->getValue($item, strpos($filterFieldName, '.') === false && $filterFieldName ? $filterFieldName : $fieldName);
+        $value = $this->getValue($item, $filterFieldName ? $filterFieldName : $fieldName);
 
         $params = [];
         if ($formatter->getOptions()['needs_context']) {
