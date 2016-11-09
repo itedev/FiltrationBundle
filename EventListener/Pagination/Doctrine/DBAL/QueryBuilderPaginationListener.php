@@ -47,11 +47,13 @@ class QueryBuilderPaginationListener
         $page = $event->getOptions()->get('page') ?: 1;
         $offset = abs($page - 1) * $limit;
 
-        // get the query
-        $sql = $target->getSQL();
 
         // count results
         $qb = clone $target;
+        $qb->resetQueryPart('orderBy');
+
+        $sql = $qb->getSQL();
+
 
         $rsm = new ResultSetMappingBuilder($this->em);
         $rsm->addScalarResult('cnt');
