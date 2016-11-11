@@ -138,16 +138,18 @@ class UrlGenerator implements UrlGeneratorInterface
         $query    = array_merge($request->request->all(), $request->attributes->get('_route_params', []));
 
         $sortField = $this->getSortField($form);
+
         if ($sortField) {
             $propertyPath = $sortField instanceof FormInterface ? $sortField->getPropertyPath() : $this->getPropertyPath($sortField);
             $multiple = $form instanceof FormInterface ? $form->getConfig()->getOption('sort_multiple') : $form->vars['sort_multiple'];
 
-            if (!$multiple) {
-                $parentForm = $this->getParent($form);
-                $query = $this->clearSorting($query, $parentForm);
+            if ($multiple) {
+                $accessor->setValue($query, $propertyPath, null);
             }
-
-            $accessor->setValue($query, $propertyPath, null);
+            else {
+                $parentForm = $this->getParent($form);
+                $query = $this->clearSorting($query, $parentForm, $sortField);
+            }
         }
 
         $propertyPath = $form instanceof FormInterface ? $form->getPropertyPath() : $this->getPropertyPath($form);
@@ -161,19 +163,21 @@ class UrlGenerator implements UrlGeneratorInterface
      *
      * @param array $query
      * @param FormInterface|FormView $form
+     * @param FormInterface|FormView $skipChild
      * @return array
      */
-    private function clearSorting($query, $form)
+    private function clearSorting($query, $form, $skipChild = null)
     {
         $accessor = PropertyAccess::createPropertyAccessor();
 
         foreach ($form as $child) {
             $sortField = $this->getSortField($child);
+
             if (!$sortField) {
                 continue;
             }
             $propertyPath = $sortField instanceof FormInterface ? $sortField->getPropertyPath() : $this->getPropertyPath($sortField);
-            $accessor->setValue($query, $propertyPath, "");
+            $accessor->setValue($query, $propertyPath, $skipChild && $skipChild->vars['name'] !== $sortField->vars['name'] && $sortField->vars['value'] !== null ? $sortField->vars['value'] : "");
         }
 
         return $query;
