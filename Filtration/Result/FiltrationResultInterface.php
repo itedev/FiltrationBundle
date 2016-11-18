@@ -19,6 +19,11 @@ interface FiltrationResultInterface extends \IteratorAggregate, \Countable, \Arr
     public function setCount($count);
 
     /**
+     * @return int
+     */
+    public function getCount();
+
+    /**
      * @return array
      */
     public function getOptions();

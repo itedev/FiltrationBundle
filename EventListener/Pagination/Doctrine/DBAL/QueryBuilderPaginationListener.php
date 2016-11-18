@@ -48,27 +48,28 @@ class QueryBuilderPaginationListener
         $offset = abs($page - 1) * $limit;
 
 
-        // count results
-        $qb = clone $target;
-        $qb->resetQueryPart('orderBy');
+        if (!$event->getCount()) {
+            // count results
+            $qb = clone $target;
+            $qb->resetQueryPart('orderBy');
 
-        $sql = $qb->getSQL();
+            $sql = $qb->getSQL();
 
 
-        $rsm = new ResultSetMappingBuilder($this->em);
-        $rsm->addScalarResult('cnt');
+            $rsm = new ResultSetMappingBuilder($this->em);
+            $rsm->addScalarResult('cnt');
 
-        $qb
-            ->setResultSetMappingBuilder($rsm)
-            ->resetQueryParts()
-            ->select('COUNT(*) AS cnt')
-            ->from('(' . $sql . ')', 'frm')
-        ;
+            $qb
+                ->setResultSetMappingBuilder($rsm)
+                ->resetQueryParts()
+                ->select('COUNT(*) AS cnt')
+                ->from('(' . $sql . ')', 'frm');
 
-        $event->setCount($qb
-            ->getQuery()
-            ->getSingleScalarResult()
-        );
+            $event->setCount($qb
+                ->getQuery()
+                ->getSingleScalarResult()
+            );
+        }
 
         // if there is results
         $event->setTarget([]);
