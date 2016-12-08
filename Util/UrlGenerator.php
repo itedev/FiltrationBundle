@@ -204,7 +204,7 @@ class UrlGenerator implements UrlGeneratorInterface
      * @param $form
      * @return null|FormInterface|FormView
      */
-    private function getParent($form)
+    protected function getParent($form)
     {
         if ($form instanceof FormView) {
             $root = $form;
