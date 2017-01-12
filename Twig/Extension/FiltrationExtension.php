@@ -138,7 +138,7 @@ class FiltrationExtension extends \Twig_Extension
         $field = $context['form'][$fieldName];
         $formatter = $field->vars['filter_formatter'];
         if (!isset($this->formatters[$formatter])) {
-            throw new \Exception(sprintf('Formatter "%s" is not registerd.'));
+            throw new \Exception(sprintf('Formatter "%s" is not registerd.', $formatter));
         }
         $formatter = $this->formatters[$formatter];
         $formatterParams = $field->vars['filter_formatter_params'];
