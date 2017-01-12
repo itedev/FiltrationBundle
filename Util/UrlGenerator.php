@@ -231,7 +231,7 @@ class UrlGenerator implements UrlGeneratorInterface
      * @param FormView $formView
      * @return string
      */
-    private function getPropertyPath(FormView $formView)
+    protected function getPropertyPath(FormView $formView)
     {
         $parent = $formView->parent;
 
