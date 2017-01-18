@@ -54,6 +54,7 @@ class QueryBuilderExpressionVisitor extends ExpressionVisitor
             case Comparison::LTE;
                 return sprintf('%s %s %s', $comparison->getField(), $comparison->getOperator(), $placeholder);
             case Comparison::IN;
+                return sprintf('%s %s (%s)', $comparison->getField(), Comparison::IN, $placeholder);
             case Comparison::NIN;
                 return sprintf('%s %s (%s)', $comparison->getField(), 'NOT IN', $placeholder);
             case Comparison::CONTAINS;
