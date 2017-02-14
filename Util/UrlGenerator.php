@@ -86,7 +86,8 @@ class UrlGenerator implements UrlGeneratorInterface
         $multiple = $form instanceof FormInterface ? $form->getConfig()->getOption('sort_multiple') : $form->vars['sort_multiple'];
 
         if (!$multiple) {
-            $form = $this->getParent($form);
+            $form  = $this->getParent($form);
+            $query = $this->injectDefaultFormData($form, $query);
             $query = $this->clearSorting($query, $form);
         }
 
@@ -113,6 +114,7 @@ class UrlGenerator implements UrlGeneratorInterface
         $query    = array_merge($request->request->all(), $request->attributes->get('_route_params', []));
 
         $form = $this->getParent($form);
+        $query = $this->injectDefaultFormData($form, $query);
         $name = $form instanceof FormInterface ? $form->getName() : $form->vars['name'];
 
         if (isset($query[$name])) {
@@ -136,6 +138,7 @@ class UrlGenerator implements UrlGeneratorInterface
         $request  = $this->requestStack->getMasterRequest();
         $route    = $request->attributes->get('_route');
         $query    = array_merge($request->request->all(), $request->attributes->get('_route_params', []));
+        $query = $this->injectDefaultFormData($form, $query);
 
         $sortField = $this->getSortField($form);
 
@@ -236,5 +239,28 @@ class UrlGenerator implements UrlGeneratorInterface
         $parent = $formView->parent;
 
         return sprintf('[%s][%s]', $parent->vars['name'], $formView->vars['name']);
+    }
+
+    /**
+     * @param $form
+     * @param $query
+     *
+     * @return mixed
+     */
+    protected function injectDefaultFormData($form, $query)
+    {
+        $accessor = PropertyAccess::createPropertyAccessor();
+        $root = $this->getParent($form);
+        $defaultData = $form->vars['data'];
+
+        if (!$defaultData) {
+            return $query;
+        }
+
+        foreach ($defaultData as $key => $value) {
+            $accessor->setValue($query, $this->getPropertyPath($root).'['.$key.']', $value);
+        }
+
+        return $query;
     }
 }
