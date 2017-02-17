@@ -138,7 +138,6 @@ class UrlGenerator implements UrlGeneratorInterface
         $request  = $this->requestStack->getMasterRequest();
         $route    = $request->attributes->get('_route');
         $query    = array_merge($request->request->all(), $request->attributes->get('_route_params', []));
-        $query = $this->injectDefaultFormData($form, $query);
 
         $sortField = $this->getSortField($form);
 
@@ -151,6 +150,7 @@ class UrlGenerator implements UrlGeneratorInterface
             }
             else {
                 $parentForm = $this->getParent($form);
+                $query = $this->injectDefaultFormData($parentForm, $query);
                 $query = $this->clearSorting($query, $parentForm, $sortField);
             }
         }
