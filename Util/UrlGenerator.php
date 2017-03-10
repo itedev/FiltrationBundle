@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -254,6 +255,10 @@ class UrlGenerator implements UrlGeneratorInterface
         $defaultData = $form->vars['data'];
 
         if (!$defaultData) {
+            return $query;
+        }
+
+        if (true === $form->vars['submitted']) {
             return $query;
         }
 
