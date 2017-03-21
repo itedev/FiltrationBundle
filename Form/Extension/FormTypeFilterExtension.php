@@ -52,6 +52,7 @@ class FormTypeFilterExtension extends AbstractTypeExtension
         $resolver->setOptional([
             'filter_form',
             'filter_aggregate',
+            'filter_form_type',
         ]);
         $resolver->setDefaults([
             'csrf_protection' => function(Options $options, $csrfProtection) {

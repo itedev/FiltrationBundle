@@ -72,6 +72,22 @@ class FiltrationManager implements FiltrationInterface
     /**
      * @inheritdoc
      */
+    public function simulateFilter($filter, array $options = [])
+    {
+        if (is_string($filter)) {
+            $filter = $this->getFilter($filter);
+        }
+
+        $options = $filter->getOptions($options);
+
+        $form = $this->getFilterForm($filter->getName(), $options);
+
+        return $this->submitFilterForm($form, $options);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function filter($target, $filter, array $options = [])
     {
         if (is_string($filter)) {
