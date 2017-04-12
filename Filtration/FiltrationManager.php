@@ -193,15 +193,16 @@ class FiltrationManager implements FiltrationInterface
 
         foreach ($form as $child) {
             if (
-                $availableHeaders === null ||
-                isset($availableHeaders[$child->getName()])
+                $availableHeaders === null
+                || isset($availableHeaders[$child->getName()])
             ) {
                 $event = new SortingEvent($child, $target, $options);
                 $this->eventDispatcher->dispatch(FiltrationEvents::SORT, $event);
 
                 $or = $event->getOrderings();
+
                 if (!empty($or)) {
-                    $orderings += $or;
+                    $orderings = array_merge($orderings, $or);
 
                     foreach ($orderings as $order) {
                         foreach ($order as $dir) {

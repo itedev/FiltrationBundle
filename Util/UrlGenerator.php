@@ -20,12 +20,12 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * @var RouterInterface
      */
-    private $router;
+    protected $router;
 
     /**
      * @var RequestStack
      */
-    private $requestStack;
+    protected $requestStack;
 
     /**
      * Public constructor
@@ -170,7 +170,7 @@ class UrlGenerator implements UrlGeneratorInterface
      * @param FormInterface|FormView $skipChild
      * @return array
      */
-    private function clearSorting($query, $form, $skipChild = null)
+    protected function clearSorting($query, $form, $skipChild = null)
     {
         $accessor = PropertyAccess::createPropertyAccessor();
 
@@ -191,7 +191,7 @@ class UrlGenerator implements UrlGeneratorInterface
      * @param $form
      * @return mixed|null|FormInterface|FormView
      */
-    private function getSortField($form)
+    protected function getSortField($form)
     {
         $rootForm = $this->getParent($form);
 

@@ -10,7 +10,7 @@
 {#{% endmacro %}#}
 
 {% block sort_link %}
-    {# filter \ITE\FiltrationBundle\Filtration\FilterInterface#}
+    {# filter \ITE\FiltrationBundle\Filtration\FilterInterface #}
     {% set attr = options.attr|default({}) %}
     {% set active_class = filter.getOptions()['attr']['button_active_class']|default('active') %}
     {% set attr = attr|merge({class: attr.class is defined ? attr.class : '' ~ ' ' ~ filter.isFieldSorted(form.vars.name) and filter.getFieldSortingDirection(form.vars.name) == direction ? 'active' : ''}) %}
