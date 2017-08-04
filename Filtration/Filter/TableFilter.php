@@ -35,6 +35,7 @@ abstract class TableFilter extends AbstractFilter
         'force_result_return' => false,
         'limit' => 10,
         'page'  => 1,
+        'pagination_query_builder'  => null,
         'hydrator' => Query::HYDRATE_OBJECT,
         'data'  => [],
         'pagination' => [

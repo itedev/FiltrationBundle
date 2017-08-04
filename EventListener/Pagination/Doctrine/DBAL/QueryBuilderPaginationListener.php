@@ -50,7 +50,10 @@ class QueryBuilderPaginationListener
 
         if (!$event->getCount()) {
             // count results
-            $qb = clone $target;
+            if (!$qb = $event->getOptions()->get('pagination_query_builder')) {
+                $qb = clone $target;
+            }
+
             $qb->resetQueryPart('orderBy');
 
             $sql = $qb->getSQL();
