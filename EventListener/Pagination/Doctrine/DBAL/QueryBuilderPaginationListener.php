@@ -47,11 +47,24 @@ class QueryBuilderPaginationListener
         $page = $event->getOptions()->get('page') ?: 1;
         $offset = abs($page - 1) * $limit;
 
-
         if (!$event->getCount()) {
             // count results
-            if (!$qb = $event->getOptions()->get('pagination_query_builder')) {
-                $qb = clone $target;
+            $tmpQb = clone $target;
+
+            /** @var QueryBuilder $qb */
+            if ($qb = $event->getOptions()->get('pagination_query_builder')) {
+                if ($qbWherePart = $tmpQb->getQueryPart('where')) {
+                    $qb->where($qbWherePart);
+                }
+
+                if ($qbHavingPart = $tmpQb->getQueryPart('having')) {
+                    $qb->having($qbHavingPart);
+                }
+
+                $qb->setParameters($tmpQb->getParameters());
+            }
+            else {
+                $qb = $tmpQb;
             }
 
             $qb->resetQueryPart('orderBy');
