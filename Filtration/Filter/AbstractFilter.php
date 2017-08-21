@@ -17,7 +17,16 @@ abstract class AbstractFilter implements FilterInterface
      * @var array
      */
     protected $filteredFields = [];
+
+    /**
+     * @var array
+     */
     protected $sortedFields = [];
+
+    /**
+     * @var array
+     */
+    protected $extendedOptions = [];
 
     /**
      * @return string
@@ -121,5 +130,40 @@ abstract class AbstractFilter implements FilterInterface
                 'fetch_join_collection' => false,
             ],
         ]);
+    }
+
+    /**
+     * @param      $name
+     * @param null $default
+     *
+     * @return mixed
+     */
+    public function getExtendedOption($name, $default = null)
+    {
+        return isset($this->extendedOptions[$name]) ? $this->extendedOptions[$name] : $default;
+    }
+
+    /**
+     * Get extendedOptions
+     *
+     * @return array
+     */
+    public function getExtendedOptions()
+    {
+        return $this->extendedOptions;
+    }
+
+    /**
+     * Set extendedOptions
+     *
+     * @param array $extendedOptions
+     *
+     * @return AbstractFilter
+     */
+    public function setExtendedOptions(array $extendedOptions = [])
+    {
+        $this->extendedOptions = $extendedOptions;
+
+        return $this;
     }
 }

@@ -95,6 +95,7 @@ class FiltrationManager implements FiltrationInterface
         }
 
         $options = $filter->getOptions($options);
+        $filter->setExtendedOptions($options);
 
         $form = $this->getFilterForm($filter->getName(), $options);
 

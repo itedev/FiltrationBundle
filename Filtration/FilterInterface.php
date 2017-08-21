@@ -43,4 +43,16 @@ interface FilterInterface
      * @return array
      */
     public function getOptions(array $options = []);
+
+    /**
+     * @return array
+     */
+    public function getExtendedOptions();
+
+    /**
+     * @param array $options
+     *
+     * @return array
+     */
+    public function setExtendedOptions(array $options = []);
 } 
