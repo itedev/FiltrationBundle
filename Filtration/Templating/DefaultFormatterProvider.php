@@ -19,7 +19,9 @@ class DefaultFormatterProvider implements FormatterProviderInterface
     {
         return [
             new SimpleFormatter('string', function ($value) {
-                return (string) $value;
+                return $value instanceof \DateTime
+                    ? $value->format('Y-m-d H:i:s')
+                    : (string) $value;
             }),
             new SimpleFormatter('attribute', function ($value, $attrName) {
                 $accessor = PropertyAccess::createPropertyAccessor();
