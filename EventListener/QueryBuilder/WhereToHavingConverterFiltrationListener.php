@@ -29,6 +29,10 @@ class WhereToHavingConverterFiltrationListener extends AbstractFiltrationListene
             return;
         }
 
+        if (!$criteria->getWhereExpression()) {
+            return;
+        }
+
         $newCriteria = new Criteria();
         $newCriteria->andHaving($criteria->getWhereExpression());
 
