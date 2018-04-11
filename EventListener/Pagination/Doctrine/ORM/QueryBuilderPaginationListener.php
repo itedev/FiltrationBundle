@@ -3,6 +3,7 @@
 
 namespace ITE\FiltrationBundle\EventListener\Pagination\Doctrine\ORM;
 
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\CountWalker;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -43,11 +44,17 @@ class QueryBuilderPaginationListener
         }
 
         $distinct = isset($paginationOptions['distinct']) && true === $paginationOptions['distinct'] ? true : false;
+        $partial = isset($paginationOptions['partial']) && true === $paginationOptions['partial'] ? true : false;
         $target
             ->setMaxResults($limit)
             ->setFirstResult($offset)
             ->setHydrationMode($event->getOptions()->get('hydrator'))
-            ->setHint(CountWalker::HINT_DISTINCT, $distinct);
+            ->setHint(CountWalker::HINT_DISTINCT, $distinct)
+        ;
+
+        if ($partial) {
+            $target->setHint(Query::HINT_FORCE_PARTIAL_LOAD, 1);
+        }
 
         $fetchJoinCollection = true;
         if (isset($paginationOptions['fetch_join_collection']) && true === $paginationOptions['fetch_join_collection']) {
