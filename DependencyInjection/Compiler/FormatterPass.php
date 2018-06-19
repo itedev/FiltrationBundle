@@ -18,11 +18,11 @@ class FormatterPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('ite_filtration.twig.extension.filtration')) {
+        if (!$container->hasDefinition('ite_filtration.formatter.manager')) {
             return;
         }
 
-        $definition = $container->getDefinition('ite_filtration.twig.extension.filtration');
+        $definition = $container->getDefinition('ite_filtration.formatter.manager');
 
         $formatterProviders = $container->findTaggedServiceIds('ite_filtration.formatter_provider');
         foreach ($formatterProviders as $id => $tags) {

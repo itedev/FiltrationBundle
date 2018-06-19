@@ -1,7 +1,11 @@
 parameters:
     ite_filtration.formatter_provider.default.class: ITE\FiltrationBundle\Filtration\Templating\DefaultFormatterProvider
+    ite_filtration.formatter.manager.class: ITE\FiltrationBundle\Filtration\Templating\FormatterManager
 
 services:
+    ite_filtration.formatter.manager:
+        class: %ite_filtration.formatter.manager.class%
+
     ite_filtration.formatter_provider.default:
         class: %ite_filtration.formatter_provider.default.class%
         tags:

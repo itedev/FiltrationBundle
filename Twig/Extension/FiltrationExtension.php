@@ -7,6 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 use ITE\FiltrationBundle\Filtration\FiltrationManager;
 use ITE\FiltrationBundle\Filtration\Result\FiltrationResultInterface;
 use ITE\FiltrationBundle\Filtration\Templating\FormatterInterface;
+use ITE\FiltrationBundle\Filtration\Templating\FormatterManager;
 use ITE\FiltrationBundle\Filtration\Templating\FormatterProviderInterface;
 use ITE\FiltrationBundle\Twig\TokenParser\FilterEmbedTokenParser;
 use ITE\FiltrationBundle\Util\UrlGenerator;
@@ -28,32 +29,27 @@ class FiltrationExtension extends \Twig_Extension
     protected $filtrator;
 
     /**
+     * @var FormatterManager $formatterManager
+     */
+    protected $formatterManager;
+
+    /**
      * @var UrlGenerator
      */
-    private $urlGenerator;
+    protected $urlGenerator;
 
     /**
-     * @var FormatterInterface[]
-     */
-    private $formatters = [];
-
-    /**
+     * FiltrationExtension constructor.
+     *
      * @param FiltrationManager $filtrator
+     * @param FormatterManager $formatterManager
+     * @param UrlGenerator|null $urlGenerator
      */
-    public function __construct(FiltrationManager $filtrator, UrlGenerator $urlGenerator = null)
+    public function __construct(FiltrationManager $filtrator, FormatterManager $formatterManager, UrlGenerator $urlGenerator = null)
     {
         $this->filtrator = $filtrator;
+        $this->formatterManager = $formatterManager;
         $this->urlGenerator = $urlGenerator;
-    }
-
-    /**
-     * @param FormatterProviderInterface $provider
-     */
-    public function addFormatterProvider(FormatterProviderInterface $provider)
-    {
-        foreach ($provider->getFormatters() as $formatter) {
-            $this->formatters[$formatter->getName()] = $formatter;
-        }
     }
 
     /**
@@ -136,26 +132,26 @@ class FiltrationExtension extends \Twig_Extension
             throw new \Exception(sprintf('Field with name "%s" is not found in form for auto formatting.', $fieldName));
         }
         $field = $context['form'][$fieldName];
-        $formatter = $field->vars['filter_formatter'];
-        if (!isset($this->formatters[$formatter])) {
-            throw new \Exception(sprintf('Formatter "%s" is not registerd.', $formatter));
-        }
-        $formatter = $this->formatters[$formatter];
+        $formatterName = $field->vars['filter_formatter'];
         $formatterParams = $field->vars['filter_formatter_params'];
 
         $filterFieldName = $field->vars['filter_field'];
         $value = $this->getValue($item, $filterFieldName ? $filterFieldName : $fieldName);
 
+        $formatter = $this->formatterManager->getFormatter($formatterName);
+
         $params = [];
+
         if ($formatter->getOptions()['needs_context']) {
             $params[] = $context;
         }
         if ($formatter->getOptions()['needs_data']) {
             $params[] = $item;
         }
-        $params = array_merge($params, [$value], $formatterParams);
 
-        return call_user_func_array($formatter->getCallable(), $params);
+        $params = array_merge($params, $formatterParams);
+
+        return $this->formatterManager->format($value, $formatterName, $params);
     }
 
     /**
