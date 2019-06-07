@@ -6,6 +6,8 @@ parameters:
     ite_filtration.handler.sorting.dbal.query_builder.class:                ITE\FiltrationBundle\Filtration\Handler\Sorting\Doctrine\DBAL\QueryBuilderHandler
     ite_filtration.doctrine.orm.query_builder_expression_visitor.class:     ITE\FiltrationBundle\Doctrine\ORM\QueryBuilder\QueryBuilderExpressionVisitor
     ite_filtration.doctrine.dbal.query_builder_expression_visitor.class:    ITE\FiltrationBundle\Doctrine\DBAL\QueryBuilder\QueryBuilderExpressionVisitor
+    ite_filtration.handler.filtration.odm.query_builder.class:              ITE\FiltrationBundle\Filtration\Handler\Filtration\Doctrine\ODM\QueryBuilderHandler
+    ite_filtration.handler.sorting.odm.query_builder.class:                 ITE\FiltrationBundle\Filtration\Handler\Sorting\Doctrine\ODM\QueryBuilderHandler
 
 services:
     ite_filtration.handler.filtration.array_collection:
@@ -33,5 +35,15 @@ services:
 
     ite_filtration.handler.sorting.dbal.query_builder:
         class: %ite_filtration.handler.sorting.dbal.query_builder.class%
+        tags:
+            - { name: ite_filtration.handler }
+
+    ite_filtration.handler.filtration.odm.query_builder:
+        class: %ite_filtration.handler.filtration.odm.query_builder.class%
+        tags:
+            - { name: ite_filtration.handler }
+
+    ite_filtration.handler.sorting.odm.query_builder:
+        class: %ite_filtration.handler.sorting.odm.query_builder.class%
         tags:
             - { name: ite_filtration.handler }
