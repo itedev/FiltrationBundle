@@ -7,6 +7,7 @@ parameters:
   ite_filtration.filtrator.callback_filter.class: ITE\FiltrationBundle\EventListener\CallbackFiltrationListener
   ite_filtration.filtrator.where_to_having_converter.class: ITE\FiltrationBundle\EventListener\QueryBuilder\WhereToHavingConverterFiltrationListener
   ite_filtration.filtrator.field_alias_guesser.class: ITE\FiltrationBundle\EventListener\QueryBuilder\FieldAliasGuesserFiltrationListener
+  ite_filtration.filtrator.odm_field_alias_guesser.class: ITE\FiltrationBundle\EventListener\QueryBuilder\ODMFieldAliasGuesserFiltrationListener
 
 services:
   # standard form wrappers
@@ -50,5 +51,10 @@ services:
 
   ite_filtration.filtrator.field_alias_guesser:
     class: %ite_filtration.filtrator.field_alias_guesser.class%
+    tags:
+      - { name: kernel.event_listener, event: ite_filtration.filter, method: filter, priority: 100 }
+
+  ite_filtration.filtrator.odm_field_alias_guesser:
+    class: %ite_filtration.filtrator.odm_field_alias_guesser.class%
     tags:
       - { name: kernel.event_listener, event: ite_filtration.filter, method: filter, priority: 100 }
