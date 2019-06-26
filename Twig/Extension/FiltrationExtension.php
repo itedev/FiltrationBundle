@@ -94,7 +94,7 @@ class FiltrationExtension extends \Twig_Extension
      * @param array             $context
      * @return string
      */
-    public function render(\Twig_Environment $twig, $filterName, array $context = [])
+    public function render(\Twig_Environment $twig, $filterName, array $context = [], $recreateForm = false)
     {
         if ($filterName instanceof FiltrationResultInterface) {
             return $twig->render($filterName->getFilter()->getTemplateName(), [
@@ -110,7 +110,7 @@ class FiltrationExtension extends \Twig_Extension
         }
 
         $context = array_merge($context, [
-            'form' => $this->getFilterForm($filterName),
+            'form' => $this->getFilterForm($filterName, [], $recreateForm),
             'filter' => $filter
         ]);
 
@@ -200,9 +200,9 @@ class FiltrationExtension extends \Twig_Extension
      * @param $name
      * @return \Symfony\Component\Form\FormView
      */
-    public function getFilterForm($name)
+    public function getFilterForm($name, $options = [], $recreate = false)
     {
-        return $this->filtrator->getFilterForm($name)->createView();
+        return $this->filtrator->getFilterForm($name, $options, $recreate)->createView();
     }
 
     /**
