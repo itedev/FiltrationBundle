@@ -42,6 +42,13 @@ class BaseTypesFiltrationListener extends AbstractFiltrationListener
             return;
         }
 
+        if (
+            $form->getConfig()->getOption('multiple') === true
+            && ($data = $form->getData()) === []
+        ) {
+            return;
+        }
+
         if ($this->supportsParentType($form, 'hidden')) {
             if (strpos($form->getName(), UrlGeneratorInterface::SORT_FIELD_PREFIX) === 0) {
                 return;
