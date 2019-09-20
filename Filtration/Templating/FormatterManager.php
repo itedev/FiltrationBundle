@@ -42,7 +42,7 @@ class FormatterManager
     public function getFormatter($name)
     {
         if (!isset($this->formatters[$name])) {
-            throw new \Exception(sprintf('Formatter "%s" is not registerd.', $formatterName));
+            return;
         }
 
         return $this->formatters[$name];
