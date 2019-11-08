@@ -31,7 +31,7 @@ class QueryBuilderHandler implements HandlerInterface
 
         if ($having) {
             $havingCondition = $having->visit($visitor);
-            $target->addAnd($whereCondition);
+            $target->addAnd($havingCondition);
         }
 
         return $target;
