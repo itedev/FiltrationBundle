@@ -7,7 +7,7 @@ sort:
         desc: Sort Highest to Lowest
     date:
         asc: Sort Oldest to Newest
-        desc: Sort Newset to Oldest
+        desc: Sort Newest to Oldest
     reset: Reset
 
 no_results: No Results
