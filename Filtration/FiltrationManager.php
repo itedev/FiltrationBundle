@@ -332,7 +332,13 @@ class FiltrationManager implements FiltrationInterface
      */
     protected function submitFilterForm(FormInterface $form, $options = [])
     {
-        $request = $this->requestStack->getMasterRequest();
+        $useCurrentRequest = $options['use_current_request'] ?? false;
+
+        if ($useCurrentRequest) {
+            $request = $this->requestStack->getCurrentRequest();
+        } else {
+            $request = $this->requestStack->getMasterRequest();
+        }
 
         if (!$form->isSubmitted()) {
             if (isset($options['data']) && !empty($options['data'])) {
