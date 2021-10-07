@@ -56,7 +56,11 @@ class BaseTypesFiltrationListener extends AbstractFiltrationListener
         }
 
         $criteria = Criteria::create();
-        $criteria->andWhere(new Comparison($event->getFieldName(), Comparison::EQ, $data));
+        if (is_array($data)) {
+            $criteria->andWhere(new Comparison($event->getFieldName(), Comparison::IN, $data));
+        } else {
+            $criteria->andWhere(new Comparison($event->getFieldName(), Comparison::EQ, $data));
+        }
 
         $event->setCriteria($criteria);
     }
